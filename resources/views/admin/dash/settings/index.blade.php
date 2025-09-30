@@ -41,7 +41,7 @@
                         <div class="card-body">
                             <div class="grid grid-cols-12 gap-6">
                                 <div class="col-span-12 md:col-span-6">
-                                    <a href="{{ route('admin.settings.change-email') }}" class="block">
+                                    <a href="{{ route('admin.settings.change.email') }}" class="block">
                                         <div
                                             class="card shadow-none border border-theme-border dark:border-themedark-border mb-0 h-full">
                                             <div class="card-body">
@@ -63,7 +63,7 @@
                                     </a>
                                 </div>
                                 <div class="col-span-12 md:col-span-6">
-                                    <a href="{{ route('admin.settings.change-password') }}" class="block">
+                                    <a href="{{ route('admin.settings.change.password') }}" class="block">
                                         <div
                                             class="card shadow-none border border-theme-border dark:border-themedark-border mb-0 h-full">
                                             <div class="card-body">
@@ -111,7 +111,7 @@
                         aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
-                                <form method="POST" action="{{ route('admin.settings.delete-account') }}">
+                                <form method="POST" action="{{ route('admin.settings.delete.account') }}">
                                     @csrf
                                     @method('DELETE')
 

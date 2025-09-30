@@ -63,7 +63,7 @@
                 <label class="form-check-label text-muted" for="customCheckc1"> Lembre de mim?</label>
             </div>
             <h6 class="font-normal text-primary-500 mb-0">
-                <a href="{{ route('admin.forgot-password') }}"> Esqueceu a sua senha? </a>
+                <a href="{{ route('admin.password.request') }}"> Esqueceu a sua senha? </a>
             </h6>
         </div>
 

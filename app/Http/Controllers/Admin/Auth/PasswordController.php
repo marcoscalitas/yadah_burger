@@ -27,7 +27,7 @@ class PasswordController extends Controller
         );
 
         return $status === Password::RESET_LINK_SENT
-            ? redirect()->route('admin.check-email')->with(['email' => $request->get("email")])
+            ? redirect()->route('admin.check.email')->with(['email' => $request->get("email")])
             : back()->withErrors(['email' => __($status)]);
     }
 

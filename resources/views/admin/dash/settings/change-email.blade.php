@@ -14,7 +14,7 @@
         'title' => 'Alterar E-mail ',
         'items' => [
             ['label' => 'Definições', 'url' => route('admin.settings.index')],
-            ['label' => 'Alterar E-mail', 'url' => route('admin.settings.change-email')],
+            ['label' => 'Alterar E-mail', 'url' => route('admin.settings.change.email')],
         ],
     ])
     <!-- [ breadcrumb ] end -->
@@ -33,7 +33,7 @@
             @endif
 
             <div class="tab-pane">
-                <form action="{{ route('admin.settings.change-email') }}" method="POST">
+                <form action="{{ route('admin.settings.change.email') }}" method="POST">
                     @csrf
                     <div class="card">
                         <div class="card-header">

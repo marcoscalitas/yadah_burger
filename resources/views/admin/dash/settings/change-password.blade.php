@@ -8,7 +8,7 @@
         'title' => 'Alterar senha ',
         'items' => [
             ['label' => 'Definições', 'url' => route('admin.settings.index')],
-            ['label' => 'Alterar senha', 'url' => route('admin.settings.change-password')],
+            ['label' => 'Alterar senha', 'url' => route('admin.settings.change.password')],
         ],
     ])
     <!-- [ breadcrumb ] end -->
@@ -28,7 +28,7 @@
                 @endif
 
                 <div class="tab-pane">
-                    <form action="{{ route('admin.settings.update-password') }}" method="POST">
+                    <form action="{{ route('admin.settings.update.password') }}" method="POST">
                         @csrf
 
                         <div class="card">
