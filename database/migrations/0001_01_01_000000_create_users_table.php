@@ -13,12 +13,23 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('fullname', 100);
+            $table->string('email', 100)->unique();
+            $table->string('phone', 9)->nullable();
+            $table->enum('gender', ['M', 'F'])->nullable();
+            $table->date('birthdate')->nullable();
+            $table->string('password', 255);
+            $table->timestamp('email_verified_at')->nullable(); // padrão Laravel
+            $table->enum('role', ['admin', 'staff'])->default('staff');
+            $table->string('image_url', 255)->nullable();
+            $table->enum('user_status', ['p', 'a', 'sp', 'd'])->default('p');
+            $table->boolean('is_online')->default(false);
+            $table->dateTime('last_login')->nullable();
+            $table->integer('failed_login_attempts')->default(0);
+            $table->dateTime('account_locked_until')->nullable();
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
