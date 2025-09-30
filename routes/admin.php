@@ -63,8 +63,3 @@ Route::middleware(['auth.admin'])->group(function () {
     Route::resource('/products', ProductController::class);
     Route::resource('/categories', CategoryController::class);
 });
-
-//Fallback for admin routes
-// Route::fallback(function () {
-//     return redirect()->route('404');
-// });
