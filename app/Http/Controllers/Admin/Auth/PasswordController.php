@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\Admin\Auth;
 
+use App\Models\User;
 use App\Helpers\Helper;
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+
 
 class PasswordController extends Controller
 {
@@ -50,7 +54,7 @@ class PasswordController extends Controller
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:8|confirmed'
         ]);
 
         $status = Password::reset(
@@ -63,7 +67,7 @@ class PasswordController extends Controller
             }
         );
 
-        return $status == Password::PASSWORD_RESET
+        return $status === Password::PASSWORD_RESET
             ? redirect()->route('admin.login')->with('success', __($status))
             : back()->withErrors(['email' => [__($status)]]);
     }
