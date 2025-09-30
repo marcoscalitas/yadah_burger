@@ -148,4 +148,13 @@ class User extends Authenticatable
         $avatar = ($this->gender === 'M' ? 'avatar-1.jpg' : 'avatar-3.jpg');
         return asset("admin/assets/images/user/{$avatar}");
     }
+
+    public function getGender(): string
+    {
+        return match ($this->gender) {
+            'm' => 'Male',
+            'f' => 'Female',
+            default => 'Não especificado',
+        };
+    }
 }
