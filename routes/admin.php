@@ -20,7 +20,7 @@ Route::middleware('guest.admin')->group(function () {
     Route::get('/login', [LoginController::class, 'login'])->name('login');
     Route::post('/login-attempt', [LoginController::class, 'loginAttempt'])->name('login.attempt');
 
-    Route::get('/code-verification', [LoginController::class, 'codeVerification'])->name('code-verification');
+    Route::get('/code-verification', [LoginController::class, 'codeVerification'])->name('code.verification');
 
     // Forget & reset password
     Route::get('/forgot-password', [PasswordController::class, 'showForgotForm'])->name('password.request');
@@ -49,11 +49,11 @@ Route::middleware(['auth.admin'])->group(function () {
     // Settings
     Route::prefix('settings')->name('settings.')->group(function () {
         Route::get('/', [SettingsController::class, 'index'])->name('index');
-        Route::get('/change-password', [SettingsController::class, 'changePassword'])->name('change-password');
-        Route::post('/change-password', [SettingsController::class, 'updatePassword'])->name('update-password');
-        Route::get('/change-email', [SettingsController::class, 'changeEmail'])->name('change-email');
-        Route::post('/change-email', [SettingsController::class, 'updateEmail'])->name('update-email');
-        Route::delete('/delete-account', [SettingsController::class, 'deleteAccount'])->name('delete-account');
+        Route::get('/change-password', [SettingsController::class, 'changePassword'])->name('change.password');
+        Route::post('/change-password', [SettingsController::class, 'updatePassword'])->name('update.password');
+        Route::get('/change-email', [SettingsController::class, 'changeEmail'])->name('change.email');
+        Route::post('/change-email', [SettingsController::class, 'updateEmail'])->name('update.email');
+        Route::delete('/delete-account', [SettingsController::class, 'deleteAccount'])->name('delete.account');
     });
     // Tables CRUD
     Route::resource('/users', UserController::class);
