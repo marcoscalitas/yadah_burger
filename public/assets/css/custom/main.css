@@ -1,0 +1,35 @@
+/* Profile */
+.status-indicator {
+    top: 115.5px;
+    right: 92px;
+}
+
+/* Input */
+.is-invalid {
+    border: 1px solid #dc3545;
+    background-color: #fff5f5;
+}
+
+.is-invalid:focus {
+    border-color: #b02a37;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.disabled-field {
+    background-color: #efefef;
+    color: #999;
+    border-color: #ddd;
+    cursor: not-allowed;
+    pointer-events: none;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Image */
+
+.round-image {
+    border-radius: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    /* garante que a imagem se comporte corretamente */
+}
