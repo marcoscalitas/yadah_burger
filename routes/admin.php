@@ -23,11 +23,13 @@ Route::middleware('guest.admin')->group(function () {
     Route::get('/code-verification', [LoginController::class, 'codeVerification'])->name('code.verification');
 
     // Forget & reset password
-    Route::get('/forgot-password', [PasswordController::class, 'showForgotForm'])->name('password.request');
-    Route::post('/forgot-password', [PasswordController::class, 'sendResetLink'])->name('password.email');
-    Route::get('/check-email', [PasswordController::class, 'showCheckEmail'])->name('check.email');
-    Route::get('/reset-password/{token}', [PasswordController::class, 'showResetForm'])->name('password.reset');
-    Route::post('/reset-password', [PasswordController::class, 'reset'])->name('password.update');
+    Route::controller(PasswordController::class)->group(function () {
+        Route::get('/forgot-password', 'showForgotForm')->name('password.request');
+        Route::post('/forgot-password', 'sendResetLink')->name('password.email');
+        Route::get('/check-email', 'showCheckEmail')->name('check.email');
+        Route::get('/reset-password/{token}', 'showResetForm')->name('password.reset');
+        Route::post('/reset-password', 'reset')->name('password.update');
+    });
 });
 
 // =======================================================================
@@ -40,20 +42,20 @@ Route::middleware(['auth.admin'])->group(function () {
     // Log out
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     // Profile
-    Route::prefix('profile')->name('profile.')->group(function () {
-        Route::get('/', [ProfileController::class, 'index'])->name('index');
-        Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
-        Route::put('/update', [ProfileController::class, 'update'])->name('update');
-        Route::post('/user-photo-upload', [ProfileController::class, 'uploadPhoto'])->name('user.photo.upload');
+    Route::prefix('profile')->name('profile.')->controller(ProfileController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/edit', 'edit')->name('edit');
+        Route::put('/update', 'update')->name('update');
+        Route::post('/user-photo-upload', 'uploadPhoto')->name('user.photo.upload');
     });
     // Settings
-    Route::prefix('settings')->name('settings.')->group(function () {
-        Route::get('/', [SettingsController::class, 'index'])->name('index');
-        Route::get('/change-password', [SettingsController::class, 'changePassword'])->name('change.password');
-        Route::post('/change-password', [SettingsController::class, 'updatePassword'])->name('update.password');
-        Route::get('/change-email', [SettingsController::class, 'changeEmail'])->name('change.email');
-        Route::post('/change-email', [SettingsController::class, 'updateEmail'])->name('update.email');
-        Route::delete('/delete-account', [SettingsController::class, 'deleteAccount'])->name('delete.account');
+    Route::prefix('settings')->name('settings.')->controller(SettingsController::class)->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/change-password', 'changePassword')->name('change.password');
+        Route::post('/change-password', 'updatePassword')->name('update.password');
+        Route::get('/change-email', 'changeEmail')->name('change.email');
+        Route::post('/change-email', 'updateEmail')->name('update.email');
+        Route::delete('/delete-account', 'deleteAccount')->name('delete.account');
     });
     // Tables CRUD
     Route::resource('/users', UserController::class);
