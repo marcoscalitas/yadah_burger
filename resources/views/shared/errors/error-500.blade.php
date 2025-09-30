@@ -8,7 +8,8 @@
             <div class="card error-card bg-transparent dark:bg-transparent shadow-none border-none">
                 <div class="card-body">
                     <div class="error-image-block">
-                        <img class="img-fluid mx-auto" src="../assets/images/pages/img-error-500.svg" alt="img" />
+                        <img class="img-fluid mx-auto" src="{{ asset('admin/assets/images/pages/img-error-500.svg') }}"
+                            alt="img" />
                     </div>
                     <div class="text-center">
                         <h1 class="mt-4"><b>Internal Server Error</b></h1>
