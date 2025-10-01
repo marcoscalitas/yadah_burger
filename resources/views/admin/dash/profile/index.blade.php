@@ -226,7 +226,7 @@
         $(document).ready(function() {
             // Image modal preview setup
             setupImagePreview('#profilePhotoInput', '#profilePreview', 'photoMessage');
-            uploadUserPhoto();
+            uploadUserPhoto('/admin/profile/user-photo-upload', '/admin/profile');
         });
     </script>
 @endsection

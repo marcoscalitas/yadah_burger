@@ -110,7 +110,7 @@ const showMessage = (message, alertId, isSuccess = false) => {
 const showError = (message, alertId) => showMessage(message, alertId, false);
 
 // Função de upload da foto
-function uploadUserPhoto() {
+function uploadUserPhoto(url, path) {
     const profileInput = document.getElementById('profilePhotoInput');
     const saveBtn = document.getElementById('savePhotoBtn');
     const profilePreview = document.getElementById('profilePreview');
@@ -132,13 +132,13 @@ function uploadUserPhoto() {
         formData.append('photo', file);
 
         try {
-            const response = await postData('/admin/profile/user-photo-upload', formData, true);
+            const response = await postData(url, formData, true);
             profilePreview.src = response.url;
             profileInput.value = '';
             showMessage(response.message || 'Foto enviada com sucesso!', alertId, true);
 
             setTimeout(() => {
-                window.location.href = '/admin/profile';
+                window.location.href = path;
             }, 2000);
 
         } catch (err) {
