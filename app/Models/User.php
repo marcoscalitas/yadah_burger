@@ -107,17 +107,6 @@ class User extends Authenticatable
         return Carbon::parse($this->birthdate)->age;
     }
 
-    public function statusShort(): ?string
-    {
-        return match ($this->user_status) {
-            'p' => 'Pendente',
-            'a' => 'Ativo',
-            'sp' => 'Suspenso',
-            'b' => 'Banido',
-            default => null,
-        };
-    }
-
     public function getFormattedDate(string $field, string $format = 'd-m-Y'): ?string
     {
         if (!isset($this->$field) || !$this->$field) {
@@ -152,9 +141,21 @@ class User extends Authenticatable
     public function getGender(): string
     {
         return match ($this->gender) {
-            'm' => 'Male',
-            'f' => 'Female',
+            'M' => 'Masculino',
+            'F' => 'Femenina',
             default => 'Não especificado',
         };
+    }
+
+    public function getStatusBadge(): string
+    {
+        $badges = [
+            'p'  => '<span class="badge text-primary-500 bg-primary-500/15">Pendente</span>',
+            'a'  => '<span class="badge text-success-500 bg-success-500/15">Ativado</span>',
+            'sp' => '<span class="badge text-warning-500 bg-warning-500/15">Suspenso</span>',
+            'd'  => '<span class="badge text-danger-500 bg-danger-500/15">Apagado</span>',
+        ];
+
+        return $badges[$this->user_status] ?? '<span class="badge text-dark bg-secondary-500/10">-</span>';
     }
 }

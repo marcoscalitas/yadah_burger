@@ -45,7 +45,7 @@
                                     <div class="text-center mt-3">
                                         <div class="chat-avtar inline-flex mx-auto justify-center">
                                             <img class="shrink-0 w-[90px] h-[90px] round-image"
-                                                src="{{ auth('admin')->user()->getImageUrl() }}" alt="user-image"
+                                                src="{{ $user->getImageUrl() }}" alt="user-image"
                                                 style="height: 100px; width: 100px;" />
                                             <span
                                                 class="absolute status-indicator block w-4 h-4 bg-green-500
@@ -65,9 +65,8 @@
                                                 <small class="text-muted">Sexo</small>
                                             </div>
                                             <div class="col-span-4">
-                                                <span class="badge text-success-500 bg-success-500/15">
-                                                    {{ $user->statusShort() }}
-                                                </span>
+                                                {!! $user->getStatusBadge() !!}
+
                                                 <small class="text-muted">Status</small>
                                             </div>
                                         </div>
@@ -112,7 +111,7 @@
                                                     <div class="preview-container"
                                                         style="width:135px;height:135px;border-radius:50%;overflow:hidden;position:relative;
                                     border:4px solid rgba(255,255,255,0.06);box-shadow:0 6px 18px rgba(0, 0, 0, 0.081);background:#f4f4f4;">
-                                                        <img id="profilePreview" src="{{ asset($user->getImageUrl()) }}"
+                                                        <img id="profilePreview" src="{{ $user->getImageUrl() }}"
                                                             alt="Foto actual"
                                                             style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
                                         object-position:center center;display:block;max-width:none;">
@@ -177,8 +176,7 @@
                                                 </div>
                                                 <div class="col-span-12 md:col-span-6">
                                                     <p class="mb-1 text-muted">Sexo</p>
-                                                    <p class="mb-0">
-                                                        {{ $user->gender === 'M' ? 'Masculino' : 'Feminino' }}</p>
+                                                    <p class="mb-0">{{ $user->getGender() }}</p>
                                                 </div>
                                             </div>
                                         </li>
