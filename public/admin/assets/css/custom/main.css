@@ -33,3 +33,7 @@
     display: block;
     /* garante que a imagem se comporte corretamente */
 }
+
+.card-body {
+    padding: 15px 24px;
+}
