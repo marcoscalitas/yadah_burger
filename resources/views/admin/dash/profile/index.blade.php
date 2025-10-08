@@ -18,17 +18,16 @@
     <!-- [ Main Content ] start -->
     <div class="grid grid-cols-12 gap-6">
         <!-- [ sample-page ] start -->
-        <div class="col-span-12">
-            <div class="tab-content">
-                @if (session()->has('success'))
-                    <div class="alert alert-success message-fade-out">
-                        <span>
-                            <i class="fas fa-check-circle fa-lg me-2"></i>
-                        </span>
-                        {{ session('success') }}
-                    </div>
-                @endif
-
+        <div class="tab-content">
+            @if (session()->has('success'))
+                <div class="alert alert-success message-fade-out">
+                    <span>
+                        <i class="fas fa-check-circle fa-lg me-2"></i>
+                    </span>
+                    {{ session('success') }}
+                </div>
+            @endif
+            <div class="col-span-12">
                 <div class="tab-pane">
                     <div class="grid grid-cols-12 gap-6">
                         <div class="col-span-12 lg:col-span-4 2xl:col-span-3">
