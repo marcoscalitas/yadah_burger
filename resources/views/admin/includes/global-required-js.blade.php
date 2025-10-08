@@ -77,6 +77,7 @@
             lengthMenu: [5, 10, 25, 50, 100],
             responsive: true,
             pagingType: "full_numbers",
+            order: [[0, 'asc']],
             language: {
                 decimal: ",",
                 thousands: ".",
