@@ -2,51 +2,14 @@
 
 @section('title', 'Utilizadores')
 
-@section('content')
-    <!-- [ breadcrumb ] start -->
-    @include('admin.dash.components.breadcrumb', [
-        'title' => 'Utilizadores',
-        'items' => [['label' => 'Utilizadores', 'url' => route('admin.users.index')]],
-    ])
-    <!-- [ breadcrumb ] end -->
+@section('breadcrumb')
+    @include('admin.dash.components.breadcrumb', getBreadcrumb('admin.users.index'))
+@endsection
 
+@section('content')
     <!-- [ Main Content ] start -->
     <div class="grid grid-cols-12 gap-x-6">
         <div class="col-span-12">
-            @if (session()->has('success'))
-                <div class="alert alert-success message-fade-out">
-                    <span>
-                        <i class="fas fa-check-circle fa-lg me-2"></i>
-                    </span>
-                    {{ session('success') }}
-                </div>
-            @endif
-            @if (session()->has('error'))
-                <div class="alert alert-danger message-fade-out">
-                    <span>
-                        <i class="fas fa-exclamation-circle fa-lg me-2"></i>
-                    </span>
-                    {{ session('error') }}
-                </div>
-            @endif
-
-            @if ($errors->any())
-                <div class="alert alert-danger message-fade-out">
-                    <span>
-                        <i class="fas fa-exclamation-circle fa-lg me-2"></i>
-                    </span>
-                    @if ($errors->has('error'))
-                        {{ $errors->first('error') }}
-                    @else
-                        <ul class="mb-0">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    @endif
-                </div>
-            @endif
-
             <div class="card table-card">
                 <div class="card-header">
                     <div class="sm:flex items-center justify-between">
@@ -201,4 +164,5 @@
             </div>
         </div>
     </div>
+    <!-- [ Main Content ] end -->
 @endsection

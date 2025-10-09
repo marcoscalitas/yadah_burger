@@ -2,14 +2,11 @@
 
 @section('title', 'Produtos')
 
-@section('content')
-    <!-- [ breadcrumb ] start -->
-    @include('admin.dash.components.breadcrumb', [
-        'title' => 'Produtos ',
-        'items' => [['label' => 'Produtos', 'url' => route('admin.products.index')]],
-    ])
-    <!-- [ breadcrumb ] end -->
+@section('breadcrumb')
+    @include('admin.dash.components.breadcrumb', getBreadcrumb('admin.products.index'))
+@endsection
 
+@section('content')
     <!-- [ Main Content ] start -->
     <div class="grid grid-cols-12 gap-x-6">
         <div class="col-span-12">

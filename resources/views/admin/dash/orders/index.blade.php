@@ -2,15 +2,11 @@
 
 @section('title', 'Pedidos')
 
+@section('breadcrumb')
+    @include('admin.dash.components.breadcrumb', getBreadcrumb('admin.orders.index'))
+@endsection
+
 @section('content')
-
-    <!-- [ breadcrumb ] start -->
-    @include('admin.dash.components.breadcrumb', [
-        'title' => 'Pedidos',
-        'items' => [['label' => 'Pedidos', 'url' => route('admin.orders.index')]],
-    ])
-    <!-- [ breadcrumb ] end -->
-
     <!-- [ Main Content ] start -->
     <div class="grid grid-cols-12 gap-x-6">
         <div class="col-span-12">

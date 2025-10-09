@@ -1,15 +1,12 @@
 @extends('admin.dash.layouts.main')
 
-@section('title', 'Categorías')
+@section('title', 'Categorias')
+
+@section('breadcrumb')
+    @include('admin.dash.components.breadcrumb', getBreadcrumb('admin.categories.index'))
+@endsection
 
 @section('content')
-    <!-- [ breadcrumb ] start -->
-    @include('admin.dash.components.breadcrumb', [
-        'title' => 'Categorías',
-        'items' => [['label' => 'Categorías', 'url' => route('admin.categories.index')]],
-    ])
-    <!-- [ breadcrumb ] end -->
-
     <!-- [ Main Content ] start -->
     <div class="grid grid-cols-12 gap-x-6">
         <div class="col-span-12">

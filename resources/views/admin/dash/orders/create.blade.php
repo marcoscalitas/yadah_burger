@@ -2,17 +2,11 @@
 
 @section('title', 'Adicionar Pedido')
 
-@section('content')
-    <!-- [ breadcrumb ] start -->
-    @include('admin.dash.components.breadcrumb', [
-        'title' => 'Adicionar Pedido',
-        'items' => [
-            ['label' => 'Pedidos', 'url' => route('admin.orders.index')],
-            ['label' => 'Adicionar Pedido', 'url' => route('admin.orders.create')],
-        ],
-    ])
-    <!-- [ breadcrumb ] end -->
+@section('breadcrumb')
+    @include('admin.dash.components.breadcrumb', getBreadcrumb('admin.orders.create'))
+@endsection
 
+@section('content')
     <!-- [ Main Content ] start -->
     <div class="grid grid-cols-12 gap-x-6">
         <div class="col-span-12">

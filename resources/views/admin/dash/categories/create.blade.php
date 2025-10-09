@@ -2,17 +2,11 @@
 
 @section('title', 'Adicionar Categoria')
 
-@section('content')
-    <!-- [ breadcrumb ] start -->
-    @include('admin.dash.components.breadcrumb', [
-        'title' => 'Adicionar Categoría',
-        'items' => [
-            ['label' => 'Categorías', 'url' => route('admin.categories.index')],
-            ['label' => 'Adicionar Categoría', 'url' => route('admin.categories.create')],
-        ],
-    ])
-    <!-- [ breadcrumb ] end -->
+@section('breadcrumb')
+    @include('admin.dash.components.breadcrumb', getBreadcrumb('admin.categories.create'))
+@endsection
 
+@section('content')
     <!-- [ Main Content ] start -->
     <div class="grid grid-cols-12 gap-x-6">
         <div class="col-span-12">

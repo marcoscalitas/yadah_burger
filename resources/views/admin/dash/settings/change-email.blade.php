@@ -1,37 +1,21 @@
 @extends('admin.dash.layouts.main')
 
-@section('title', 'Alterar Email')
+@section('title', 'Alterar E-mail')
 
 @section('custom-style')
     <!-- [css ] -->
     <link rel="stylesheet" href="{{ asset('admin/assets/css/plugins/animate.min.css') }}" />
 @endsection
 
-@section('content')
-    <!-- [ breadcrumb ] start -->
-    <!-- [ breadcrumb ] start -->
-    @include('admin.dash.components.breadcrumb', [
-        'title' => 'Alterar E-mail ',
-        'items' => [
-            ['label' => 'Definições', 'url' => route('admin.settings.index')],
-            ['label' => 'Alterar E-mail', 'url' => route('admin.settings.change.email')],
-        ],
-    ])
-    <!-- [ breadcrumb ] end -->
+@section('breadcrumb')
+    @include('admin.dash.components.breadcrumb', getBreadcrumb('admin.settings.change.email'))
+@endsection
 
+@section('content')
     <!-- [ Main Content ] start -->
     <div class="grid grid-cols-12 gap-6">
         <!-- [ sample-page ] start -->
         <div class="col-span-12">
-            @if (session()->has('success'))
-                <div class="alert alert-success message-fade-out">
-                    <span>
-                        <i class="fas fa-check-circle fa-lg me-2"></i>
-                    </span>
-                    {{ session('success') }}
-                </div>
-            @endif
-
             <div class="tab-pane">
                 <form action="{{ route('admin.settings.change.email') }}" method="POST">
                     @csrf
