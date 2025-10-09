@@ -37,17 +37,20 @@
     <!-- [ Main Content ] start -->
     <div class="pc-container">
         <div class="pc-content">
+            <!-- [ Email verification reminder ] start -->
             @if (session('email_verified') === false && is_null(auth('admin')->user()->email_verified_at))
                 <div class="alert alert-warning">
                     <i class="fas fa-exclamation-triangle me-2"></i>
                     O seu e-mail ainda não foi verificado. Verifique sua caixa de entrada.
                 </div>
             @endif
+            <!-- [ Email verification reminder ] end -->
 
             <!-- [ Breadcrumb automático ] start -->
-           @yield('breadcrumb')
+            @yield('breadcrumb')
+            <!-- [ Breadcrumb automático ] end -->
 
-            {{-- Messages success & errors --}}
+            <!-- [ Messages ] start -->
             @if (session()->has('success'))
                 <div class="alert alert-success message-fade-out">
                     <span>
@@ -56,14 +59,14 @@
                     {{ session('success') }}
                 </div>
             @endif
-            @if (session()->has('error'))
+            {{-- @if (session()->has('error'))
                 <div class="alert alert-danger message-fade-out">
                     <span>
                         <i class="fas fa-exclamation-circle fa-lg me-2"></i>
                     </span>
                     {{ session('error') }}
                 </div>
-            @endif
+            @endif --}}
             @if ($errors->any() && !$errors->has('error'))
                 <div class="alert alert-danger message-fade-out">
                     <span>
@@ -77,9 +80,11 @@
                     </ul>
                 </div>
             @endif
+            <!-- [ Messages ] end -->
 
-            {{-- Content --}}
+            <!-- [ Content ] start -->
             @yield('content')
+            <!-- [ Content ] end -->
         </div>
     </div>
     <!-- [ Main Content ] end -->
