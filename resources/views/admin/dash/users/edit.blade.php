@@ -2,24 +2,21 @@
 
 @section('title', 'Adicionar Utilizador')
 
-@section('custom-style')
-    <!-- [css ] -->
-    <link rel="stylesheet" href="{{ asset('admin/assets/css/plugins/uppy.min.css') }}" />
-@endsection
-
 @section('content')
     <!-- [ breadcrumb ] start -->
     @include('admin.dash.components.breadcrumb', [
-        'title' => 'Adicionar Utilizador',
+        'title' => 'Editar utilizador',
         'items' => [
             ['label' => 'Utilizadores', 'url' => route('admin.users.index')],
-            ['label' => 'Adicionar Utilizador', 'url' => route('admin.users.create')],
+            ['label' => $user->getShortName(), 'url' => route('admin.users.show', $user->id)],
+            ['label' => 'Editar Utilizador', 'url' => route('admin.users.edit', $user->id)],
         ],
     ])
     <!-- [ breadcrumb ] end -->
 
     <!-- [ Main Content ] start -->
     <div class="grid grid-cols-12 gap-6">
+        <!-- [ sample-page ] start -->
         <div class="col-span-12">
             @if (session()->has('success'))
                 <div class="alert alert-success message-fade-out">
@@ -29,6 +26,15 @@
                     {{ session('success') }}
                 </div>
             @endif
+            @if (session()->has('error'))
+                <div class="alert alert-danger message-fade-out">
+                    <span>
+                        <i class="fas fa-exclamation-circle fa-lg me-2"></i>
+                    </span>
+                    {{ session('error') }}
+                </div>
+            @endif
+
             @if ($errors->any() && !$errors->has('error'))
                 <div class="alert alert-danger message-fade-out">
                     <span>
@@ -42,15 +48,26 @@
                     </ul>
                 </div>
             @endif
+
+            @if ($errors->has('error'))
+                <div class="alert alert-danger message-fade-out">
+                    <span>
+                        <i class="fas fa-exclamation-circle fa-lg me-2"></i>
+                    </span>
+                    {{ $errors->first('error') }}
+                </div>
+            @endif
+
             <div class="tab-content">
-                <div class="tab-pane">
+                <div class="tab-pane" id="profile-2">
                     <div class="grid grid-cols-12 gap-6">
                         <div class="col-span-12">
-                            <form action="{{ route('admin.users.store') }}" method="POST" enctype="multipart/form-data">
+                            <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
                                 @csrf
+                                @method('PUT')
                                 <div class="card">
                                     <div class="card-header">
-                                        <h5>Adicionar Utilizador</h5>
+                                        <h5>Editar Utilizador</h5>
                                     </div>
                                     <div class="card-body">
                                         <div class="grid grid-cols-12 gap-6">
@@ -64,7 +81,10 @@
                                                     </label>
                                                     <input type="text"
                                                         class="form-control @error('fullname') is-invalid @enderror"
-                                                        name="fullname" value="{{ old('fullname') }}" />
+                                                        name="fullname" value="{{ old('fullname', $user->fullname) }}" />
+                                                    <small class="form-text text-muted">
+                                                        Utilizador: {{ $user->getShortName() }}
+                                                    </small>
                                                     @error('fullname')
                                                         <div class="text-danger d-flex align-items-center mt-1">
                                                             <i class="fas fa-exclamation-triangle me-1"></i> {{ $message }}
@@ -80,9 +100,9 @@
                                                         Email
                                                         <span class="text-danger">*</span>
                                                     </label>
-                                                    <input type="email"
+                                                    <input type="text"
                                                         class="form-control @error('email') is-invalid @enderror"
-                                                        name="email" value="{{ old('email') }}" />
+                                                        name="email" value="{{ old('email', $user->email) }}" />
                                                     @error('email')
                                                         <div class="text-danger d-flex align-items-center mt-1">
                                                             <i class="fas fa-exclamation-triangle me-1"></i> {{ $message }}
@@ -102,12 +122,14 @@
                                                         <span class="input-group-text">+244</span>
                                                         <input type="text"
                                                             class="form-control @error('phone') is-invalid @enderror"
-                                                            name="phone" value="{{ old('phone') }}" maxlength="11"
-                                                            id="phone-number" />
+                                                            name="phone"
+                                                            value="{{ old('phone', $user->getFormattedPhone(false)) }}"
+                                                            id="phone-number" maxlength="11" />
                                                     </div>
                                                     @error('phone')
                                                         <div class="text-danger d-flex align-items-center mt-1">
-                                                            <i class="fas fa-exclamation-triangle me-1"></i> {{ $message }}
+                                                            <i class="fas fa-exclamation-triangle me-1"></i>
+                                                            {{ $message }}
                                                         </div>
                                                     @enderror
                                                 </div>
@@ -119,12 +141,11 @@
                                                     <label class="form-label">Sexo</label>
                                                     <select class="form-select @error('gender') is-invalid @enderror"
                                                         name="gender">
-                                                        <option value="">Selecione</option>
                                                         <option value="M"
-                                                            {{ old('gender') == 'M' ? 'selected' : '' }}>
+                                                            {{ old('gender', $user->gender) == 'M' ? 'selected' : '' }}>
                                                             Masculino</option>
                                                         <option value="F"
-                                                            {{ old('gender') == 'F' ? 'selected' : '' }}>
+                                                            {{ old('gender', $user->gender) == 'F' ? 'selected' : '' }}>
                                                             Feminino</option>
                                                     </select>
                                                     @error('gender')
@@ -145,7 +166,8 @@
                                                     </label>
                                                     <input type="date"
                                                         class="form-control @error('birthdate') is-invalid @enderror"
-                                                        name="birthdate" value="{{ old('birthdate') }}" />
+                                                        name="birthdate"
+                                                        value="{{ old('birthdate', $user->birthdate) }}" />
                                                     @error('birthdate')
                                                         <div class="text-danger d-flex align-items-center mt-1">
                                                             <i class="fas fa-exclamation-triangle me-1"></i>
@@ -161,12 +183,11 @@
                                                     <label class="form-label">Função</label>
                                                     <select class="form-select @error('role') is-invalid @enderror"
                                                         name="role">
-                                                        <option value="">Selecione</option>
                                                         <option value="admin"
-                                                            {{ old('role') == 'admin' ? 'selected' : '' }}>
+                                                            {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>
                                                             Administrador</option>
                                                         <option value="staff"
-                                                            {{ old('role') == 'staff' ? 'selected' : '' }}>
+                                                            {{ old('role', $user->role) == 'staff' ? 'selected' : '' }}>
                                                             Funcionário</option>
                                                     </select>
                                                     @error('role')
@@ -178,79 +199,47 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Senha -->
+                                            <!-- Data de Criação -->
                                             <div class="col-span-12 sm:col-span-6">
                                                 <div class="mb-1">
                                                     <label class="form-label">
-                                                        Palavra-passe
+                                                        Data de Criação
                                                         <span class="text-danger">*</span>
                                                     </label>
-                                                    <input type="password"
-                                                        class="form-control @error('password') is-invalid @enderror"
-                                                        name="password" />
-                                                    @error('password')
-                                                        <div class="text-danger d-flex align-items-center mt-1">
-                                                            <i class="fas fa-exclamation-triangle me-1"></i>
-                                                            {{ $message }}
-                                                        </div>
-                                                    @enderror
+                                                    <input type="date" name="created_at"
+                                                        class="form-control disabled-field" disabled
+                                                        value="{{ old('role', $user->getFormattedDate('created_at', 'Y-m-d')) }}" />
                                                 </div>
                                             </div>
 
-                                            <!-- Confirmação de Senha -->
+                                            <!-- Data de Edição -->
                                             <div class="col-span-12 sm:col-span-6">
                                                 <div class="mb-1">
                                                     <label class="form-label">
-                                                        Confirmar Palavra-passe
+                                                        Data de Edição
                                                         <span class="text-danger">*</span>
                                                     </label>
-                                                    <input type="password"
-                                                        class="form-control @error('password_confirmation') is-invalid @enderror"
-                                                        name="password_confirmation" />
-                                                    @error('password_confirmation')
-                                                        <div class="text-danger d-flex align-items-center mt-1">
-                                                            <i class="fas fa-exclamation-triangle me-1"></i>
-                                                            {{ $message }}
-                                                        </div>
-                                                    @enderror
+                                                    <input type="date" name="updated_at"
+                                                        class="form-control disabled-field" disabled
+                                                        value="{{ old('role', $user->getFormattedDate('updated_at', 'Y-m-d')) }}" />
                                                 </div>
                                             </div>
 
-                                            <!-- User photo -->
-                                            <div class="col-span-12 sm:col-span-12">
-                                                <div class="mb-1">
-                                                    <label class="form-label">
-                                                        Escolher foto
-                                                        <span class="text-danger">*</span>
-                                                    </label>
-                                                    <input type="file"
-                                                        class="form-control @error('photo') is-invalid @enderror"
-                                                        name="photo" accept="image/*" />
-                                                    @error('photo')
-                                                        <div class="text-danger d-flex align-items-center mt-1">
-                                                            <i class="fas fa-exclamation-triangle me-1"></i>
-                                                            {{ $message }}
-                                                        </div>
-                                                    @enderror
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="col-span-12 text-right">
-                                    <button type="submit" class="btn btn-primary">Adicionar Utilizador</button>
+                                    <button type="submit" class="btn btn-primary">Salvar alterações</button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- [ sample-page ] end -->
         </div>
+        <!-- [ Main Content ] end -->
     </div>
-@endsection
-
-@section('custom-scripts')
-    <script>
-        $(document).ready(function() {});
-    </script>
+    <!-- [ Main Content ] end -->
 @endsection

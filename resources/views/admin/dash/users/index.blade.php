@@ -13,13 +13,45 @@
     <!-- [ Main Content ] start -->
     <div class="grid grid-cols-12 gap-x-6">
         <div class="col-span-12">
+            @if (session()->has('success'))
+                <div class="alert alert-success message-fade-out">
+                    <span>
+                        <i class="fas fa-check-circle fa-lg me-2"></i>
+                    </span>
+                    {{ session('success') }}
+                </div>
+            @endif
+            @if (session()->has('error'))
+                <div class="alert alert-danger message-fade-out">
+                    <span>
+                        <i class="fas fa-exclamation-circle fa-lg me-2"></i>
+                    </span>
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="alert alert-danger message-fade-out">
+                    <span>
+                        <i class="fas fa-exclamation-circle fa-lg me-2"></i>
+                    </span>
+                    @if ($errors->has('error'))
+                        {{ $errors->first('error') }}
+                    @else
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
+                </div>
+            @endif
+
             <div class="card table-card">
                 <div class="card-header">
                     <div class="sm:flex items-center justify-between">
                         <h5 class="mb-3 sm:mb-0">Lista de utilizadores</h5>
                         <div>
-                            <a href="../admins/course-teacher-apply.html" class="btn btn-outline-secondary mr-1">Apply
-                                Utilizadores</a>
                             <a href="{{ route('admin.users.create') }}" class="btn btn-primary">Adicionar Utilizador</a>
                         </div>
                     </div>
@@ -31,331 +63,135 @@
                                 <table class="table table-hover datatable-table" id="pc-dt-simple">
                                     <thead>
                                         <tr>
-                                            <th data-sortable="true" style="width: 22.605694564279553%;"><button
-                                                    class="datatable-sorter">NAME</button></th>
-                                            <th data-sortable="true" style="width: 18.809318377911993%;"><button
-                                                    class="datatable-sorter">DEPARTMENTS</button></th>
-                                            <th data-sortable="true" style="width: 15.875754961173424%;"><button
-                                                    class="datatable-sorter">QUALIFICATION</button></th>
-                                            <th data-sortable="true" style="width: 13.805004314063849%;"><button
-                                                    class="datatable-sorter">MOBILE</button></th>
-                                            <th data-sortable="true" style="width: 14.667817083692839%;"><button
-                                                    class="datatable-sorter">JOINING DATE</button></th>
-                                            <th data-sortable="true" style="width: 14.236410698878343%;"><button
-                                                    class="datatable-sorter">ACTION</button></th>
+                                            <th data-sortable="true" style="width: 6%;">
+                                                <button class="datatable-sorter">#</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 22.605694564279553%;">
+                                                <button class="datatable-sorter">Nome</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 18.809318377911993%;">
+                                                <button class="datatable-sorter">E-mail</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 18.809318377911993%;">
+                                                <button class="datatable-sorter">Telefone</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 15.875754961173424%;">
+                                                <button class="datatable-sorter">Sexo</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 13.805004314063849%;">
+                                                <button class="datatable-sorter">Função</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 14.667817083692839%;">
+                                                <button class="datatable-sorter">Estado</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 14.236410698878343%;">
+                                                <button class="datatable-sorter">ACTION</button>
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr data-index="0">
-                                            <td>
-                                                <div class="flex items-center w-44">
-                                                    <div class="shrink-0">
-                                                        <img src="{{ asset('admin/assets/images/user/avatar-1.jpg') }}"
-                                                            alt="user image" class="rounded-full w-10">
+                                        @forelse ($users as $index => $user)
+                                            <tr data-index="{{ $index }}" data-id="{{ $user->id }}">
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>
+                                                    <div class="flex items-center w-44">
+                                                        <div class="shrink-0">
+                                                            <img class="shrink-0 w-[100px] h-[100px] round-image"
+                                                                src="{{ $user->getImageUrl() }}" alt="user-image"
+                                                                style="height: 50px; width: 50px;" />
+                                                        </div>
+
+                                                        <div class="grow ltr:ml-3 rtl:mr-3">
+                                                            <h6 class="mb-0">{{ $user->getShortName() }}</h6>
+                                                        </div>
                                                     </div>
-                                                    <div class="grow ltr:ml-3 rtl:mr-3">
-                                                        <h6 class="mb-0">Airi Satou</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>Developer</td>
-                                            <td>B.COM., M.COM.</td>
-                                            <td>(123) 4567 890</td>
-                                            <td>2023/09/12</td>
-                                            <td>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-eye text-xl leading-none"></i>
-                                                </a>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-edit text-xl leading-none"></i>
-                                                </a>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-trash text-xl leading-none"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr data-index="1">
-                                            <td>
-                                                <div class="flex items-center w-44">
-                                                    <div class="shrink-0">
-                                                        <img src="{{ asset('admin/assets/images/user/avatar-2.jpg') }}"
-                                                            alt="user image" class="rounded-full w-10">
-                                                    </div>
-                                                    <div class="grow ltr:ml-3 rtl:mr-3">
-                                                        <h6 class="mb-0">Ashton Cox</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>Junior Technical</td>
-                                            <td>B.COM., M.COM.</td>
-                                            <td>(123) 4567 890</td>
-                                            <td>2023/12/24</td>
-                                            <td>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-eye text-xl leading-none"></i>
-                                                </a>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-edit text-xl leading-none"></i>
-                                                </a>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-trash text-xl leading-none"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr data-index="2">
-                                            <td>
-                                                <div class="flex items-center w-44">
-                                                    <div class="shrink-0">
-                                                        <img src="{{ asset('admin/assets/images/user/avatar-3.jpg') }}"
-                                                            alt="user image" class="rounded-full w-10">
-                                                    </div>
-                                                    <div class="grow ltr:ml-3 rtl:mr-3">
-                                                        <h6 class="mb-0">Bradley Greer</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>Sales Assistant</td>
-                                            <td>B.A, B.C.A</td>
-                                            <td>(123) 4567 890</td>
-                                            <td>2022/09/19</td>
-                                            <td>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-eye text-xl leading-none"></i>
-                                                </a>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-edit text-xl leading-none"></i>
-                                                </a>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-trash text-xl leading-none"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr data-index="3">
-                                            <td>
-                                                <div class="flex items-center w-44">
-                                                    <div class="shrink-0">
-                                                        <img src="{{ asset('admin/assets/images/user/avatar-4.jpg') }}"
-                                                            alt="user image" class="rounded-full w-10">
-                                                    </div>
-                                                    <div class="grow ltr:ml-3 rtl:mr-3">
-                                                        <h6 class="mb-0">Brielle Williamson</h6>
+                                                </td>
+                                                <td>{{ $user->email }}</td>
+                                                <td>{{ $user->getFormattedPhone() }}</td>
+                                                <td>{{ $user->getGender() }}</td>
+                                                <td>{{ $user->getRoleLabel() }}</td>
+                                                <td>{!! $user->getStatusBadge() !!}</td>
+                                                <td class="d-flex gap-2">
+                                                    {{-- Mostrar --}}
+                                                    <a href="{{ route('admin.users.show', $user->id) }}"
+                                                        class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
+                                                        <i class="ti ti-eye text-xl leading-none"></i>
+                                                    </a>
+
+                                                    {{-- Editar --}}
+                                                    <a href="{{ route('admin.users.edit', $user->id) }}"
+                                                        class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
+                                                        <i class="ti ti-edit text-xl leading-none"></i>
+                                                    </a>
+
+                                                    {{-- Excluir --}}
+                                                    <button type="button"
+                                                        class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
+                                                        data-pc-toggle="modal"
+                                                        data-pc-target="#deleteUserModal{{ $user->id }}"
+                                                        data-pc-animate="sticky-up">
+                                                        <i class="ti ti-trash text-xl leading-none"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+
+                                            <!-- Modal de Confirmação de Exclusão -->
+                                            <div id="deleteUserModal{{ $user->id }}" class="modal fade" tabindex="-1"
+                                                role="dialog" aria-labelledby="deleteUserModalLabel{{ $user->id }}"
+                                                aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                        <form method="POST"
+                                                            action="{{ route('admin.users.destroy', $user->id) }}">
+                                                            @csrf
+                                                            @method('DELETE')
+
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title font-semibold text-danger text-lg">
+                                                                    <i class="fas fa-user-times me-2"></i> Confirmar
+                                                                    exclusão
+                                                                </h5>
+                                                                <button type="button"
+                                                                    data-pc-modal-dismiss="#deleteUserModal{{ $user->id }}"
+                                                                    class="text-lg flex items-center justify-center rounded w-7 h-7 text-secondary-500 hover:bg-danger-500/10 hover:text-danger-500">
+                                                                    <i class="ti ti-x"></i>
+                                                                </button>
+                                                            </div>
+
+                                                            <div class="modal-body text-center">
+                                                                <p
+                                                                    class="text-base text-gray-600 font-medium max-w-[420px] mx-auto leading-relaxed">
+                                                                    Tem certeza de que deseja excluir o utilizador<br>
+                                                                    <strong
+                                                                        class="text-danger">“{{ $user->getShortName() }}”</strong>?
+                                                                    <br>Essa ação é <strong
+                                                                        class="text-danger">permanente</strong> e não poderá
+                                                                    ser desfeita.
+                                                                </p>
+                                                            </div>
+
+                                                            <div class="modal-footer flex justify-center gap-3 border-t">
+                                                                <button type="button"
+                                                                    data-pc-modal-dismiss="#deleteUserModal{{ $user->id }}"
+                                                                    class="btn btn-outline-secondary px-4">
+                                                                    Cancelar
+                                                                </button>
+                                                                <button type="submit" class="btn btn-danger px-5">
+                                                                    <i class="fas fa-trash-alt me-1"></i> Excluir
+                                                                    definitivamente
+                                                                </button>
+                                                            </div>
+                                                        </form>
                                                     </div>
                                                 </div>
-                                            </td>
-                                            <td>JavaScript Developer</td>
-                                            <td>B.A, B.C.A</td>
-                                            <td>(123) 4567 890</td>
-                                            <td>2022/08/22</td>
-                                            <td>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-eye text-xl leading-none"></i>
-                                                </a>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-edit text-xl leading-none"></i>
-                                                </a>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-trash text-xl leading-none"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr data-index="4">
-                                            <td>
-                                                <div class="flex items-center w-44">
-                                                    <div class="shrink-0">
-                                                        <img src="{{ asset('admin/assets/images/user/avatar-5.jpg') }}"
-                                                            alt="user image" class="rounded-full w-10">
-                                                    </div>
-                                                    <div class="grow ltr:ml-3 rtl:mr-3">
-                                                        <h6 class="mb-0">Airi Satou</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>Developer</td>
-                                            <td>B.COM., M.COM.</td>
-                                            <td>(123) 4567 890</td>
-                                            <td>2023/09/12</td>
-                                            <td>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-eye text-xl leading-none"></i>
-                                                </a>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-edit text-xl leading-none"></i>
-                                                </a>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-trash text-xl leading-none"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr data-index="5">
-                                            <td>
-                                                <div class="flex items-center w-44">
-                                                    <div class="shrink-0">
-                                                        <img src="{{ asset('admin/assets/images/user/avatar-6.jpg') }}"
-                                                            alt="user image" class="rounded-full w-10">
-                                                    </div>
-                                                    <div class="grow ltr:ml-3 rtl:mr-3">
-                                                        <h6 class="mb-0">Ashton Cox</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>Junior Technical</td>
-                                            <td>B.COM., M.COM.</td>
-                                            <td>(123) 4567 890</td>
-                                            <td>2023/12/24</td>
-                                            <td>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-eye text-xl leading-none"></i>
-                                                </a>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-edit text-xl leading-none"></i>
-                                                </a>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-trash text-xl leading-none"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr data-index="6">
-                                            <td>
-                                                <div class="flex items-center w-44">
-                                                    <div class="shrink-0">
-                                                        <img src="{{ asset('admin/assets/images/user/avatar-7.jpg') }}"
-                                                            alt="user image" class="rounded-full w-10">
-                                                    </div>
-                                                    <div class="grow ltr:ml-3 rtl:mr-3">
-                                                        <h6 class="mb-0">Bradley Greer</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>Sales Assistant</td>
-                                            <td>B.A, B.C.A</td>
-                                            <td>(123) 4567 890</td>
-                                            <td>2022/09/19</td>
-                                            <td>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-eye text-xl leading-none"></i>
-                                                </a>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-edit text-xl leading-none"></i>
-                                                </a>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-trash text-xl leading-none"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr data-index="7">
-                                            <td>
-                                                <div class="flex items-center w-44">
-                                                    <div class="shrink-0">
-                                                        <img src="{{ asset('admin/assets/images/user/avatar-8.jpg') }}"
-                                                            alt="user image" class="rounded-full w-10">
-                                                    </div>
-                                                    <div class="grow ltr:ml-3 rtl:mr-3">
-                                                        <h6 class="mb-0">Brielle Williamson</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>JavaScript Developer</td>
-                                            <td>B.A, B.C.A</td>
-                                            <td>(123) 4567 890</td>
-                                            <td>2022/08/22</td>
-                                            <td>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-eye text-xl leading-none"></i>
-                                                </a>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-edit text-xl leading-none"></i>
-                                                </a>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-trash text-xl leading-none"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr data-index="8">
-                                            <td>
-                                                <div class="flex items-center w-44">
-                                                    <div class="shrink-0">
-                                                        <img src="{{ asset('admin/assets/images/user/avatar-9.jpg') }}"
-                                                            alt="user image" class="rounded-full w-10">
-                                                    </div>
-                                                    <div class="grow ltr:ml-3 rtl:mr-3">
-                                                        <h6 class="mb-0">Brielle Williamson</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>JavaScript Developer</td>
-                                            <td>B.A, B.C.A</td>
-                                            <td>(123) 4567 890</td>
-                                            <td>2022/08/22</td>
-                                            <td>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-eye text-xl leading-none"></i>
-                                                </a>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-edit text-xl leading-none"></i>
-                                                </a>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-trash text-xl leading-none"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        <tr data-index="9">
-                                            <td>
-                                                <div class="flex items-center w-44">
-                                                    <div class="shrink-0">
-                                                        <img src="{{ asset('admin/assets/images/user/avatar-10.jpg') }}"
-                                                            alt="user image" class="rounded-full w-10">
-                                                    </div>
-                                                    <div class="grow ltr:ml-3 rtl:mr-3">
-                                                        <h6 class="mb-0">Airi Satou</h6>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>Developer</td>
-                                            <td>B.COM., M.COM.</td>
-                                            <td>(123) 4567 890</td>
-                                            <td>2023/09/12</td>
-                                            <td>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-eye text-xl leading-none"></i>
-                                                </a>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-edit text-xl leading-none"></i>
-                                                </a>
-                                                <a href="#"
-                                                    class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                    <i class="ti ti-trash text-xl leading-none"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
+                                            </div>
+                                        @empty
+                                            <tr>
+                                                <td colspan="8" class="text-center text-muted">
+                                                    Nenhum utilizador encontrado.
+                                                </td>
+                                            </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>

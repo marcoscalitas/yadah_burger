@@ -62,4 +62,8 @@ Route::middleware(['auth.admin'])->group(function () {
     Route::resource('/orders', OrderController::class);
     Route::resource('/products', ProductController::class);
     Route::resource('/categories', CategoryController::class);
+
+    // Utils
+    Route::post('/users/{id}/update-photo', [UserController::class, 'uploadPhoto'])->name('users.update.photo');
 });
+
