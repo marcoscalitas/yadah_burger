@@ -42,6 +42,16 @@
                     </a>
                 </li>
                 <li class="pc-item">
+                    <a href="{{ route('admin.users.index') }}" class="pc-link">
+                        <span class="pc-micon">
+                            <svg class="pc-icon">
+                                <use xlink:href="#custom-user"></use>
+                            </svg>
+                        </span>
+                        <span class="pc-mtext" data-i18n="Utilizadores">Utilizadores</span>
+                    </a>
+                </li>
+                <li class="pc-item">
                     <a href="{{ route('admin.orders.index') }}" class="pc-link">
                         <span class="pc-micon">
                             <svg class="pc-icon">
@@ -50,16 +60,6 @@
                         </span>
                         <span class="pc-mtext" data-i18n="Pedidos">Pedidos</span>
 
-                    </a>
-                </li>
-                <li class="pc-item">
-                    <a href="{{ route('admin.users.index') }}" class="pc-link">
-                        <span class="pc-micon">
-                            <svg class="pc-icon">
-                                <use xlink:href="#custom-user"></use>
-                            </svg>
-                        </span>
-                        <span class="pc-mtext" data-i18n="Utilizadores">Utilizadores</span>
                     </a>
                 </li>
                 <li class="pc-item">
