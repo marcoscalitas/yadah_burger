@@ -37,7 +37,7 @@ class CategoryController extends Controller
             return abort(403, 'Acesso negado. Apenas administradores podem criar categorias.');
         }
 
-        $currentUser = getCurrentUser();
+        $currentUser = getCurrentUser('admin');
         $validated = $request->validate([
             'name'  => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -80,7 +80,7 @@ class CategoryController extends Controller
             return abort(403, 'Acesso negado. Apenas administradores podem editar categorias.');
         }
 
-        $currentUser = getCurrentUser();
+        $currentUser = getCurrentUser('admin');
         $category = Category::findOrFail($id);
         $validated = $request->validate([
             'name'  => 'required|string|max:255',
@@ -115,7 +115,7 @@ class CategoryController extends Controller
             return abort(403, 'Acesso negado. Apenas administradores podem apagar categorias.');
         }
 
-        $currentUser = getCurrentUser();
+        $currentUser = getCurrentUser('admin');
         $category = Category::findOrFail($id);
         $category->delete();
 

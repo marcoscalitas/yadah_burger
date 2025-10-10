@@ -31,7 +31,7 @@ class UserController extends Controller
             'phone' => preg_replace('/\D/', '', $request->input('phone'))
         ]);
 
-        $currentUser = getCurrentUser();
+        $currentUser = getCurrentUser('admin');
         $validated = $request->validate([
             'fullname'  => 'required|string|max:255',
             'email'     => 'required|email|max:255|unique:users,email',
@@ -77,7 +77,7 @@ class UserController extends Controller
 
     public function update(Request $request, string $id)
     {
-        $currentUser = getCurrentUser();
+        $currentUser = getCurrentUser('admin');
         $user = User::findOrFail($id);
 
         $request->merge([
@@ -132,7 +132,7 @@ class UserController extends Controller
 
     public function destroy(string $id)
     {
-        $currentUser = getCurrentUser();
+        $currentUser = getCurrentUser('admin');
         $user = User::findOrFail($id);
 
         if ($currentUser->id == $user->id) {

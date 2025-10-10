@@ -17,12 +17,12 @@
                 <div class="card-body !p-5">
                     <div class="flex items-center">
                         <img class="shrink-0 w-[55px] h-[55px] round-image"
-                            src="{{ auth('admin')->user()->getImageUrl() }}" alt="user-image" />
+                            src="{{ getCurrentUser('admin')->getImageUrl() }}" alt="user-image" />
                         <div class="ml-4 mr-2 grow">
-                            <h6 class="mb-0" data-i18n="{{ auth('admin')->user()->getShortName() }} ">
-                                {{ auth('admin')->user()->getShortName() }}
+                            <h6 class="mb-0" data-i18n="{{ getCurrentUser('admin')->getShortName() }} ">
+                                {{ getCurrentUser('admin')->getShortName() }}
                             </h6>
-                            <small>{{ auth('admin')->user()->getRoleLabel() }}</small>
+                            <small>{{ getCurrentUser('admin')->getRoleLabel() }}</small>
                         </div>
                     </div>
                 </div>

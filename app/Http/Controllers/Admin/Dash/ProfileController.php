@@ -32,7 +32,7 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
-        $currentUser = auth('admin')->user();
+        $currentUser = getCurrentUser('admin');
         $request->merge(['phone' => preg_replace('/\D/', '', $request->input('phone'))]);
 
         $data = $request->validate([
@@ -76,7 +76,7 @@ class ProfileController extends Controller
             ])->upload($request->file('photo'));
 
             // Salva o caminho da foto no usuário (usando o guard correto)
-            $user = auth('admin')->user();
+            $user = getCurrentUser('admin');
             $user->image_url = $fileData['path'];
             $user->save();
 

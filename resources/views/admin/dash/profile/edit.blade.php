@@ -28,9 +28,9 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <input type="text" class="form-control @error('fullname') is-invalid @enderror"
-                                        name="fullname" value="{{ old('fullname', auth('admin')->user()->fullname) }}" />
+                                        name="fullname" value="{{ old('fullname', getCurrentUser('admin')->fullname) }}" />
                                     <small class="form-text text-muted">
-                                        Utilizador: {{ auth('admin')->user()->getShortName() }}
+                                        Utilizador: {{ getCurrentUser('admin')->getShortName() }}
                                     </small>
                                     @error('fullname')
                                         <div class="text-danger d-flex align-items-center mt-1">
@@ -48,7 +48,7 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <input type="text" class="form-control @error('email') is-invalid @enderror"
-                                        name="email" value="{{ old('email', auth('admin')->user()->email) }}" />
+                                        name="email" value="{{ old('email', getCurrentUser('admin')->email) }}" />
                                     @error('email')
                                         <div class="text-danger d-flex align-items-center mt-1">
                                             <i class="fas fa-exclamation-triangle me-1"></i> {{ $message }}
@@ -68,7 +68,7 @@
                                         <span class="input-group-text">+244</span>
                                         <input type="text" class="form-control @error('phone') is-invalid @enderror"
                                             name="phone"
-                                            value="{{ old('phone', auth('admin')->user()->getFormattedPhone(false)) }}"
+                                            value="{{ old('phone', getCurrentUser('admin')->getFormattedPhone(false)) }}"
                                             id="phone-number" maxlength="11" />
                                     </div>
                                     @error('phone')
@@ -85,10 +85,10 @@
                                     <label class="form-label">Sexo</label>
                                     <select class="form-select @error('gender') is-invalid @enderror" name="gender">
                                         <option value="M"
-                                            {{ old('gender', auth('admin')->user()->gender) == 'M' ? 'selected' : '' }}>
+                                            {{ old('gender', getCurrentUser('admin')->gender) == 'M' ? 'selected' : '' }}>
                                             Masculino</option>
                                         <option value="F"
-                                            {{ old('gender', auth('admin')->user()->gender) == 'F' ? 'selected' : '' }}>
+                                            {{ old('gender', getCurrentUser('admin')->gender) == 'F' ? 'selected' : '' }}>
                                             Feminino</option>
                                     </select>
                                     @error('gender')
@@ -109,7 +109,7 @@
                                     </label>
                                     <input type="date" class="form-control @error('birthdate') is-invalid @enderror"
                                         name="birthdate"
-                                        value="{{ old('birthdate', auth('admin')->user()->birthdate) }}" />
+                                        value="{{ old('birthdate', getCurrentUser('admin')->birthdate) }}" />
                                     @error('birthdate')
                                         <div class="text-danger d-flex align-items-center mt-1">
                                             <i class="fas fa-exclamation-triangle me-1"></i>
@@ -124,15 +124,15 @@
                                 <div class="mb-1">
                                     <label class="form-label">Função</label>
                                     <select
-                                        class="form-select @if (auth('admin')->user()->role == 'staff') disabled-field @endif
+                                        class="form-select @if (getCurrentUser('admin')->role == 'staff') disabled-field @endif
                                                         @error('role') is-invalid @enderror"
                                         name="role">
 
                                         <option value="admin"
-                                            {{ old('role', auth('admin')->user()->role) == 'admin' ? 'selected' : '' }}>
+                                            {{ old('role', getCurrentUser('admin')->role) == 'admin' ? 'selected' : '' }}>
                                             Administrador</option>
                                         <option value="staff"
-                                            {{ old('role', auth('admin')->user()->role) == 'staff' ? 'selected' : '' }}>
+                                            {{ old('role', getCurrentUser('admin')->role) == 'staff' ? 'selected' : '' }}>
                                             Funcionário</option>
                                     </select>
                                     @error('role')
@@ -152,7 +152,7 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <input type="date" name="created_at" class="form-control disabled-field" disabled
-                                        value="{{ old('role', auth('admin')->user()->getFormattedDate('created_at', 'Y-m-d')) }}" />
+                                        value="{{ old('role', getCurrentUser('admin')->getFormattedDate('created_at', 'Y-m-d')) }}" />
                                 </div>
                             </div>
 
@@ -164,7 +164,7 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <input type="date" name="updated_at" class="form-control disabled-field" disabled
-                                        value="{{ old('role', auth('admin')->user()->getFormattedDate('updated_at', 'Y-m-d')) }}" />
+                                        value="{{ old('role', getCurrentUser('admin')->getFormattedDate('updated_at', 'Y-m-d')) }}" />
                                 </div>
                             </div>
 

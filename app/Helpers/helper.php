@@ -83,9 +83,9 @@ if (!function_exists('getStatusBadge')) {
 
 // Get current User
 if (!function_exists('getCurrentUser')) {
-    function getCurrentUser()
+    function getCurrentUser($role = '')
     {
-        $user = auth('admin')->user() ?? auth()->user();
+        $user = auth($role)->user() ?? auth()->user();
         return $user;
     }
 }
@@ -94,7 +94,7 @@ if (!function_exists('getCurrentUser')) {
 if (!function_exists('isAdmin')) {
     function isAdmin(): bool
     {
-        $user = getCurrentUser();
+        $user = getCurrentUser('admin');
         return $user && $user->role === 'admin';
     }
 }

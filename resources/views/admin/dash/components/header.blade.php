@@ -224,7 +224,7 @@
                         href="course-dashboard.html#" role="button" aria-haspopup="false"
                         data-pc-auto-close="outside" aria-expanded="false">
                         <img class="shrink-0 w-[45px] h-[45px] round-image"
-                            src="{{ auth('admin')->user()->getImageUrl() }}" alt="user-image" />
+                            src="{{ getCurrentUser('admin')->getImageUrl() }}" alt="user-image" />
                     </a>
                     <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown p-2">
                         <div class="dropdown-header flex items-center justify-between py-4 px-5">
@@ -236,11 +236,11 @@
                                 <div class="flex mb-1 items-center">
                                     <div class="shrink-0">
                                         <img class="shrink-0 w-[45px] h-[45px] round-image"
-                                            src="{{ auth('admin')->user()->getImageUrl() }}" alt="user-image" />
+                                            src="{{ getCurrentUser('admin')->getImageUrl() }}" alt="user-image" />
                                     </div>
                                     <div class="grow ms-3">
-                                        <h6 class="mb-1"> {{ auth('admin')->user()->getShortName() }} 🖖</h6>
-                                        <span> {{ auth('admin')->user()->email }}</span>
+                                        <h6 class="mb-1"> {{ getCurrentUser('admin')->getShortName() }} 🖖</h6>
+                                        <span> {{ getCurrentUser('admin')->email }}</span>
                                     </div>
                                 </div>
                                 <hr class="border-secondary-500/10 my-4" />

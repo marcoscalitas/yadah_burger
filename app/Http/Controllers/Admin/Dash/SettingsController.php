@@ -48,7 +48,7 @@ class SettingsController extends Controller
             'password_confirmation.required' => 'O campo confirmar senha é obrigatório.',
         ]);
 
-        $user = auth('admin')->user();
+        $user = getCurrentUser('admin');
         if (!Hash::check($request->current_password, $user->password)) {
             return back()->withErrors(['current_password' => 'Senha atual incorreta'])->withInput();
         }
@@ -66,7 +66,7 @@ class SettingsController extends Controller
 
     public function updateEmail(Request $request)
     {
-        $user = auth('admin')->user();
+        $user = getCurrentUser('admin');
 
         $request->validate([
             'current_password' => ['required'],
