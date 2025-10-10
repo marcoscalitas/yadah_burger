@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Http\Request;
+use App\Services\UploadService;
+
 if (!function_exists('getBreadcrumb')) {
     /**
      * Retorna o breadcrumb configurado com as rotas resolvidas.
@@ -42,15 +45,15 @@ if (!function_exists('getBreadcrumb')) {
 
 // handlePhotoUpload
 if (!function_exists('handlePhotoUpload')) {
-    function handlePhotoUpload(Request $request, UploadService $uploader): string
+    function handlePhotoUpload(Request $request, string $folder, string $field): string
     {
         try {
-            $fileData = $uploader->configure([
+            $fileData = (new UploadService)->configure([
                 'mimes' => ['jpg', 'jpeg', 'png'],
                 'maxSizeMB' => 3,
-                'folder' => 'admin/users/profile_photos',
+                'folder' => $folder,
                 'disk' => 'public'
-            ])->upload($request->file('photo'));
+            ])->upload($request->file($field));
 
             return $fileData['path'];
         } catch (\Throwable $e) {
@@ -75,5 +78,14 @@ if (!function_exists('getStatusBadge')) {
         ];
 
         return $badges[$status] ?? $badge('dark', '-');
+    }
+}
+
+// isAdmin
+if (!function_exists('isAdmin')) {
+    function isAdmin(): bool
+    {
+        $user = auth('admin')->user() ?? auth()->user();
+        return $user && $user->role === 'admin';
     }
 }
