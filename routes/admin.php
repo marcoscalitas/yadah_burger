@@ -61,9 +61,8 @@ Route::middleware(['auth.admin'])->group(function () {
     Route::resource('/users', UserController::class);
     Route::resource('/orders', OrderController::class);
     Route::resource('/products', ProductController::class);
-    Route::resource('/categories', CategoryController::class);
+    Route::resource('/categories', CategoryController::class)->except(['show']);
 
     // Utils
     Route::post('/users/{id}/update-photo', [UserController::class, 'uploadPhoto'])->name('users.update.photo');
 });
-

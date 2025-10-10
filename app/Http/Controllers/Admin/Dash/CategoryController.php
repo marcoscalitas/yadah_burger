@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin\Dash;
 
-use App\Http\Controllers\Controller;
+use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
@@ -14,7 +16,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return view(self::ADMIN_DASH_CATEGORIES . 'index');
+        $categories = Category::orderBy('id', 'desc')->get();
+        return view(self::ADMIN_DASH_CATEGORIES . 'index', compact('categories'));
     }
 
     /**
@@ -30,15 +33,32 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        if (!isAdmin()) {
+            return abort(403, 'Acesso negado. Apenas administradores podem criar categorias.');
+        }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        $validated = $request->validate([
+            'name'  => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'image'     => 'nullable|image|mimes:jpeg,png,jpg|max:3072',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $validated['image_url'] = handlePhotoUpload($request, 'admin/categories/images', 'image');
+        }
+
+        unset($validated['image']);
+
+        $category = Category::create($validated);
+
+        Log::info('Categoria criada com sucesso', [
+            'category_id'   => $category->id,
+            'category_name' => $category->name,
+            'created_by' => auth('admin')->id() ?? auth()->id(),
+        ]);
+
+        return redirect()->route('admin.categories.index')
+            ->with('success', 'Categoria criada com sucesso.');
     }
 
     /**
@@ -46,7 +66,8 @@ class CategoryController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $category = Category::findOrFail($id);
+        return view(self::ADMIN_DASH_CATEGORIES . 'edit', compact('category'));
     }
 
     /**
@@ -54,7 +75,35 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        if (!isAdmin()) {
+            return abort(403, 'Acesso negado. Apenas administradores podem editar categorias.');
+        }
+
+        $category = Category::findOrFail($id);
+        $currentUserId = auth('admin')->id() ?? auth()->id();
+
+        $validated = $request->validate([
+            'name'  => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'image'     => 'nullable|image|mimes:jpeg,png,jpg|max:3072',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $validated['image_url'] = handlePhotoUpload($request, 'admin/categories/images', 'image');
+        }
+
+        unset($validated['image']);
+
+        $category->update($validated);
+
+        Log::info('Categoria editada com sucesso', [
+            'category_id'   => $category->id,
+            'category_name' => $category->name,
+            'updated_by' => $currentUserId,
+        ]);
+
+        return redirect()->route('admin.categories.index')
+            ->with('success', 'Categoria editada com sucesso.');
     }
 
     /**
@@ -62,6 +111,20 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        if (!isAdmin()) {
+            return abort(403, 'Acesso negado. Apenas administradores podem apagar categorias.');
+        }
+
+        $category = Category::findOrFail($id);
+        $category->delete();
+
+        Log::info('Categoria apagada com sucesso', [
+            'category_id'   => $category->id,
+            'category_name' => $category->name,
+            'deleted_by' => auth('admin')->id() ?? auth()->id(),
+        ]);
+
+        return redirect()->route('admin.categories.index')
+            ->with('success', 'Categoria apagada com sucesso.');
     }
 }

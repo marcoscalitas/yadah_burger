@@ -84,6 +84,14 @@ return [
         ],
     ],
 
+    'admin.categories.edit' => [
+        'title' => 'Editar Categoria',
+        'items' => [
+            ['label' => 'Categorias', 'route' => 'admin.categories.index'],
+            // O nome da categoria e editar serão adicionados dinamicamente na view
+        ],
+    ],
+
     // Pedidos
     'admin.orders.index' => [
         'title' => 'Pedidos',

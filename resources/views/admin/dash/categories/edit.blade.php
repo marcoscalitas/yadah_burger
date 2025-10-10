@@ -3,15 +3,21 @@
 @section('title', 'Adicionar Categoria')
 
 @section('breadcrumb')
-    @include('admin.dash.components.breadcrumb', getBreadcrumb('admin.categories.create'))
+    @include(
+        'admin.dash.components.breadcrumb',
+        getBreadcrumb(
+            'admin.categories.edit',
+            [['label' => 'Editar Categoria', 'url' => route('admin.categories.edit', $category->id)]],
+            'Editar categoria'))
 @endsection
 
 @section('content')
     <!-- [ Main Content ] start -->
     <div class="grid grid-cols-12 gap-x-6">
         <div class="col-span-12">
-            <form action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.categories.update', $category->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                @method('PUT')
                 <div class="card">
                     <div class="card-header">
                         <h5>Adicionar Categoria</h5>
@@ -27,7 +33,7 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                        name="name" value="{{ old('name') }}" />
+                                        name="name" value="{{ old('name', $category->name) }}" />
                                     @error('name')
                                         <div class="text-danger d-flex align-items-center mt-1">
                                             <i class="fas fa-exclamation-triangle me-1"></i> {{ $message }}
@@ -42,7 +48,7 @@
                                     <label class="form-label">
                                         Descrição
                                     </label>
-                                    <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="3">{{ old('description') }}</textarea>
+                                    <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="3">{{ old('description', $category->description) }}</textarea>
                                     @error('description')
                                         <div class="text-danger d-flex align-items-center mt-1">
                                             <i class="fas fa-exclamation-triangle me-1"></i>
@@ -51,7 +57,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            
+
                             <!-- User image -->
                             <div class="col-span-12 sm:col-span-12">
                                 <div class="mb-1">
@@ -72,7 +78,7 @@
                         </div>
                     </div>
                     <div class="col-span-12 text-right">
-                        <button type="submit" class="btn btn-primary">Adicionar Categoría</button>
+                        <button type="submit" class="btn btn-primary">Editar Categoria</button>
                     </div>
             </form>
         </div>
