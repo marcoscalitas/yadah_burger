@@ -48,7 +48,7 @@
                                 <small class="text-muted">Sexo</small>
                             </div>
                             <div class="col-span-4">
-                                {!! $user->getStatusBadge() !!}
+                                {!! getStatusBadge($user->user_status) !!}
                                 <small class="text-muted">Status</small>
                             </div>
                         </div>
