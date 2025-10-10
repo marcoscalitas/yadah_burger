@@ -74,7 +74,7 @@ class LoginController extends Controller
 
     public function loginAttempt(Request $request)
     {
-        $auth = auth()->guard('admin');
+        $auth = auth('admin');
         $this->validateLogin($request);
 
         $user = User::where('email', $request->email)->first();
@@ -109,7 +109,7 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
-        $auth = auth()->guard('admin');
+        $auth = auth('admin');
         $user = $auth->user();
 
         if ($user) {
