@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name', 100);
             $table->text('description')->nullable();
             $table->string('image_url', 255)->nullable();
-            $table->enum('category_status', ['active','inactive'])->default('active');
+            $table->enum('category_status', ['a','i'])->default('a');
             $table->timestamps();
         });
     }
