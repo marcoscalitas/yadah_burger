@@ -37,6 +37,7 @@ class CategoryController extends Controller
             return abort(403, 'Acesso negado. Apenas administradores podem criar categorias.');
         }
 
+        $currentUser = getCurrentUser();
         $validated = $request->validate([
             'name'  => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -54,7 +55,7 @@ class CategoryController extends Controller
         Log::info('Categoria criada com sucesso', [
             'category_id'   => $category->id,
             'category_name' => $category->name,
-            'created_by' => auth('admin')->id() ?? auth()->id(),
+            'created_by' => $currentUser->id,
         ]);
 
         return redirect()->route('admin.categories.index')
@@ -79,9 +80,8 @@ class CategoryController extends Controller
             return abort(403, 'Acesso negado. Apenas administradores podem editar categorias.');
         }
 
+        $currentUser = getCurrentUser();
         $category = Category::findOrFail($id);
-        $currentUserId = auth('admin')->id() ?? auth()->id();
-
         $validated = $request->validate([
             'name'  => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -99,7 +99,7 @@ class CategoryController extends Controller
         Log::info('Categoria editada com sucesso', [
             'category_id'   => $category->id,
             'category_name' => $category->name,
-            'updated_by' => $currentUserId,
+            'updated_by' => $currentUser->id,
         ]);
 
         return redirect()->route('admin.categories.index')
@@ -115,13 +115,14 @@ class CategoryController extends Controller
             return abort(403, 'Acesso negado. Apenas administradores podem apagar categorias.');
         }
 
+        $currentUser = getCurrentUser();
         $category = Category::findOrFail($id);
         $category->delete();
 
         Log::info('Categoria apagada com sucesso', [
             'category_id'   => $category->id,
             'category_name' => $category->name,
-            'deleted_by' => auth('admin')->id() ?? auth()->id(),
+            'deleted_by' => $currentUser->id,
         ]);
 
         return redirect()->route('admin.categories.index')

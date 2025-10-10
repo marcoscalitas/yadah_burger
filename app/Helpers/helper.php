@@ -81,11 +81,20 @@ if (!function_exists('getStatusBadge')) {
     }
 }
 
+// Get current User
+if (!function_exists('getCurrentUser')) {
+    function getCurrentUser()
+    {
+        $user = auth('admin')->user() ?? auth()->user();
+        return $user;
+    }
+}
+
 // isAdmin
 if (!function_exists('isAdmin')) {
     function isAdmin(): bool
     {
-        $user = auth('admin')->user() ?? auth()->user();
+        $user = getCurrentUser();
         return $user && $user->role === 'admin';
     }
 }

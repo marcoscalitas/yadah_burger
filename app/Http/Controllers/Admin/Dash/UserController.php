@@ -31,6 +31,7 @@ class UserController extends Controller
             'phone' => preg_replace('/\D/', '', $request->input('phone'))
         ]);
 
+        $currentUser = getCurrentUser();
         $validated = $request->validate([
             'fullname'  => 'required|string|max:255',
             'email'     => 'required|email|max:255|unique:users,email',
@@ -55,7 +56,7 @@ class UserController extends Controller
         Log::info('Utilizador criado com sucesso', [
             'user_id'   => $user->id,
             'user_name' => $user->fullname,
-            'created_by' => auth('admin')->id() ?? auth()->id(),
+            'created_by' => $currentUser->id,
         ]);
 
         return redirect()->route('admin.users.index')
@@ -76,8 +77,8 @@ class UserController extends Controller
 
     public function update(Request $request, string $id)
     {
+        $currentUser = getCurrentUser();
         $user = User::findOrFail($id);
-        $currentUserId = auth('admin')->id() ?? auth()->id();
 
         $request->merge([
             'phone' => preg_replace('/\D/', '', $request->input('phone'))
@@ -96,7 +97,7 @@ class UserController extends Controller
             return back()->withErrors(['role' => 'Não é possível alterar o role do último administrador.'])->withInput();
         }
 
-        if ($currentUserId == $user->id && $user->role !== $validated['role']) {
+        if ($currentUser->id == $user->id && $user->role !== $validated['role']) {
             return back()->withErrors(['role' => 'Não é possível alterar a sua própria função.'])->withInput();
         }
 
@@ -105,7 +106,7 @@ class UserController extends Controller
 
         Log::info('Utilizador atualizado com sucesso', [
             'user_id' => $user->id,
-            'updated_by' => $currentUserId,
+            'updated_by' => $currentUser->id,
             'changes' => array_diff_assoc($validated, $originalData)
         ]);
 
@@ -131,10 +132,10 @@ class UserController extends Controller
 
     public function destroy(string $id)
     {
+        $currentUser = getCurrentUser();
         $user = User::findOrFail($id);
-        $currentUserId = auth('admin')->id() ?? auth()->id();
 
-        if ($currentUserId == $user->id) {
+        if ($currentUser->id == $user->id) {
             return $this->redirectWithError('Não é possível eliminar a sua própria conta.');
         }
 
@@ -150,7 +151,7 @@ class UserController extends Controller
 
         Log::info('Utilizador eliminado com sucesso', [
             'user_id' => $id,
-            'deleted_by' => $currentUserId,
+            'deleted_by' => $currentUser->id,
         ]);
 
         return redirect()->route('admin.users.index')
