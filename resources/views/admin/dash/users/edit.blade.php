@@ -3,10 +3,15 @@
 @section('title', 'Editar Utilizador')
 
 @section('breadcrumb')
-    @include('admin.dash.components.breadcrumb', getBreadcrumb('admin.users.edit', [
-        ['label' => $user->getShortName(), 'url' => route('admin.users.show', $user->id)],
-        ['label' => 'Editar Utilizador', 'url' => route('admin.users.edit', $user->id)],
-    ], 'Editar utilizador'))
+    @include(
+        'admin.dash.components.breadcrumb',
+        getBreadcrumb(
+            'admin.users.edit',
+            [
+                ['label' => $user->getShortName(), 'url' => route('admin.users.show', $user->id)],
+                ['label' => 'Editar Utilizador', 'url' => route('admin.users.edit', $user->id)],
+            ],
+            'Editar utilizador'))
 @endsection
 
 @section('content')
