@@ -19,7 +19,7 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->decimal('promotion_price', 10, 2)->nullable();
             $table->string('image_url', 255)->nullable();
-            $table->enum('product_status', ['active','inactive'])->default('active');
+            $table->enum('product_status', ['a','i'])->default('a');
             $table->boolean('is_featured')->default(false);
             $table->timestamps();
         });
