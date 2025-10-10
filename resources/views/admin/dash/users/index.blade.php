@@ -73,7 +73,7 @@
                                                 <td>{{ $user->getFormattedPhone() }}</td>
                                                 <td>{{ $user->getGender() }}</td>
                                                 <td>{{ $user->getRoleLabel() }}</td>
-                                                <td>{!! $user->getStatusBadge() !!}</td>
+                                                <td>{!! getStatusBadge($user->user_status) !!}</td>
                                                 <td class="d-flex gap-2">
                                                     {{-- Mostrar --}}
                                                     <a href="{{ route('admin.users.show', $user->id) }}"
@@ -150,8 +150,17 @@
                                             </div>
                                         @empty
                                             <tr>
-                                                <td colspan="8" class="text-center text-muted">
-                                                    Nenhum utilizador encontrado.
+                                                <td colspan="6" class="text-center py-8">
+                                                    <div class="flex flex-col items-center justify-center">
+                                                        <i class="ti ti-tag text-6xl text-gray-300 mb-4"></i>
+                                                        <h5 class="text-gray-500 mb-2">Nenhum utilizador encontrado.</h5>
+                                                        <p class="text-gray-400 mb-4">Ainda não há utilizadores cadastrados no
+                                                            sistema.</p>
+                                                        <a href="{{ route('admin.users.create') }}"
+                                                            class="btn btn-primary">
+                                                            <i class="ti ti-plus me-2"></i>Adicionar primeiro utilizador
+                                                        </a>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         @endforelse
