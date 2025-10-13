@@ -225,3 +225,55 @@ function validatePassword() {
     // Inicialmente desabilita o botão
     $('#submitBtn').prop('disabled', true);
 }
+
+// Toggle Promotion Price
+function togglePromotionPrice() {
+    const selectField = $('select[name="is_featured"]');
+    const promoInput = $('input[name="promotion_price"]');
+    const isFeatured = selectField.val();
+
+    if (isFeatured === "0" || isFeatured === "") {
+        promoInput.prop("disabled", true).addClass("disabled-field");
+    } else {
+        promoInput.prop("disabled", false).removeClass("disabled-field");
+    }
+
+    selectField.off("change blur focusin focusout").on("change blur focusin focusout", function () {
+        const value = $(this).val();
+        if (value === "0" || value === "") {
+            promoInput.prop("disabled", true).addClass("disabled-field");
+        } else {
+            promoInput.prop("disabled", false).removeClass("disabled-field");
+        }
+    });
+}
+
+function formatPriceField(fieldId) {
+    const field = $('#' + fieldId);
+
+    field.on('input blur focusout', function () {
+        let value = field.val();
+
+        // Remove tudo que não for dígito ou vírgula
+        value = value.replace(/[^\d,]/g, '');
+
+        // Divide parte inteira e decimal
+        let [intPart, decPart] = value.split(',');
+
+        // Remove zeros desnecessários à esquerda
+        intPart = intPart ? intPart.replace(/^0+(?=\d)/, '') : '';
+
+        // Adiciona pontos a cada 3 dígitos (milhar)
+        intPart = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+        // Limita decimais a 2 casas se houver vírgula
+        if (decPart !== undefined) {
+            decPart = decPart.substring(0, 2);
+            value = intPart + ',' + decPart;
+        } else {
+            value = intPart;
+        }
+
+        field.val(value);
+    });
+}

@@ -68,6 +68,14 @@ return [
         ],
     ],
 
+    'admin.products.edit' => [
+        'title' => 'Editar Produto',
+        'items' => [
+            ['label' => 'Produtos', 'route' => 'admin.products.index'],
+            // O nome do produto e editar serão adicionados dinamicamente na view
+        ],
+    ],
+
     // Categorias
     'admin.categories.index' => [
         'title' => 'Categorias',

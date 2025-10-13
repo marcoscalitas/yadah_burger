@@ -1,17 +1,23 @@
 @extends('admin.dash.layouts.main')
 
-@section('title', 'Adicionar Produto')
+@section('title', 'Editar Produto')
 
 @section('breadcrumb')
-    @include('admin.dash.components.breadcrumb', getBreadcrumb('admin.products.create'))
+    @include(
+        'admin.dash.components.breadcrumb',
+        getBreadcrumb(
+            'admin.products.edit',
+            [['label' => 'Editar Produto', 'url' => route('admin.products.edit', $product->id)]],
+            'Editar produto ' . $product->name))
 @endsection
 
 @section('content')
     <!-- [ Main Content ] start -->
     <div class="grid grid-cols-12 gap-6">
         <div class="col-span-12">
-            <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                @method('PUT')
                 <div class="card">
                     <div class="card-header">
                         <h5>Adicionar Produto</h5>
@@ -25,7 +31,7 @@
                                         Nome <span class="text-danger">*</span>
                                     </label>
                                     <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                        name="name" value="{{ old('name') }}" />
+                                        name="name" value="{{ old('name', $product->name) }}" />
                                     @error('name')
                                         <div class="text-danger d-flex align-items-center mt-1">
                                             <i class="fas fa-exclamation-triangle me-1"></i> {{ $message }}
@@ -45,7 +51,7 @@
                                         <option value="">Selecione</option>
                                         @foreach ($categories as $category)
                                             <option value="{{ $category->id }}"
-                                                {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                                {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
                                                 {{ $category->name }}</option>
                                         @endforeach
                                     </select>
@@ -62,7 +68,7 @@
                             <div class="col-span-12 sm:col-span-12">
                                 <div class="mb-1">
                                     <label class="form-label"> Descrição</label>
-                                    <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="3">{{ old('description') }}</textarea>
+                                    <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="3">{{ old('description', $product->description) }}</textarea>
                                     @error('description')
                                         <div class="text-danger d-flex align-items-center mt-1">
                                             <i class="fas fa-exclamation-triangle me-1"></i>
@@ -79,7 +85,7 @@
                                         Preço <span class="text-danger">*</span>
                                     </label>
                                     <input type="text" class="form-control @error('price') is-invalid @enderror"
-                                        name="price" id="price" value="{{ old('price') }}" />
+                                        name="price" id="price" value="{{ old('price', $product->price) }}" />
                                     @error('price')
                                         <div class="text-danger d-flex align-items-center mt-1">
                                             <i class="fas fa-exclamation-triangle me-1"></i> {{ $message }}
@@ -95,9 +101,11 @@
                                     <select class="form-select @error('is_featured') is-invalid @enderror"
                                         name="is_featured">
                                         <option value="">Selecione</option>
-                                        <option value="1" {{ old('is_featured') == '1' ? 'selected' : '' }}>
+                                        <option value="1"
+                                            {{ old('is_featured', $product->is_featured) == '1' ? 'selected' : '' }}>
                                             Sim</option>
-                                        <option value="0" {{ old('is_featured') == '0' ? 'selected' : '' }}>
+                                        <option value="0"
+                                            {{ old('is_featured', $product->is_featured) == '0' ? 'selected' : '' }}>
                                             Não</option>
                                     </select>
                                     @error('is_featured')
@@ -115,7 +123,8 @@
                                     <label class="form-label">Preço promocional</label>
                                     <input type="text"
                                         class="form-control @error('promotion_price') is-invalid @enderror"
-                                        name="promotion_price" id="promotion-price" value="{{ old('promotion_price') }}" />
+                                        name="promotion_price" id="promotion-price"
+                                        value="{{ old('promotion_price', $product->promotion_price) }}" />
                                     @error('promotion_price')
                                         <div class="text-danger d-flex align-items-center mt-1">
                                             <i class="fas fa-exclamation-triangle me-1"></i> {{ $message }}
@@ -136,13 +145,22 @@
                                             {{ $message }}
                                         </div>
                                     @enderror
+                                    @if ($product->image_url)
+                                        <div class="mt-2">
+                                            <small class="text-muted">Imagem atual:</small><br>
+
+                                            <img class="shrink-0 w-[100px] h-[100px] round-image"
+                                                src="{{ $product->getImageUrl() }}" alt="Imagem atual"
+                                                style="height: 160px; width: 160px;" />
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-span-12 text-right">
-                    <button type="submit" class="btn btn-primary">Adicionar Produto</button>
+                    <button type="submit" class="btn btn-primary">Atualizar Produto</button>
                 </div>
             </form>
         </div>

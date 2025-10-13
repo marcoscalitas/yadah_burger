@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
 class Product extends Model
@@ -49,7 +50,7 @@ class Product extends Model
      */
     public function getImageUrl(): string
     {
-        if ($this->image_url && \Illuminate\Support\Facades\Storage::disk('public')->exists($this->image_url)) {
+        if ($this->image_url && Storage::disk('public')->exists($this->image_url)) {
             return asset("storage/{$this->image_url}");
         }
         // Default product image

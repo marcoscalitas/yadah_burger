@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\Admin\Dash;
 
-use App\Http\Controllers\Controller;
+use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Services\UploadService;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
@@ -14,7 +18,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return view(self::ADMIN_DASH_PRODUCTS . 'index');
+        $products = Product::with('category')->orderBy('created_at', 'desc')->get();
+        return view(self::ADMIN_DASH_PRODUCTS . 'index', compact('products'));
     }
 
     /**
@@ -22,7 +27,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view(self::ADMIN_DASH_PRODUCTS . 'create');
+        $categories = Category::orderBy('name', 'asc')->get();
+        return view(self::ADMIN_DASH_PRODUCTS . 'create', compact('categories'));
     }
 
     /**
@@ -30,15 +36,50 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        if (!isAdmin()) {
+            return abort(403, 'Acesso negado. Apenas administradores podem criar produtos.');
+        }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        $isPromotion = $request->boolean('is_featured');
+
+        $request->merge([
+            'price' => $this->convertToDecimal($request->input('price') ?? 0),
+            'promotion_price' => $isPromotion
+                ? $this->convertToDecimal($request->input('promotion_price'))
+                : null,
+        ]);
+
+        $rules = [
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'price' => 'required|numeric|gt:0',
+            'category_id' => 'required|exists:categories,id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:3072',
+            'is_featured' => 'required|boolean',
+        ];
+
+        $rules['promotion_price'] = $isPromotion
+            ? 'required|numeric|gt:0'
+            : 'nullable|numeric|gte:0';
+
+        $validated = $request->validate($rules);
+
+        if ($request->hasFile('image')) {
+            $validated['image_url'] = handlePhotoUpload($request, 'admin/products/images', 'image');
+        }
+
+        unset($validated['image']);
+
+        $product = Product::create($validated);
+
+        Log::info('Produto criado com sucesso', [
+            'product_id'   => $product->id,
+            'product_name' => $product->name,
+            'created_by'   => getCurrentUser('admin')->id,
+        ]);
+
+        return redirect()->route('admin.products.index')
+            ->with('success', 'Produto criado com sucesso.');
     }
 
     /**
@@ -46,7 +87,9 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $product = Product::with('category')->findOrFail($id);
+        $categories = Category::orderBy('name', 'asc')->get();
+        return view(self::ADMIN_DASH_PRODUCTS . 'edit', compact('product', 'categories'));
     }
 
     /**
@@ -54,7 +97,51 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        if (!isAdmin()) {
+            return abort(403, 'Acesso negado. Apenas administradores podem editar produtos.');
+        }
+
+        $product = Product::findOrFail($id);
+        $isPromotion = $request->boolean('is_featured');
+
+        $request->merge([
+            'price' => $this->convertToDecimal($request->input('price') ?? 0),
+            'promotion_price' => $isPromotion
+                ? $this->convertToDecimal($request->input('promotion_price'))
+                : null,
+        ]);
+
+        $rules = [
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'price' => 'required|numeric|gt:0',
+            'category_id' => 'required|exists:categories,id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:3072',
+            'is_featured' => 'required|boolean',
+        ];
+
+        $rules['promotion_price'] = $isPromotion
+            ? 'required|numeric|gt:0'
+            : 'nullable|numeric|gte:0';
+
+        $validated = $request->validate($rules);
+
+        if ($request->hasFile('image')) {
+            $validated['image_url'] = handlePhotoUpload($request, 'admin/products/images', 'image');
+        }
+
+        unset($validated['image']);
+
+        $product->update($validated);
+
+        Log::info('Produto atualizado com sucesso', [
+            'product_id'   => $product->id,
+            'product_name' => $product->name,
+            'updated_by'   => getCurrentUser('admin')->id,
+        ]);
+
+        return redirect()->route('admin.products.index')
+            ->with('success', 'Produto atualizado com sucesso.');
     }
 
     /**
@@ -62,6 +149,39 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        if (!isAdmin()) {
+            return abort(403, 'Acesso negado. Apenas administradores podem remover produtos.');
+        }
+
+        $product = Product::findOrFail($id);
+        $productName = $product->name;
+        $product->delete();
+
+        Log::info('Produto removido com sucesso', [
+            'product_id'   => $id,
+            'product_name' => $productName,
+            'deleted_by'   => getCurrentUser('admin')->id,
+        ]);
+
+        return redirect()->route('admin.products.index')
+            ->with('success', 'Produto removido com sucesso.');
+    }
+
+    /** ------------------------------
+     * Helpers (código reutilizável)
+     * ------------------------------ */
+
+    /**
+     * Converte uma string de preço formatada (ex: "50.000,00") para decimal (ex: "50000.00").
+     */
+    private function convertToDecimal($value)
+    {
+
+        // Remove pontos de milhar
+        $value = str_replace('.', '', $value);
+        // Troca vírgula decimal por ponto
+        $value = str_replace(',', '.', $value);
+        // Garante que é numérico
+        return is_numeric($value) ? (float) $value : 0;
     }
 }

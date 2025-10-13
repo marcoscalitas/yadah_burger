@@ -60,7 +60,7 @@ Route::middleware(['auth.admin'])->group(function () {
     // Tables CRUD
     Route::resource('/users', UserController::class);
     Route::resource('/orders', OrderController::class);
-    Route::resource('/products', ProductController::class);
+    Route::resource('/products', ProductController::class)->except(['show']);
     Route::resource('/categories', CategoryController::class)->except(['show']);
 
     // Utils
