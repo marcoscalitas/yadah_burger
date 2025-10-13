@@ -19,8 +19,10 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->decimal('promotion_price', 10, 2)->nullable();
             $table->string('image_url', 255)->nullable();
-            $table->enum('product_status', ['a','i'])->default('a');
+            $table->enum('product_status', ['a', 'i'])->default('a');
             $table->boolean('is_featured')->default(false);
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
         });
     }

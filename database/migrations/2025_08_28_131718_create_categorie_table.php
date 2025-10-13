@@ -17,6 +17,8 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('image_url', 255)->nullable();
             $table->enum('category_status', ['a','i'])->default('a');
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
         });
     }

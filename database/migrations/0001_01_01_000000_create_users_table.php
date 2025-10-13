@@ -19,7 +19,7 @@ return new class extends Migration
             $table->enum('gender', ['M', 'F'])->nullable();
             $table->date('birthdate')->nullable();
             $table->string('password', 255);
-            $table->timestamp('email_verified_at')->nullable(); // padrão Laravel
+            $table->timestamp('email_verified_at')->nullable();
             $table->enum('role', ['admin', 'staff'])->default('staff');
             $table->string('image_url', 255)->nullable();
             $table->enum('user_status', ['p', 'a', 'sp', 'd'])->default('p');
@@ -28,6 +28,8 @@ return new class extends Migration
             $table->integer('failed_login_attempts')->default(0);
             $table->dateTime('account_locked_until')->nullable();
             $table->rememberToken();
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });
