@@ -54,6 +54,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'birthdate' => 'date',
             'last_login' => 'datetime',
             'account_locked_until' => 'datetime',
             'password' => 'hashed',
@@ -107,27 +108,6 @@ class User extends Authenticatable
         return Carbon::parse($this->birthdate)->age;
     }
 
-    public function getFormattedDate(string $field, string $format = 'd-m-Y'): ?string
-    {
-        if (!isset($this->$field) || !$this->$field) {
-            return null;
-        }
-
-        $value = $this->$field;
-
-        if ($value instanceof Carbon) {
-            $date = $value;
-        } else {
-            try {
-                $date = Carbon::parse($value);
-            } catch (\Exception $e) {
-                return null;
-            }
-        }
-
-        return $date->format($format);
-    }
-
     public function getImageUrl(): string
     {
         if ($this->image_url && Storage::disk('public')->exists($this->image_url)) {
@@ -145,5 +125,18 @@ class User extends Authenticatable
             'F' => 'Femenina',
             default => 'Não especificado',
         };
+    }
+
+    public function getFormattedBirthdate(string $format = 'd-m-Y'): ?string
+    {
+        if (!$this->birthdate) {
+            return null;
+        }
+
+        try {
+            return $this->birthdate->format($format);
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 }
