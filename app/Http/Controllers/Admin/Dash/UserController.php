@@ -63,12 +63,6 @@ class UserController extends Controller
             ->with('success', 'Utilizador criado com sucesso!');
     }
 
-    public function show(string $id)
-    {
-        $user = User::findOrFail($id);
-        return view(self::ADMIN_DASH_USERS . 'show', compact('user'));
-    }
-
     public function edit(string $id)
     {
         $user = User::findOrFail($id);

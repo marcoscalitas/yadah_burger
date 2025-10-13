@@ -44,14 +44,6 @@ return [
         ],
     ],
 
-    'admin.users.show' => [
-        'title' => 'Detalhes do Utilizador',
-        'items' => [
-            ['label' => 'Utilizadores', 'route' => 'admin.users.index'],
-            // O nome do utilizador será adicionado dinamicamente na view
-        ],
-    ],
-
     // Produtos
     'admin.products.index' => [
         'title' => 'Produtos',

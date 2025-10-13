@@ -58,7 +58,7 @@ Route::middleware(['auth.admin'])->group(function () {
         Route::delete('/delete-account', 'deleteAccount')->name('delete.account');
     });
     // Tables CRUD
-    Route::resource('/users', UserController::class);
+    Route::resource('/users', UserController::class)->except(['show']);
     Route::resource('/orders', OrderController::class);
     Route::resource('/products', ProductController::class)->except(['show']);
     Route::resource('/categories', CategoryController::class)->except(['show']);

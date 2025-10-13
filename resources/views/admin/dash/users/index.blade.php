@@ -75,12 +75,6 @@
                                                 <td>{{ $user->getRoleLabel() }}</td>
                                                 <td>{!! getStatusBadge($user->user_status) !!}</td>
                                                 <td class="d-flex gap-2">
-                                                    {{-- Mostrar --}}
-                                                    <a href="{{ route('admin.users.show', $user->id) }}"
-                                                        class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                        <i class="ti ti-eye text-xl leading-none"></i>
-                                                    </a>
-
                                                     {{-- Editar --}}
                                                     <a href="{{ route('admin.users.edit', $user->id) }}"
                                                         class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
