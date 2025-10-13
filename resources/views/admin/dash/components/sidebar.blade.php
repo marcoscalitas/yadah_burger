@@ -31,7 +31,7 @@
                 <li class="pc-item pc-caption">
                     <label data-i18n="Navigation">Navegação</label>
                 </li>
-                <li class="pc-item">
+                <li class="pc-item {{ getActiveClass('admin.index', 'active') }}">
                     <a href="{{ route('admin.index') }}" class="pc-link">
                         <span class="pc-micon">
                             <svg class="pc-icon">
@@ -41,7 +41,7 @@
                         <span class="pc-mtext" data-i18n="Dashboard">Dashboard</span>
                     </a>
                 </li>
-                <li class="pc-item">
+                <li class="pc-item {{ getActiveClass('admin.users.*', 'active') }}">
                     <a href="{{ route('admin.users.index') }}" class="pc-link">
                         <span class="pc-micon">
                             <svg class="pc-icon">
@@ -51,7 +51,7 @@
                         <span class="pc-mtext" data-i18n="Utilizadores">Utilizadores</span>
                     </a>
                 </li>
-                <li class="pc-item">
+                <li class="pc-item {{ getActiveClass('admin.orders.*', 'active') }}">
                     <a href="{{ route('admin.orders.index') }}" class="pc-link">
                         <span class="pc-micon">
                             <svg class="pc-icon">
@@ -59,10 +59,9 @@
                             </svg>
                         </span>
                         <span class="pc-mtext" data-i18n="Pedidos">Pedidos</span>
-
                     </a>
                 </li>
-                <li class="pc-item">
+                <li class="pc-item {{ getActiveClass('admin.products.*', 'active') }}">
                     <a href="{{ route('admin.products.index') }}" class="pc-link">
                         <span class="pc-micon">
                             <svg class="pc-icon">
@@ -72,7 +71,7 @@
                         <span class="pc-mtext" data-i18n="Produtos">Produtos</span>
                     </a>
                 </li>
-                <li class="pc-item">
+                <li class="pc-item {{ getActiveClass('admin.categories.*', 'active') }}">
                     <a href="{{ route('admin.categories.index') }}" class="pc-link">
                         <span class="pc-micon">
                             <svg class="pc-icon">
@@ -88,7 +87,7 @@
                         <use xlink:href="#custom-layer"></use>
                     </svg>
                 </li>
-                <li class="pc-item">
+                <li class="pc-item {{ getActiveClass('admin.settings.*', 'active') }}">
                     <a href="{{ route('admin.settings.index') }}" class="pc-link">
                         <span class="pc-micon">
                             <svg class="pc-icon">
