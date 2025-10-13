@@ -149,3 +149,25 @@ if (! function_exists('getActiveClass')) {
         return isRouteActive($routePatterns) ? $activeClass : $inactiveClass;
     }
 }
+
+// get Formatted Date
+if (! function_exists('getFormattedDate')) {
+    function getFormattedDate($value, string $format = 'd-m-Y'): ?string
+    {
+        if (! $value) {
+            return null;
+        }
+
+        if ($value instanceof \Carbon\Carbon) {
+            $date = $value;
+        } else {
+            try {
+                $date = \Carbon\Carbon::parse($value);
+            } catch (\Exception $e) {
+                return null;
+            }
+        }
+
+        return $date->format($format);
+    }
+}
