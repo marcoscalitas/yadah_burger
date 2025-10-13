@@ -30,7 +30,7 @@
                                                 <button class="datatable-sorter">#</button>
                                             </th>
                                             <th data-sortable="true" style="width: 22.605694564279553%;">
-                                                <button class="datatable-sorter">Nome</button>
+                                                <button class="datatable-sorter">Utilizador</button>
                                             </th>
                                             <th data-sortable="true" style="width: 18.809318377911993%;">
                                                 <button class="datatable-sorter">E-mail</button>
@@ -154,7 +154,8 @@
                                                     <div class="flex flex-col items-center justify-center">
                                                         <i class="ti ti-tag text-6xl text-gray-300 mb-4"></i>
                                                         <h5 class="text-gray-500 mb-2">Nenhum utilizador encontrado.</h5>
-                                                        <p class="text-gray-400 mb-4">Ainda não há utilizadores cadastrados no
+                                                        <p class="text-gray-400 mb-4">Ainda não há utilizadores cadastrados
+                                                            no
                                                             sistema.</p>
                                                         <a href="{{ route('admin.users.create') }}"
                                                             class="btn btn-primary">

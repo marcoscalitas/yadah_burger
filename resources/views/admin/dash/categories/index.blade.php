@@ -32,10 +32,7 @@
                                                 <button class="datatable-sorter">#</button>
                                             </th>
                                             <th data-sortable="true" style="width: 15%;">
-                                                <button class="datatable-sorter">Imagem</button>
-                                            </th>
-                                            <th data-sortable="true" style="width: 25%;">
-                                                <button class="datatable-sorter">Nome</button>
+                                                <button class="datatable-sorter">Categoria</button>
                                             </th>
                                             <th data-sortable="true" style="width: 25%;">
                                                 <button class="datatable-sorter">Descrição</button>
@@ -56,14 +53,17 @@
                                             <tr data-index="{{ $index }}" data-id="{{ $category->id }}">
                                                 <td>{{ $index + 1 }}</td>
                                                 <td>
-                                                    <div class="shrink-0">
-                                                        <img class="shrink-0 w-[100px] h-[100px] round-image"
-                                                            src="{{ $category->getImageUrl() }}" alt="categoria-image"
-                                                            style="height: 50px; width: 50px;" />
+                                                    <div class="flex items-center w-44">
+                                                        <div class="shrink-0">
+                                                            <img class="shrink-0 w-[100px] h-[100px] round-image"
+                                                                src="{{ $category->getImageUrl() }}" alt="user-image"
+                                                                style="height: 50px; width: 50px;" />
+                                                        </div>
+
+                                                        <div class="grow ltr:ml-3 rtl:mr-3">
+                                                            <h6 class="mb-0">{{ $category->name }}</h6>
+                                                        </div>
                                                     </div>
-                                                </td>
-                                                <td>
-                                                    <h6 class="mb-0 font-semibold">{{ $category->name }}</h6>
                                                 </td>
                                                 <td>
                                                     <span class="text-sm text-gray-600">
