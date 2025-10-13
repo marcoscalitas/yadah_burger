@@ -149,7 +149,7 @@
                                         <div class="mt-2">
                                             <small class="text-muted">Imagem atual:</small><br>
 
-                                            <img class="shrink-0 w-[100px] h-[100px] round-image"
+                                            <img class="mt-2 shrink-0 w-[100px] h-[100px] round-image"
                                                 src="{{ $product->getImageUrl() }}" alt="Imagem atual"
                                                 style="height: 160px; width: 160px;" />
                                         </div>

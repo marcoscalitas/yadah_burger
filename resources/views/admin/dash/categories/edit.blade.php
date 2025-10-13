@@ -58,13 +58,10 @@
                                 </div>
                             </div>
 
-                            <!-- User image -->
+                            <!-- Image -->
                             <div class="col-span-12 sm:col-span-12">
                                 <div class="mb-1">
-                                    <label class="form-label">
-                                        Escolher imagem
-                                        <span class="text-danger">*</span>
-                                    </label>
+                                    <label class="form-label">Escolher foto</label>
                                     <input type="file" class="form-control @error('image') is-invalid @enderror"
                                         name="image" accept="image/*" />
                                     @error('image')
@@ -73,13 +70,21 @@
                                             {{ $message }}
                                         </div>
                                     @enderror
+                                    @if ($category->image_url)
+                                        <div class="mt-3">
+                                            <small class="text-muted">Imagem atual:</small><br>
+
+                                            <img class="mt-2 shrink-0 w-[100px] h-[100px] round-image"
+                                                src="{{ $category->getImageUrl() }}" alt="Imagem atual"
+                                                style="height: 120px; width: 120px;" />
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-span-12 text-right">
-                        <button type="submit" class="btn btn-primary">Editar Categoria</button>
-                    </div>
+                        <div class="col-span-12 text-right">
+                            <button type="submit" class="btn btn-primary">Editar Categoria</button>
+                        </div>
             </form>
         </div>
     </div>
