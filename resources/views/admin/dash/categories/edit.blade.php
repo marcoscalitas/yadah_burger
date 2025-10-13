@@ -24,7 +24,6 @@
                     </div>
                     <div class="card-body">
                         <div class="grid grid-cols-12 gap-6">
-
                             <!-- Nome -->
                             <div class="col-span-12 sm:col-span-6">
                                 <div class="mb-1">
@@ -81,10 +80,36 @@
                                     @endif
                                 </div>
                             </div>
+
+                            <!-- Data de Criação -->
+                            <div class="col-span-12 sm:col-span-6">
+                                <div class="mb-1">
+                                    <label class="form-label">
+                                        Data de Criação
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="date" name="created_at" class="form-control disabled-field" disabled
+                                        value="{{ old('role', $category->created_at->format('Y-m-d')) }}" />
+                                </div>
+                            </div>
+
+                            <!-- Data de Edição -->
+                            <div class="col-span-12 sm:col-span-6">
+                                <div class="mb-1">
+                                    <label class="form-label">
+                                        Data de Edição
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="date" name="updated_at" class="form-control disabled-field" disabled
+                                        value="{{ old('role', $category->updated_at->format('Y-m-d')) }}" />
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-span-12 text-right">
-                            <button type="submit" class="btn btn-primary">Editar Categoria</button>
-                        </div>
+                    </div>
+                    <div class="col-span-12 text-right">
+                        <button type="submit" class="btn btn-primary">Editar Categoria</button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>

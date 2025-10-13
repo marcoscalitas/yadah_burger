@@ -156,6 +156,31 @@
                                     @endif
                                 </div>
                             </div>
+
+                            <!-- Data de Criação -->
+                            <div class="col-span-12 sm:col-span-6">
+                                <div class="mb-1">
+                                    <label class="form-label">
+                                        Data de Criação
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="date" name="created_at" class="form-control disabled-field" disabled
+                                        value="{{ old('role', $product->created_at->format('Y-m-d')) }}" />
+                                </div>
+                            </div>
+
+                            <!-- Data de Edição -->
+                            <div class="col-span-12 sm:col-span-6">
+                                <div class="mb-1">
+                                    <label class="form-label">
+                                        Data de Edição
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="date" name="updated_at" class="form-control disabled-field" disabled
+                                        value="{{ old('role', $product->updated_at->format('Y-m-d')) }}" />
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>

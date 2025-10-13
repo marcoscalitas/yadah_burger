@@ -161,7 +161,7 @@
                                 <div class="col-span-12 md:col-span-6">
                                     <p class="mb-1 text-muted">Data de Nascimento</p>
                                     <p class="mb-0">
-                                        {{ $user->getFormattedDate('birthdate') }}
+                                        {{ $user->birthdate->format('d-m-Y') }}
                                     </p>
                                 </div>
                                 <div class="col-span-12 md:col-span-6">
@@ -174,11 +174,11 @@
                             <div class="grid grid-cols-12 gap-6">
                                 <div class="col-span-12 md:col-span-6">
                                     <p class="mb-1 text-muted">Data de Criação</p>
-                                    <p class="mb-0"> {{ $user->getFormattedDate('created_at') }}</p>
+                                    <p class="mb-0"> {{ $user->created_at->format('d-m-Y') }}</p>
                                 </div>
                                 <div class="col-span-12 md:col-span-6">
                                     <p class="mb-1 text-muted">Data de Edição</p>
-                                    <p class="mb-0"> {{ $user->getFormattedDate('updated_at') }}</p>
+                                    <p class="mb-0"> {{ $user->updated_at->format('d-m-Y') }}</p>
                                 </div>
                             </div>
                         </li>

@@ -152,7 +152,7 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <input type="date" name="created_at" class="form-control disabled-field" disabled
-                                        value="{{ old('role', getCurrentUser('admin')->getFormattedDate('created_at', 'Y-m-d')) }}" />
+                                        value="{{ old('role', getCurrentUser('admin')->created_at->format('Y-m-d')) }}" />
                                 </div>
                             </div>
 
@@ -164,7 +164,7 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <input type="date" name="updated_at" class="form-control disabled-field" disabled
-                                        value="{{ old('role', getCurrentUser('admin')->getFormattedDate('updated_at', 'Y-m-d')) }}" />
+                                        value="{{ old('role', getCurrentUser('admin')->updated_at->format('Y-m-d')) }}" />
                                 </div>
                             </div>
 
