@@ -55,12 +55,12 @@ class Category extends Model
      */
     public function getShortDescription(int $length = 50): string
     {
-        if (!$this->description) {
+        if (! $this->description) {
             return '';
         }
 
         return strlen($this->description) > $length
-            ? substr($this->description, 0, $length) . '...'
+            ? substr($this->description, 0, $length).'...'
             : $this->description;
     }
 

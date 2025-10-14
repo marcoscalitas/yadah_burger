@@ -4,10 +4,10 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -73,16 +73,16 @@ class User extends Authenticatable
             return '';
         }
 
-        return $names[0] . ' ' . (count($names) > 1 ? end($names) : '');
+        return $names[0].' '.(count($names) > 1 ? end($names) : '');
     }
 
     public function getRoleLabel(): string
     {
         return match ([$this->gender, $this->role]) {
             ['M', 'admin'] => 'Administrador',
-            ['M', 'staff']  => 'Funcionário',
+            ['M', 'staff'] => 'Funcionário',
             ['F', 'admin'] => 'Administradora',
-            ['F', 'staff']  => 'Funcionária',
+            ['F', 'staff'] => 'Funcionária',
         };
     }
 
@@ -103,7 +103,7 @@ class User extends Authenticatable
 
     public function getAge(): ?int
     {
-        if (!$this->birthdate) {
+        if (! $this->birthdate) {
             return null;
         }
 
@@ -117,6 +117,7 @@ class User extends Authenticatable
         }
 
         $avatar = ($this->gender === 'M' ? 'avatar-1.jpg' : 'avatar-3.jpg');
+
         return asset("admin/assets/images/user/{$avatar}");
     }
 
@@ -131,7 +132,7 @@ class User extends Authenticatable
 
     public function getFormattedBirthdate(string $format = 'd-m-Y'): ?string
     {
-        if (!$this->birthdate) {
+        if (! $this->birthdate) {
             return null;
         }
 

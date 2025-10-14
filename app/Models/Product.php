@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-
 
 class Product extends Model
 {
@@ -55,6 +54,7 @@ class Product extends Model
         if ($this->image_url && Storage::disk('public')->exists($this->image_url)) {
             return asset("storage/{$this->image_url}");
         }
+
         // Default product image
         return asset('admin/assets/images/product/default-product.jpg');
     }
@@ -64,11 +64,12 @@ class Product extends Model
      */
     public function getShortDescription(int $length = 50): string
     {
-        if (!$this->description) {
+        if (! $this->description) {
             return '';
         }
+
         return strlen($this->description) > $length
-            ? substr($this->description, 0, $length) . '...'
+            ? substr($this->description, 0, $length).'...'
             : $this->description;
     }
 
