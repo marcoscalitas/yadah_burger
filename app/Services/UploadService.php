@@ -10,8 +10,11 @@ use Illuminate\Validation\ValidationException;
 class UploadService
 {
     protected array $allowedMimes = [];
+
     protected int $maxSizeMB = 10; // padrão 10 MB
+
     protected string $folder = 'uploads';
+
     protected string $disk = 'public';
 
     /**
@@ -19,13 +22,21 @@ class UploadService
      */
     public function configure(array $options = []): self
     {
-        if (isset($options['mimes'])) $this->allowedMimes = $options['mimes'];
-        if (isset($options['maxSizeMB'])) $this->maxSizeMB = $options['maxSizeMB'];
-        if (isset($options['folder'])) $this->folder = $options['folder'];
-        if (isset($options['disk'])) $this->disk = $options['disk'];
+        if (isset($options['mimes'])) {
+            $this->allowedMimes = $options['mimes'];
+        }
+        if (isset($options['maxSizeMB'])) {
+            $this->maxSizeMB = $options['maxSizeMB'];
+        }
+        if (isset($options['folder'])) {
+            $this->folder = $options['folder'];
+        }
+        if (isset($options['disk'])) {
+            $this->disk = $options['disk'];
+        }
 
         // Adiciona subpastas por data automaticamente
-        $this->folder .= '/' . date('Y/m/d');
+        $this->folder .= '/'.date('Y/m/d');
 
         return $this;
     }
@@ -46,7 +57,7 @@ class UploadService
             'filename' => $filename,
             'folder' => $this->folder,
             'disk' => $this->disk,
-            'url' => Storage::disk($this->disk)->url($path) // URL pública
+            'url' => Storage::disk($this->disk)->url($path), // URL pública
         ];
     }
 
@@ -66,9 +77,9 @@ class UploadService
         $extension = strtolower($file->getClientOriginalExtension());
 
         // Tipo permitido (case-insensitive)
-        if (!empty($this->allowedMimes) && !in_array($extension, array_map('strtolower', $this->allowedMimes))) {
+        if (! empty($this->allowedMimes) && ! in_array($extension, array_map('strtolower', $this->allowedMimes))) {
             throw ValidationException::withMessages([
-                'file' => 'Tipo de arquivo não permitido. Permitidos: ' . implode(', ', $this->allowedMimes)
+                'file' => 'Tipo de arquivo não permitido. Permitidos: '.implode(', ', $this->allowedMimes),
             ]);
         }
 
@@ -76,7 +87,7 @@ class UploadService
         $sizeMB = $file->getSize() / 1024 / 1024;
         if ($sizeMB > $this->maxSizeMB) {
             throw ValidationException::withMessages([
-                'file' => "O arquivo excede o tamanho máximo de {$this->maxSizeMB} MB."
+                'file' => "O arquivo excede o tamanho máximo de {$this->maxSizeMB} MB.",
             ]);
         }
     }
@@ -86,6 +97,6 @@ class UploadService
      */
     protected function generateFilename(UploadedFile $file): string
     {
-        return time() . '_' . Str::random(12) . '.' . $file->getClientOriginalExtension();
+        return time().'_'.Str::random(12).'.'.$file->getClientOriginalExtension();
     }
 }

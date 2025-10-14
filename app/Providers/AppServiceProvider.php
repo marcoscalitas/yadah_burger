@@ -2,11 +2,11 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use App\Http\Middleware\GuardAdmin;
 use App\Http\Middleware\GuestAdmin;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
