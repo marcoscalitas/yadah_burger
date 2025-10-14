@@ -27,6 +27,10 @@ class UserController extends Controller
 
     public function store(Request $request, UploadService $uploader)
     {
+        if (!isAdmin()) {
+            return abort(403, 'Acesso negado. Apenas administradores podem criar utilizadores.');
+        }
+
         $request->merge([
             'phone' => preg_replace('/\D/', '', $request->input('phone'))
         ]);
@@ -72,6 +76,11 @@ class UserController extends Controller
 
     public function update(Request $request, string $id)
     {
+
+         if (!isAdmin()) {
+            return abort(403, 'Acesso negado. Apenas administradores podem editar utilizadores.');
+        }
+
         $currentUser = getCurrentUser('admin');
         $user = User::findOrFail($id);
 
@@ -129,6 +138,11 @@ class UserController extends Controller
 
     public function destroy(string $id)
     {
+
+         if (!isAdmin()) {
+            return abort(403, 'Acesso negado. Apenas administradores podem editar utilizadores.');
+        }
+
         $currentUser = getCurrentUser('admin');
         $user = User::findOrFail($id);
 
