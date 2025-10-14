@@ -4,12 +4,9 @@ namespace App\Http\Controllers\Admin\Dash;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use PhpParser\Node\Stmt\Return_;
 use App\Services\UploadService;
-
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
@@ -21,13 +18,15 @@ class ProfileController extends Controller
     public function index()
     {
         $user = User::find(auth('admin')->id());
-        return view(self::ADMIN_DASH_PROFILE . 'index', compact('user'));
+
+        return view(self::ADMIN_DASH_PROFILE.'index', compact('user'));
     }
 
     public function edit()
     {
         $user = User::find(auth('admin')->id());
-        return view(self::ADMIN_DASH_PROFILE . 'edit', compact('user'));
+
+        return view(self::ADMIN_DASH_PROFILE.'edit', compact('user'));
     }
 
     public function update(Request $request)
@@ -46,13 +45,13 @@ class ProfileController extends Controller
 
         if ($data['role'] === 'staff' && $currentUser->role === 'admin') {
             return redirect()->back()->withErrors([
-                'role' => 'Você não pode alterar seu própria função de admin para staff.'
+                'role' => 'Você não pode alterar seu própria função de admin para staff.',
             ])->withInput();
         }
 
         if ($currentUser->role === 'staff' && $data['role'] !== $currentUser->role) {
             return redirect()->back()->withErrors([
-                'role' => 'Você não tem permissão para alterar roles.'
+                'role' => 'Você não tem permissão para alterar roles.',
             ])->withInput();
         }
 
@@ -72,7 +71,7 @@ class ProfileController extends Controller
                 'mimes' => ['jpg', 'jpeg', 'png'],
                 'maxSizeMB' => 3,
                 'folder' => 'admin/profile_photos',
-                'disk' => 'public'
+                'disk' => 'public',
             ])->upload($request->file('photo'));
 
             // Salva o caminho da foto no usuário (usando o guard correto)
@@ -86,11 +85,12 @@ class ProfileController extends Controller
             ]);
 
         } catch (\Throwable $e) {
-            Log::error('Erro no upload de foto de perfil: ' . $e->getMessage(), [
+            Log::error('Erro no upload de foto de perfil: '.$e->getMessage(), [
                 'trace' => $e->getTraceAsString(),
             ]);
+
             return response()->json([
-                'message' => 'Erro ao enviar foto: ' . $e->getMessage(),
+                'message' => 'Erro ao enviar foto: '.$e->getMessage(),
             ], 500);
         }
     }

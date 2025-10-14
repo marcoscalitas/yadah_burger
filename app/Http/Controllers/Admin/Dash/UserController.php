@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin\Dash;
 
-use App\Models\User;
-use Illuminate\Http\Request;
-use App\Services\UploadService;
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Services\UploadService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -17,34 +17,35 @@ class UserController extends Controller
     public function index()
     {
         $users = User::orderBy('id', 'desc')->get();
-        return view(self::ADMIN_DASH_USERS . 'index', compact('users'));
+
+        return view(self::ADMIN_DASH_USERS.'index', compact('users'));
     }
 
     public function create()
     {
-        return view(self::ADMIN_DASH_USERS . 'create');
+        return view(self::ADMIN_DASH_USERS.'create');
     }
 
     public function store(Request $request, UploadService $uploader)
     {
-        if (!isAdmin()) {
+        if (! isAdmin()) {
             return abort(403, 'Acesso negado. Apenas administradores podem criar utilizadores.');
         }
 
         $request->merge([
-            'phone' => preg_replace('/\D/', '', $request->input('phone'))
+            'phone' => preg_replace('/\D/', '', $request->input('phone')),
         ]);
 
         $currentUser = getCurrentUser('admin');
         $validated = $request->validate([
-            'fullname'  => 'required|string|max:255',
-            'email'     => 'required|email|max:255|unique:users,email',
-            'phone'     => ['required', 'string', 'size:9', 'regex:/^\d{9}$/'],
-            'gender'    => 'required|in:M,F',
+            'fullname' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email',
+            'phone' => ['required', 'string', 'size:9', 'regex:/^\d{9}$/'],
+            'gender' => 'required|in:M,F',
             'birthdate' => 'required|date|before:today',
-            'role'      => 'required|in:admin,staff',
-            'password'  => 'required|string|min:8|confirmed',
-            'photo'     => 'nullable|image|mimes:jpeg,png,jpg|max:3072',
+            'role' => 'required|in:admin,staff',
+            'password' => 'required|string|min:8|confirmed',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:3072',
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
@@ -59,7 +60,7 @@ class UserController extends Controller
         $user = User::create($validated);
 
         Log::info('Utilizador criado com sucesso', [
-            'user_id'   => $user->id,
+            'user_id' => $user->id,
             'user_name' => $user->fullname,
             'created_by' => $currentUser->id,
         ]);
@@ -71,13 +72,14 @@ class UserController extends Controller
     public function edit(string $id)
     {
         $user = User::with(['createdBy', 'updatedBy'])->findOrFail($id);
-        return view(self::ADMIN_DASH_USERS . 'edit', compact('user'));
+
+        return view(self::ADMIN_DASH_USERS.'edit', compact('user'));
     }
 
     public function update(Request $request, string $id)
     {
 
-         if (!isAdmin()) {
+        if (! isAdmin()) {
             return abort(403, 'Acesso negado. Apenas administradores podem editar utilizadores.');
         }
 
@@ -85,16 +87,16 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         $request->merge([
-            'phone' => preg_replace('/\D/', '', $request->input('phone'))
+            'phone' => preg_replace('/\D/', '', $request->input('phone')),
         ]);
 
         $validated = $request->validate([
-            'fullname'  => 'required|string|max:255',
-            'email'     => 'required|email|max:255|unique:users,email,' . $user->id,
-            'phone'     => ['required', 'string', 'size:9', 'regex:/^\d{9}$/'],
-            'gender'    => 'required|in:M,F',
+            'fullname' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,'.$user->id,
+            'phone' => ['required', 'string', 'size:9', 'regex:/^\d{9}$/'],
+            'gender' => 'required|in:M,F',
             'birthdate' => 'required|date|before:today',
-            'role'      => 'required|in:admin,staff',
+            'role' => 'required|in:admin,staff',
         ]);
 
         if ($this->isLastAdminDemotion($user, $validated)) {
@@ -113,7 +115,7 @@ class UserController extends Controller
         Log::info('Utilizador atualizado com sucesso', [
             'user_id' => $user->id,
             'updated_by' => $currentUser->id,
-            'changes' => array_diff_assoc($validated, $originalData)
+            'changes' => array_diff_assoc($validated, $originalData),
         ]);
 
         return redirect()->route('admin.users.index')
@@ -132,14 +134,13 @@ class UserController extends Controller
 
         return response()->json([
             'message' => 'Foto enviada com sucesso!',
-            'url'     => Storage::url($user->image_url),
+            'url' => Storage::url($user->image_url),
         ]);
     }
 
     public function destroy(string $id)
     {
-
-         if (!isAdmin()) {
+        if (! isAdmin()) {
             return abort(403, 'Acesso negado. Apenas administradores podem editar utilizadores.');
         }
 
@@ -172,7 +173,6 @@ class UserController extends Controller
     /** ------------------------------
      * Helpers (código reutilizável)
      * ------------------------------ */
-
     private function handlePhotoUpload(Request $request, UploadService $uploader): string
     {
         try {
@@ -180,13 +180,13 @@ class UserController extends Controller
                 'mimes' => ['jpg', 'jpeg', 'png'],
                 'maxSizeMB' => 3,
                 'folder' => 'admin/users/profile_photos',
-                'disk' => 'public'
+                'disk' => 'public',
             ])->upload($request->file('photo'));
 
             return $fileData['path'];
         } catch (\Throwable $e) {
-            Log::error('Erro no upload da foto: ' . $e->getMessage());
-            throw new \Exception('Erro ao enviar foto: ' . $e->getMessage());
+            Log::error('Erro no upload da foto: '.$e->getMessage());
+            throw new \Exception('Erro ao enviar foto: '.$e->getMessage());
         }
     }
 

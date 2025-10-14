@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin\Dash;
 
+use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
@@ -17,7 +17,8 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::orderBy('id', 'desc')->get();
-        return view(self::ADMIN_DASH_CATEGORIES . 'index', compact('categories'));
+
+        return view(self::ADMIN_DASH_CATEGORIES.'index', compact('categories'));
     }
 
     /**
@@ -25,7 +26,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view(self::ADMIN_DASH_CATEGORIES . 'create');
+        return view(self::ADMIN_DASH_CATEGORIES.'create');
     }
 
     /**
@@ -33,15 +34,15 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        if (!isAdmin()) {
+        if (! isAdmin()) {
             return abort(403, 'Acesso negado. Apenas administradores podem criar categorias.');
         }
 
         $currentUser = getCurrentUser('admin');
         $validated = $request->validate([
-            'name'  => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image'     => 'nullable|image|mimes:jpeg,png,jpg|max:3072',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:3072',
         ]);
 
         if ($request->hasFile('image')) {
@@ -54,7 +55,7 @@ class CategoryController extends Controller
         $category = Category::create($validated);
 
         Log::info('Categoria criada com sucesso', [
-            'category_id'   => $category->id,
+            'category_id' => $category->id,
             'category_name' => $category->name,
             'created_by' => $currentUser->id,
         ]);
@@ -69,7 +70,8 @@ class CategoryController extends Controller
     public function edit(string $id)
     {
         $category = Category::with(['createdBy', 'updatedBy'])->findOrFail($id);
-        return view(self::ADMIN_DASH_CATEGORIES . 'edit', compact('category'));
+
+        return view(self::ADMIN_DASH_CATEGORIES.'edit', compact('category'));
     }
 
     /**
@@ -77,16 +79,16 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        if (!isAdmin()) {
+        if (! isAdmin()) {
             return abort(403, 'Acesso negado. Apenas administradores podem editar categorias.');
         }
 
         $currentUser = getCurrentUser('admin');
         $category = Category::findOrFail($id);
         $validated = $request->validate([
-            'name'  => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image'     => 'nullable|image|mimes:jpeg,png,jpg|max:3072',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:3072',
         ]);
 
         if ($request->hasFile('image')) {
@@ -99,7 +101,7 @@ class CategoryController extends Controller
         $category->update($validated);
 
         Log::info('Categoria editada com sucesso', [
-            'category_id'   => $category->id,
+            'category_id' => $category->id,
             'category_name' => $category->name,
             'updated_by' => $currentUser->id,
         ]);
@@ -113,7 +115,7 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        if (!isAdmin()) {
+        if (! isAdmin()) {
             return abort(403, 'Acesso negado. Apenas administradores podem apagar categorias.');
         }
 
@@ -122,7 +124,7 @@ class CategoryController extends Controller
         $category->delete();
 
         Log::info('Categoria apagada com sucesso', [
-            'category_id'   => $category->id,
+            'category_id' => $category->id,
             'category_name' => $category->name,
             'deleted_by' => $currentUser->id,
         ]);

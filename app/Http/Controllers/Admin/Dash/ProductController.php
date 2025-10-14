@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin\Dash;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use App\Services\UploadService;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
@@ -19,7 +18,8 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::with('category')->orderBy('created_at', 'desc')->get();
-        return view(self::ADMIN_DASH_PRODUCTS . 'index', compact('products'));
+
+        return view(self::ADMIN_DASH_PRODUCTS.'index', compact('products'));
     }
 
     /**
@@ -28,7 +28,8 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::orderBy('name', 'asc')->get();
-        return view(self::ADMIN_DASH_PRODUCTS . 'create', compact('categories'));
+
+        return view(self::ADMIN_DASH_PRODUCTS.'create', compact('categories'));
     }
 
     /**
@@ -36,7 +37,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        if (!isAdmin()) {
+        if (! isAdmin()) {
             return abort(403, 'Acesso negado. Apenas administradores podem criar produtos.');
         }
 
@@ -75,9 +76,9 @@ class ProductController extends Controller
         $product = Product::create($validated);
 
         Log::info('Produto criado com sucesso', [
-            'product_id'   => $product->id,
+            'product_id' => $product->id,
             'product_name' => $product->name,
-            'created_by'   => $currentUser->id,
+            'created_by' => $currentUser->id,
         ]);
 
         return redirect()->route('admin.products.index')
@@ -91,7 +92,8 @@ class ProductController extends Controller
     {
         $product = Product::with(['category', 'createdBy', 'updatedBy'])->findOrFail($id);
         $categories = Category::orderBy('name', 'asc')->get();
-        return view(self::ADMIN_DASH_PRODUCTS . 'edit', compact('product', 'categories'));
+
+        return view(self::ADMIN_DASH_PRODUCTS.'edit', compact('product', 'categories'));
     }
 
     /**
@@ -99,7 +101,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        if (!isAdmin()) {
+        if (! isAdmin()) {
             return abort(403, 'Acesso negado. Apenas administradores podem editar produtos.');
         }
 
@@ -139,9 +141,9 @@ class ProductController extends Controller
         $product->update($validated);
 
         Log::info('Produto atualizado com sucesso', [
-            'product_id'   => $product->id,
+            'product_id' => $product->id,
             'product_name' => $product->name,
-            'updated_by'   => $currentUser->id,
+            'updated_by' => $currentUser->id,
         ]);
 
         return redirect()->route('admin.products.index')
@@ -153,7 +155,7 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        if (!isAdmin()) {
+        if (! isAdmin()) {
             return abort(403, 'Acesso negado. Apenas administradores podem remover produtos.');
         }
 
@@ -162,9 +164,9 @@ class ProductController extends Controller
         $product->delete();
 
         Log::info('Produto removido com sucesso', [
-            'product_id'   => $id,
+            'product_id' => $id,
             'product_name' => $productName,
-            'deleted_by'   => getCurrentUser('admin')->id,
+            'deleted_by' => getCurrentUser('admin')->id,
         ]);
 
         return redirect()->route('admin.products.index')
@@ -185,6 +187,7 @@ class ProductController extends Controller
         $value = str_replace('.', '', $value);
         // Troca vírgula decimal por ponto
         $value = str_replace(',', '.', $value);
+
         // Garante que é numérico
         return is_numeric($value) ? (float) $value : 0;
     }

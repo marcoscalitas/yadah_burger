@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin\Dash;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
@@ -16,12 +16,12 @@ class SettingsController extends Controller
      */
     public function index()
     {
-        return view(self::ADMIN_DASH_SETTINGS . 'index');
+        return view(self::ADMIN_DASH_SETTINGS.'index');
     }
 
     public function changePassword()
     {
-        return view(self::ADMIN_DASH_SETTINGS . 'change-password');
+        return view(self::ADMIN_DASH_SETTINGS.'change-password');
     }
 
     public function updatePassword(Request $request)
@@ -49,7 +49,7 @@ class SettingsController extends Controller
         ]);
 
         $user = getCurrentUser('admin');
-        if (!Hash::check($request->current_password, $user->password)) {
+        if (! Hash::check($request->current_password, $user->password)) {
             return back()->withErrors(['current_password' => 'Senha atual incorreta'])->withInput();
         }
 
@@ -61,7 +61,7 @@ class SettingsController extends Controller
 
     public function changeEmail()
     {
-        return view(self::ADMIN_DASH_SETTINGS . 'change-email');
+        return view(self::ADMIN_DASH_SETTINGS.'change-email');
     }
 
     public function updateEmail(Request $request)
@@ -78,7 +78,7 @@ class SettingsController extends Controller
             'new_email.unique' => 'Este e-mail já está em uso.',
         ]);
 
-        if (!Hash::check($request->current_password, $user->password)) {
+        if (! Hash::check($request->current_password, $user->password)) {
             return back()->withErrors(['current_password' => 'Senha incorreta.']);
         }
 

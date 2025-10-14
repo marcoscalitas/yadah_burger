@@ -14,7 +14,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return view(self::ADMIN_DASH_ORDERS . 'index');
+        return view(self::ADMIN_DASH_ORDERS.'index');
     }
 
     /**
@@ -22,7 +22,7 @@ class OrderController extends Controller
      */
     public function create()
     {
-        return view(self::ADMIN_DASH_ORDERS . 'create');
+        return view(self::ADMIN_DASH_ORDERS.'create');
     }
 
     /**
