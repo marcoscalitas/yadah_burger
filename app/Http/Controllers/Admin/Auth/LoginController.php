@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Admin\Auth;
 
-use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -14,19 +13,19 @@ class LoginController extends Controller
 
     public function login()
     {
-        return view(self::ADMIN_AUTH_LOGIN . 'login');
+        return view(self::ADMIN_AUTH_LOGIN.'login');
     }
 
     private function validateLogin(Request $request)
     {
         $request->validate([
-            'email'    => 'required|email',
+            'email' => 'required|email',
             'password' => 'required|string|min:6',
         ], [
-            'email.required'    => 'O campo de e-mail é obrigatório.',
-            'email.email'       => 'Insira um email válido.',
+            'email.required' => 'O campo de e-mail é obrigatório.',
+            'email.email' => 'Insira um email válido.',
             'password.required' => 'O campo de senha é obrigatório.',
-            'password.min'      => 'A senha deve ter pelo menos 6 caracteres.',
+            'password.min' => 'A senha deve ter pelo menos 6 caracteres.',
         ]);
     }
 
@@ -40,6 +39,7 @@ class LoginController extends Controller
         if ($user->account_locked_until && $user->account_locked_until->isFuture()) {
             Carbon::setLocale('pt_BR');
             $remaining = $user->account_locked_until->diffForHumans();
+
             return "Conta bloqueada temporariamente. Tente novamente $remaining.";
         }
 
@@ -66,9 +66,9 @@ class LoginController extends Controller
     {
         $user->update([
             'failed_login_attempts' => 0,
-            'account_locked_until'  => null,
-            'is_online'             => true,
-            'last_login'            => now(),
+            'account_locked_until' => null,
+            'is_online' => true,
+            'last_login' => now(),
         ]);
     }
 
@@ -88,7 +88,7 @@ class LoginController extends Controller
 
         $credentials = $request->only('email', 'password');
 
-        if (!$auth->attempt($credentials, $remember)) {
+        if (! $auth->attempt($credentials, $remember)) {
             return $user
                 ? $this->showFormError($request, $this->incrementFailedAttempts($user))
                 : $this->showFormError($request, 'Email ou senha incorretos. Tente novamente.');
@@ -98,6 +98,7 @@ class LoginController extends Controller
 
         if (! in_array($user->role, ['admin', 'staff'])) {
             $auth->logout();
+
             return $this->showFormError($request, 'Acesso restrito. Você não tem permissão para acessar esta área.');
         }
 
@@ -129,6 +130,6 @@ class LoginController extends Controller
 
     public function codeVerification()
     {
-        return view(self::ADMIN_AUTH_LOGIN . 'code-verification');
+        return view(self::ADMIN_AUTH_LOGIN.'code-verification');
     }
 }

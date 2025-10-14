@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers\Admin\Auth;
 
-use App\Models\User;
-use App\Helpers\Helper;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
-
+use Illuminate\Support\Str;
 
 class PasswordController extends Controller
 {
@@ -17,7 +15,7 @@ class PasswordController extends Controller
 
     public function showForgotForm()
     {
-        return view(self::ADMIN_AUTH_PASSWORD . 'forgot');
+        return view(self::ADMIN_AUTH_PASSWORD.'forgot');
     }
 
     public function sendResetLink(Request $request)
@@ -31,21 +29,22 @@ class PasswordController extends Controller
         );
 
         return $status === Password::RESET_LINK_SENT
-            ? redirect()->route('admin.check.email')->with(['email' => $request->get("email")])
+            ? redirect()->route('admin.check.email')->with(['email' => $request->get('email')])
             : back()->withErrors(['email' => __($status)]);
     }
 
     public function showCheckEmail(Request $request)
     {
         $email = session('email');
-        return view(self::ADMIN_AUTH_PASSWORD . 'check-email', compact('email'));
+
+        return view(self::ADMIN_AUTH_PASSWORD.'check-email', compact('email'));
     }
 
     public function showResetForm(Request $request, $token)
     {
-        return view(self::ADMIN_AUTH_PASSWORD . 'reset', [
+        return view(self::ADMIN_AUTH_PASSWORD.'reset', [
             'token' => $token,
-            'email' => $request->email
+            'email' => $request->email,
         ]);
     }
 
@@ -54,7 +53,7 @@ class PasswordController extends Controller
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
-            'password' => 'required|string|min:8|confirmed'
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
         $status = Password::reset(
