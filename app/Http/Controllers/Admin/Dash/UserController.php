@@ -107,7 +107,7 @@ class UserController extends Controller
             'changes' => array_diff_assoc($validated, $originalData)
         ]);
 
-        return redirect()->route('admin.users.show', $user->id)
+        return redirect()->route('admin.users.index')
             ->with('success', 'Utilizador atualizado com sucesso!');
     }
 
