@@ -112,4 +112,22 @@ class Product extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+
+    /**
+     * Get the order items for this product
+     */
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
+    /**
+     * Get the orders through order items
+     */
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class, 'order_items')
+            ->withPivot(['quantity', 'unit_price', 'subtotal', 'whatsapp_message'])
+            ->withTimestamps();
+    }
 }

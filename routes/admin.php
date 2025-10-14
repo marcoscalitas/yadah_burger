@@ -63,6 +63,9 @@ Route::middleware(['auth.admin'])->group(function () {
     Route::resource('/products', ProductController::class)->except(['show']);
     Route::resource('/categories', CategoryController::class)->except(['show']);
 
+    // Additional order routes
+    Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.update.status');
+
     // Utils
     Route::post('/users/{id}/update-photo', [UserController::class, 'uploadPhoto'])->name('users.update.photo');
 });
