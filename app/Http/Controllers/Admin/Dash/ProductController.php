@@ -40,6 +40,7 @@ class ProductController extends Controller
             return abort(403, 'Acesso negado. Apenas administradores podem criar produtos.');
         }
 
+        $currentUser = getCurrentUser('admin');
         $isPromotion = $request->boolean('is_featured');
 
         $request->merge([
@@ -70,12 +71,13 @@ class ProductController extends Controller
 
         unset($validated['image']);
 
+        $validated['created_by'] = $currentUser->id;
         $product = Product::create($validated);
 
         Log::info('Produto criado com sucesso', [
             'product_id'   => $product->id,
             'product_name' => $product->name,
-            'created_by'   => getCurrentUser('admin')->id,
+            'created_by'   => $currentUser->id,
         ]);
 
         return redirect()->route('admin.products.index')
@@ -87,7 +89,7 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        $product = Product::with('category')->findOrFail($id);
+        $product = Product::with(['category', 'createdBy', 'updatedBy'])->findOrFail($id);
         $categories = Category::orderBy('name', 'asc')->get();
         return view(self::ADMIN_DASH_PRODUCTS . 'edit', compact('product', 'categories'));
     }
@@ -101,6 +103,7 @@ class ProductController extends Controller
             return abort(403, 'Acesso negado. Apenas administradores podem editar produtos.');
         }
 
+        $currentUser = getCurrentUser('admin');
         $product = Product::findOrFail($id);
         $isPromotion = $request->boolean('is_featured');
 
@@ -132,12 +135,13 @@ class ProductController extends Controller
 
         unset($validated['image']);
 
+        $validated['updated_by'] = $currentUser->id;
         $product->update($validated);
 
         Log::info('Produto atualizado com sucesso', [
             'product_id'   => $product->id,
             'product_name' => $product->name,
-            'updated_by'   => getCurrentUser('admin')->id,
+            'updated_by'   => $currentUser->id,
         ]);
 
         return redirect()->route('admin.products.index')

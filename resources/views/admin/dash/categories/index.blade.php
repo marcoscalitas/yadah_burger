@@ -28,22 +28,25 @@
                                 <table class="table table-hover datatable-table" id="pc-dt-simple">
                                     <thead>
                                         <tr>
-                                            <th data-sortable="true" style="width: 6%;">
+                                            <th data-sortable="true" style="width: 5%;">
                                                 <button class="datatable-sorter">#</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 15%;">
+                                            <th data-sortable="true" style="width: 25%;">
                                                 <button class="datatable-sorter">Categoria</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 25%;">
+                                            <th data-sortable="true" style="width: 20%;">
                                                 <button class="datatable-sorter">Descrição</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 12%;">
+                                            <th data-sortable="true" style="width: 10%;">
                                                 <button class="datatable-sorter">Status</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 15%;">
+                                                <button class="datatable-sorter">Criada por</button>
                                             </th>
                                             <th data-sortable="true" style="width: 15%;">
                                                 <button class="datatable-sorter">Data de Criação</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 12%;">
+                                            <th data-sortable="true" style="width: 10%;">
                                                 <button class="datatable-sorter">Ações</button>
                                             </th>
                                         </tr>
@@ -66,11 +69,17 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <span class="text-sm text-gray-600">
-                                                        {{ $category->getShortDescription(80) }}
-                                                    </span>
+                                                    <div class="max-w-xs overflow-hidden">
+                                                        <span class="text-sm text-gray-600 block truncate"
+                                                            title="{{ $category->description }}">
+                                                            {{ $category->getShortDescription(60) }}
+                                                        </span>
+                                                    </div>
                                                 </td>
                                                 <td>{!! getStatusBadge($category->category_status) !!}</td>
+                                                <td>
+                                                    {{ $category->createdBy ? $category->createdBy->getShortName() : 'Sistema' }}
+                                                </td>
                                                 <td>{{ $category->created_at->format('d/m/Y H:i') }}</td>
                                                 <td class="d-flex gap-2">
                                                     {{-- Editar --}}
@@ -155,7 +164,8 @@
                                                     <div class="flex flex-col items-center justify-center">
                                                         <i class="ti ti-tag text-6xl text-gray-300 mb-4"></i>
                                                         <h5 class="text-gray-500 mb-2">Nenhuma categoria encontrada</h5>
-                                                        <p class="text-gray-400 mb-4">Ainda não há categorias cadastradas no
+                                                        <p class="text-gray-400 mb-4">Ainda não há categorias cadastradas
+                                                            no
                                                             sistema.</p>
                                                         <a href="{{ route('admin.categories.create') }}"
                                                             class="btn btn-primary">

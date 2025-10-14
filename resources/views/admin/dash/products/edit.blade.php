@@ -157,6 +157,28 @@
                                 </div>
                             </div>
 
+                            <!-- Criado por -->
+                            <div class="col-span-12 sm:col-span-6">
+                                <div class="mb-1">
+                                    <label class="form-label">
+                                        Criado por
+                                    </label>
+                                    <input type="text" name="created_by_display" class="form-control disabled-field" disabled
+                                        value="{{ $product->createdBy ? $product->createdBy->fullname : 'Sistema' }}" />
+                                </div>
+                            </div>
+
+                            <!-- Editado por -->
+                            <div class="col-span-12 sm:col-span-6">
+                                <div class="mb-1">
+                                    <label class="form-label">
+                                        Editado por
+                                    </label>
+                                    <input type="text" name="updated_by_display" class="form-control disabled-field" disabled
+                                        value="{{ $product->updatedBy ? $product->updatedBy->fullname : 'Sistema' }}" />
+                                </div>
+                            </div>
+
                             <!-- Data de Criação -->
                             <div class="col-span-12 sm:col-span-6">
                                 <div class="mb-1">

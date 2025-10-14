@@ -51,6 +51,7 @@ class UserController extends Controller
 
         unset($validated['photo']);
 
+        $validated['created_by'] = $currentUser->id;
         $user = User::create($validated);
 
         Log::info('Utilizador criado com sucesso', [
@@ -65,7 +66,7 @@ class UserController extends Controller
 
     public function edit(string $id)
     {
-        $user = User::findOrFail($id);
+        $user = User::with(['createdBy', 'updatedBy'])->findOrFail($id);
         return view(self::ADMIN_DASH_USERS . 'edit', compact('user'));
     }
 
@@ -96,6 +97,8 @@ class UserController extends Controller
         }
 
         $originalData = $user->only(['fullname', 'email', 'phone', 'gender', 'birthdate', 'role']);
+
+        $validated['updated_by'] = $currentUser->id;
         $user->update($validated);
 
         Log::info('Utilizador atualizado com sucesso', [

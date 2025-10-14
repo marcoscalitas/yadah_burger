@@ -27,6 +27,8 @@ class Product extends Model
         'product_status',
         'is_featured',
         'category_id',
+        'created_by',
+        'updated_by',
     ];
 
     /**
@@ -92,5 +94,21 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * Relacionamento com o usuário que criou este registro
+     */
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Relacionamento com o usuário que atualizou este registro pela última vez
+     */
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 }

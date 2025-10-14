@@ -7,10 +7,7 @@
         'admin.dash.components.breadcrumb',
         getBreadcrumb(
             'admin.users.edit',
-            [
-                ['label' => $user->getShortName(), 'url' => route('admin.users.show', $user->id)],
-                ['label' => 'Editar Utilizador', 'url' => route('admin.users.edit', $user->id)],
-            ],
+            [['label' => 'Editar Utilizador', 'url' => route('admin.users.edit', $user->id)]],
             'Editar utilizador'))
 @endsection
 
@@ -139,6 +136,28 @@
                                             {{ $message }}
                                         </div>
                                     @enderror
+                                </div>
+                            </div>
+
+                                                        <!-- Criado por -->
+                            <div class="col-span-12 sm:col-span-6">
+                                <div class="mb-1">
+                                    <label class="form-label">
+                                        Criado por
+                                    </label>
+                                    <input type="text" name="created_by_display" class="form-control disabled-field" disabled
+                                        value="{{ $user->createdBy ? $user->createdBy->fullname : 'Sistema' }}" />
+                                </div>
+                            </div>
+
+                            <!-- Editado por -->
+                            <div class="col-span-12 sm:col-span-6">
+                                <div class="mb-1">
+                                    <label class="form-label">
+                                        Editado por
+                                    </label>
+                                    <input type="text" name="updated_by_display" class="form-control disabled-field" disabled
+                                        value="{{ $user->updatedBy ? $user->updatedBy->fullname : 'Sistema' }}" />
                                 </div>
                             </div>
 

@@ -48,7 +48,7 @@
                                                 <button class="datatable-sorter">Estado</button>
                                             </th>
                                             <th data-sortable="true" style="width: 14.236410698878343%;">
-                                                <button class="datatable-sorter">ACTION</button>
+                                                <button class="datatable-sorter">Ação</button>
                                             </th>
                                         </tr>
                                     </thead>

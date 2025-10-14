@@ -50,6 +50,7 @@ class CategoryController extends Controller
 
         unset($validated['image']);
 
+        $validated['created_by'] = $currentUser->id;
         $category = Category::create($validated);
 
         Log::info('Categoria criada com sucesso', [
@@ -67,7 +68,7 @@ class CategoryController extends Controller
      */
     public function edit(string $id)
     {
-        $category = Category::findOrFail($id);
+        $category = Category::with(['createdBy', 'updatedBy'])->findOrFail($id);
         return view(self::ADMIN_DASH_CATEGORIES . 'edit', compact('category'));
     }
 
@@ -94,6 +95,7 @@ class CategoryController extends Controller
 
         unset($validated['image']);
 
+        $validated['updated_by'] = $currentUser->id;
         $category->update($validated);
 
         Log::info('Categoria editada com sucesso', [

@@ -33,6 +33,8 @@ class User extends Authenticatable
         'last_login',
         'failed_login_attempts',
         'account_locked_until',
+        'created_by',
+        'updated_by',
     ];
 
     /**
@@ -138,5 +140,21 @@ class User extends Authenticatable
         } catch (\Exception $e) {
             return null;
         }
+    }
+
+    /**
+     * Relacionamento com o usuário que criou este registro
+     */
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Relacionamento com o usuário que atualizou este registro pela última vez
+     */
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 }

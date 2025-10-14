@@ -20,6 +20,8 @@ class Category extends Model
         'description',
         'image_url',
         'category_status',
+        'created_by',
+        'updated_by',
     ];
 
     /**
@@ -76,5 +78,21 @@ class Category extends Model
     public function scopeInactive($query)
     {
         return $query->where('category_status', 'i');
+    }
+
+    /**
+     * Relacionamento com o usuário que criou este registro
+     */
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Relacionamento com o usuário que atualizou este registro pela última vez
+     */
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 }

@@ -31,17 +31,23 @@
                                             <th data-sortable="true" style="width: 6%;">
                                                 <button class="datatable-sorter">#</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 30%;">
+                                            <th data-sortable="true" style="width: 20%;">
                                                 <button class="datatable-sorter">Produto</button>
                                             </th>
                                             <th data-sortable="true" style="width: 20%;">
                                                 <button class="datatable-sorter">Categoria</button>
                                             </th>
+                                            <th data-sortable="true" style="width: 10%;">
+                                                <button class="datatable-sorter">Descrição</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 15%;">
+                                                <button class="datatable-sorter">Preço</button>
+                                            </th>
                                             <th data-sortable="true" style="width: 15%;">
                                                 <button class="datatable-sorter">Status</button>
                                             </th>
                                             <th data-sortable="true" style="width: 15%;">
-                                                <button class="datatable-sorter">Preço</button>
+                                                <button class="datatable-sorter">Criada por</button>
                                             </th>
                                             <th data-sortable="true" style="width: 14%;">
                                                 <button class="datatable-sorter">Ações</button>
@@ -69,8 +75,19 @@
                                                     <span
                                                         class="text-sm text-gray-600">{{ $product->category->name ?? 'Sem categoria' }}</span>
                                                 </td>
-                                                <td>{!! getStatusBadge($product->product_status) !!}</td>
+                                                <td>
+                                                    <div class="max-w-xs overflow-hidden">
+                                                        <span class="text-sm text-gray-600 block truncate"
+                                                            title="{{ $product->description }}">
+                                                            {{ $product->getShortDescription(60) }}
+                                                        </span>
+                                                    </div>
+                                                </td>
                                                 <td>{{ number_format($product->price, 2, ',', '.') . ' Kz' }}</td>
+                                                <td>{!! getStatusBadge($product->product_status) !!}</td>
+                                                <td>
+                                                    {{ $product->createdBy ? $product->createdBy->getShortName() : 'Sistema' }}
+                                                </td>
                                                 <td class="d-flex gap-2">
                                                     {{-- Editar --}}
                                                     <a href="{{ route('admin.products.edit', $product->id) }}"
