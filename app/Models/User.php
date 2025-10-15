@@ -83,11 +83,16 @@ class User extends Authenticatable
             ['M', 'staff'] => 'Funcionário',
             ['F', 'admin'] => 'Administradora',
             ['F', 'staff'] => 'Funcionária',
+            default => ucfirst($this->role ?? '-')
         };
     }
 
     public function getFormattedPhone($code = true): string
     {
+        if (empty($this->phone)) {
+            return '-';
+        }
+
         $digits = preg_replace('/\D/', '', $this->phone);
 
         if (strlen($digits) !== 9) {
