@@ -24,7 +24,7 @@ class PasswordController extends Controller
             'email' => 'required|email',
         ]);
 
-        $status = Password::sendResetLink(
+        $status = Password::broker('admins')->sendResetLink(
             $request->only('email')
         );
 
@@ -56,7 +56,7 @@ class PasswordController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        $status = Password::reset(
+        $status = Password::broker('admins')->reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function (User $user, string $password) {
                 $user->forceFill([
