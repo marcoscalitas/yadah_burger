@@ -56,7 +56,8 @@ class Product extends Model
         }
 
         // Default product image
-        return asset('admin/assets/images/product/default-product.jpg');
+        // return asset('admin/assets/images/product/default-product.jpg');
+        return asset($this->image_url);
     }
 
     /**

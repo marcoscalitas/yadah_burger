@@ -47,7 +47,8 @@ class Category extends Model
         }
 
         // Default category image
-        return asset('admin/assets/images/category/default-category.jpg');
+        // return asset('admin/assets/images/category/default-category.jpg');
+        return asset($this->image_url);
     }
 
     /**
