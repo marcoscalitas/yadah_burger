@@ -78,7 +78,7 @@ class Product extends Model
      */
     public function scopeActive($query)
     {
-        return $query->where('product_status', 'active');
+        return $query->where('product_status', 'a');
     }
 
     /**
@@ -86,7 +86,7 @@ class Product extends Model
      */
     public function scopeInactive($query)
     {
-        return $query->where('product_status', 'inactive');
+        return $query->where('product_status', 'i');
     }
 
     /**
