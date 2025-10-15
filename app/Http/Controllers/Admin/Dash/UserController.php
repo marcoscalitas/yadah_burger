@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Dash;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\UploadService;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -59,6 +60,9 @@ class UserController extends Controller
         $validated['created_by'] = $currentUser->id;
         $user = User::create($validated);
 
+        // Enviar email de verificação automaticamente
+        event(new Registered($user));
+
         Log::info('Utilizador criado com sucesso', [
             'user_id' => $user->id,
             'user_name' => $user->fullname,
@@ -66,7 +70,7 @@ class UserController extends Controller
         ]);
 
         return redirect()->route('admin.users.index')
-            ->with('success', 'Utilizador criado com sucesso!');
+            ->with('success', 'Utilizador criado com sucesso! Email de verificação enviado.');
     }
 
     public function edit(string $id)

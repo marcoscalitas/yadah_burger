@@ -102,6 +102,25 @@ class LoginController extends Controller
             return $this->showFormError($request, 'Acesso restrito. Você não tem permissão para acessar esta área.');
         }
 
+        // Verificar se o email foi verificado ou se o status impede o acesso
+        if (($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail()) ||
+            in_array($user->user_status, ['p', 'sp', 'd'])) {
+
+            // Mantém o usuário logado mas redireciona para verificação
+            $this->resetLoginAttempts($user);
+            $request->session()->regenerate();
+
+            $message = match($user->user_status) {
+                'p' => 'Sua conta está pendente de verificação. Por favor, verifique seu email para ativar sua conta.',
+                'sp' => 'Sua conta foi suspensa. Entre em contato com o administrador para reativá-la.',
+                'd' => 'Sua conta foi desativada. Entre em contato com o administrador.',
+                default => 'Por favor, verifique seu email antes de acessar o dashboard.'
+            };
+
+            return redirect()->route('admin.verification.notice')
+                ->with('message', $message);
+        }
+
         $this->resetLoginAttempts($user);
         $request->session()->regenerate();
 

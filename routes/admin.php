@@ -1,16 +1,17 @@
 <?php
 
+use App\Http\Controllers\Admin\Auth\EmailVerificationController;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\Auth\PasswordController;
+use App\Http\Controllers\Admin\Dash\CategoryController;
 use App\Http\Controllers\Admin\Dash\HomeController;
-use App\Http\Controllers\Admin\Dash\UserController;
 use App\Http\Controllers\Admin\Dash\OrderController;
 use App\Http\Controllers\Admin\Dash\ProductController;
-use App\Http\Controllers\Admin\Dash\CategoryController;
-use App\Http\Controllers\Admin\Dash\SettingsController;
 use App\Http\Controllers\Admin\Dash\ProfileController;
-use Symfony\Component\HttpKernel\Profiler\Profile;
+use App\Http\Controllers\Admin\Dash\SettingsController;
+use App\Http\Controllers\Admin\Dash\UserController;
 use Illuminate\Support\Facades\Route;
+use Symfony\Component\HttpKernel\Profiler\Profile;
 
 // =======================================================================
 // ADMIN - Public routes (No login required)
@@ -33,14 +34,34 @@ Route::middleware('guest.admin')->group(function () {
 });
 
 // =======================================================================
-// ADMIN - Private routes (login required)
+// ADMIN - Email Verification routes (public access needed for verification link)
 // =======================================================================
 
-Route::middleware(['auth.admin'])->group(function () {
+// Email verification link (must be accessible without auth for email links)
+Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+    ->middleware(['signed', 'throttle:6,1'])
+    ->name('verification.verify');
+
+// Email verification notice and resend (requires auth)
+Route::middleware('auth.admin')->group(function () {
+    Route::get('/email/verify', [EmailVerificationController::class, 'notice'])
+        ->name('verification.notice');
+
+    Route::post('/email/verification-notification', [EmailVerificationController::class, 'send'])
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
+
+    // Log out (disponível para todos os usuários logados, mesmo não verificados)
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+});
+
+// =======================================================================
+// ADMIN - Private routes (login required + verified)
+// =======================================================================
+
+Route::middleware(['auth.admin', 'verified'])->group(function () {
     // Index
     Route::get('/dashboard', [HomeController::class, 'index'])->name('index');
-    // Log out
-    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     // Profile
     Route::prefix('profile')->name('profile.')->controller(ProfileController::class)->group(function () {
         Route::get('/', 'index')->name('index');
