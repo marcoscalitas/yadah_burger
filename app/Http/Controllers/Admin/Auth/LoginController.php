@@ -110,7 +110,7 @@ class LoginController extends Controller
             $this->resetLoginAttempts($user);
             $request->session()->regenerate();
 
-            $message = match($user->user_status) {
+            $message = match ($user->user_status) {
                 'p' => 'Sua conta está pendente de verificação. Por favor, verifique seu email para ativar sua conta.',
                 'sp' => 'Sua conta foi suspensa. Entre em contato com o administrador para reativá-la.',
                 'd' => 'Sua conta foi desativada. Entre em contato com o administrador.',
@@ -145,10 +145,5 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('admin.login');
-    }
-
-    public function codeVerification()
-    {
-        return view(self::ADMIN_AUTH_LOGIN.'code-verification');
     }
 }

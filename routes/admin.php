@@ -21,8 +21,6 @@ Route::middleware('guest.admin')->group(function () {
     Route::get('/login', [LoginController::class, 'login'])->name('login');
     Route::post('/login-attempt', [LoginController::class, 'loginAttempt'])->name('login.attempt');
 
-    Route::get('/code-verification', [LoginController::class, 'codeVerification'])->name('code.verification');
-
     // Forget & reset password
     Route::controller(PasswordController::class)->group(function () {
         Route::get('/forgot-password', 'showForgotForm')->name('password.request');
