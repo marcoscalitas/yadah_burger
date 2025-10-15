@@ -13,6 +13,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
+            'auth.admin' => \App\Http\Middleware\GuardAdmin::class,
+            'guest.admin' => \App\Http\Middleware\GuestAdmin::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
