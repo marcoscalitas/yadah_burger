@@ -107,41 +107,15 @@ class UserController extends Controller
             return back()->withErrors(['role' => 'Não é possível alterar a sua própria função.'])->withInput();
         }
 
-        $originalData = $user->only(['fullname', 'email', 'phone', 'gender', 'birthdate', 'role']);
-
-        // Email changed
-        $emailChanged = $user->email !== $validated['email'];
-
-        if ($emailChanged) {
-            $validated['user_status'] = 'p';
-            $validated['email_verified_at'] = null;
-        }
-
         $validated['updated_by'] = $currentUser->id;
-        $user->update($validated);
 
-        // Email changed
-        if ($emailChanged) {
-            event(new Registered($user));
-
-            Log::info('Email do utilizador alterado - Status resetado e email de verificação enviado', [
-                'user_id' => $user->id,
-                'old_email' => $originalData['email'],
-                'new_email' => $validated['email'],
-                'updated_by' => $currentUser->id,
-            ]);
-        }
+        // Update email processing with verification using helper
+        $successMessage = handleUserEmailUpdate($user, $validated, false, $currentUser->id);
 
         Log::info('Utilizador atualizado com sucesso', [
             'user_id' => $user->id,
             'updated_by' => $currentUser->id,
-            'changes' => array_diff_assoc($validated, $originalData),
-            'email_changed' => $emailChanged,
         ]);
-
-        $successMessage = $emailChanged
-            ? 'Utilizador atualizado com sucesso! Email de verificação enviado para o novo endereço.'
-            : 'Utilizador atualizado com sucesso!';
 
         return redirect()->route('admin.users.index')
             ->with('success', $successMessage);

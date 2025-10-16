@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin\Dash;
 
-use App\Models\User;
-use Illuminate\Http\Request;
-use App\Services\UploadService;
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Services\UploadService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
@@ -37,7 +37,7 @@ class ProfileController extends Controller
         $data = $request->validate([
             'phone' => ['required', 'string', 'size:9', 'regex:/^\d{9}$/'],
             'fullname' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+            'email' => 'required|email|max:255|unique:users,email,'.$currentUser->id,
             'gender' => 'required|in:M,F',
             'birthdate' => 'required|date',
             'role' => 'required|in:admin,staff',
@@ -55,9 +55,14 @@ class ProfileController extends Controller
             ])->withInput();
         }
 
-        $currentUser->update($data);
+        // Update email processing with verification using helper
+        $successMessage = handleUserEmailUpdate($currentUser, $data, true);
 
-        return redirect()->route('admin.profile.index')->with('success', 'Perfil atualizado com sucesso.');
+        Log::info('Perfil do utilizador atualizado com sucesso', [
+            'user_id' => $currentUser->id,
+        ]);
+
+        return redirect()->route('admin.profile.index')->with('success', $successMessage);
     }
 
     public function uploadPhoto(Request $request, UploadService $uploader)
