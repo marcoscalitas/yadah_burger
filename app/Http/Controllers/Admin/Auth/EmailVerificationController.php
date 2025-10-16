@@ -48,18 +48,18 @@ class EmailVerificationController extends Controller
             abort(403, 'Link de verificação inválido.');
         }
 
-        if ($user->hasVerifiedEmail()) {
-            // Ativar automaticamente usuários pendentes que já verificaram o email
-            if ($user->user_status === 'p') {
-                $user->update(['user_status' => 'a']);
-            }
-
-            // Log the user in and redirect
+        // SECURITY FIX: Verificar se o email não foi alterado após o link ser gerado
+        // Se o usuário já tem email verificado MAS o status está pendente,
+        // significa que o email foi alterado e este é um link antigo
+        if ($user->hasVerifiedEmail() && $user->user_status === 'a') {
+            // Email já verificado e conta já ativa - link desnecessário mas válido
             auth('admin')->login($user);
-
             return redirect()->intended(route('admin.index', absolute: false).'?verified=1')
-                ->with('success', 'Email já estava verificado! Bem-vindo ao dashboard.');
-        }        if ($user->markEmailAsVerified()) {
+                ->with('info', 'Email já estava verificado! Bem-vindo de volta.');
+        }
+
+        // Se chegou aqui, é um link válido para verificação
+        if ($user->markEmailAsVerified()) {
             event(new Verified($user));
         }
 

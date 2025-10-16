@@ -199,6 +199,9 @@ if (! function_exists('handleUserEmailUpdate')) {
         if ($emailChanged) {
             $data['user_status'] = 'p';
             $data['email_verified_at'] = null;
+
+            // SECURITY FIX: Invalidar todos os tokens de verificação antigos
+            invalidateOldVerificationTokens($user->id);
         }
 
         // Atualizar usuário
@@ -229,5 +232,32 @@ if (! function_exists('handleUserEmailUpdate')) {
         $baseMessage = $isSelfUpdate ? 'Perfil atualizado com sucesso' : 'Utilizador atualizado com sucesso';
 
         return $emailChanged ? $baseMessage.'! Email de verificação enviado para o novo endereço.' : $baseMessage.'!';
+    }
+}
+
+// Invalidate Old Verification Tokens - Invalida tokens de verificação antigos
+if (! function_exists('invalidateOldVerificationTokens')) {
+    /**
+     * Invalida todos os tokens de verificação de email antigos para um usuário.
+     *
+     * @param int $userId
+     * @return void
+     */
+    function invalidateOldVerificationTokens(int $userId): void
+    {
+        try {
+            \Illuminate\Support\Facades\DB::table('email_verification_tokens')
+                ->where('user_id', $userId)
+                ->where('used', false)
+                ->update(['used' => true, 'updated_at' => now()]);
+
+            \Illuminate\Support\Facades\Log::info('Tokens de verificação antigos invalidados', [
+                'user_id' => $userId
+            ]);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::warning('Erro ao invalidar tokens antigos: ' . $e->getMessage(), [
+                'user_id' => $userId
+            ]);
+        }
     }
 }
