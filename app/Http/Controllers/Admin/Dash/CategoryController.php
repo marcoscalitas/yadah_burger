@@ -11,6 +11,8 @@ class CategoryController extends Controller
 {
     private const ADMIN_DASH_CATEGORIES = 'admin.dash.categories.';
 
+    private const ENTITY = 'categorias';
+
     /**
      * Display a listing of the resource.
      */
@@ -34,23 +36,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        if (! isAdmin()) {
-            return abort(403, 'Acesso negado. Apenas administradores podem criar categorias.');
-        }
-
-        $currentUser = getCurrentUser('admin');
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:3072',
-        ]);
-
-        if ($request->hasFile('image')) {
-            $validated['image_url'] = handlePhotoUpload($request, 'admin/categories/images', 'image');
-        }
-
-        unset($validated['image']);
-
+        [$validated, $currentUser] = $this->handleSubmit($request);
         $validated['created_by'] = $currentUser->id;
         $category = Category::create($validated);
 
@@ -79,24 +65,8 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        if (! isAdmin()) {
-            return abort(403, 'Acesso negado. Apenas administradores podem editar categorias.');
-        }
-
-        $currentUser = getCurrentUser('admin');
         $category = Category::findOrFail($id);
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:3072',
-        ]);
-
-        if ($request->hasFile('image')) {
-            $validated['image_url'] = handlePhotoUpload($request, 'admin/categories/images', 'image');
-        }
-
-        unset($validated['image']);
-
+        [$validated, $currentUser] = $this->handleSubmit($request, true);
         $validated['updated_by'] = $currentUser->id;
         $category->update($validated);
 
@@ -115,9 +85,7 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        if (! isAdmin()) {
-            return abort(403, 'Acesso negado. Apenas administradores podem apagar categorias.');
-        }
+        checkIfIsAdmin('apagar', self::ENTITY);
 
         $currentUser = getCurrentUser('admin');
         $category = Category::findOrFail($id);
@@ -131,5 +99,28 @@ class CategoryController extends Controller
 
         return redirect()->route('admin.categories.index')
             ->with('success', 'Categoria apagada com sucesso.');
+    }
+
+    /** ------------------------------
+     * Helpers (Reusable code)
+     * ------------------------------ */
+    private function handleSubmit(Request $request, bool $isUpdate = false)
+    {
+        checkIfIsAdmin($isUpdate ? 'editar' : 'criar', self::ENTITY);
+
+        $currentUser = getCurrentUser('admin');
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:3072',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $validated['image_url'] = handlePhotoUpload($request, 'admin/categories/images', 'image');
+        }
+
+        unset($validated['image']);
+
+        return [$validated, $currentUser];
     }
 }

@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\Admin\Dash;
 
-use App\Models\Product;
+use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
     private const ADMIN_DASH_PRODUCTS = 'admin.dash.products.';
+
+    private const ENTITY = 'produtos';
 
     /**
      * Display a listing of the resource.
@@ -37,41 +39,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        if (! isAdmin()) {
-            return abort(403, 'Acesso negado. Apenas administradores podem criar produtos.');
-        }
-
-        $currentUser = getCurrentUser('admin');
-        $isPromotion = $request->boolean('is_featured');
-
-        $request->merge([
-            'price' => $this->convertToDecimal($request->input('price') ?? 0),
-            'promotion_price' => $isPromotion
-                ? $this->convertToDecimal($request->input('promotion_price'))
-                : null,
-        ]);
-
-        $rules = [
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric|gt:0',
-            'category_id' => 'required|exists:categories,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:3072',
-            'is_featured' => 'required|boolean',
-        ];
-
-        $rules['promotion_price'] = $isPromotion
-            ? 'required|numeric|gt:0'
-            : 'nullable|numeric|gte:0';
-
-        $validated = $request->validate($rules);
-
-        if ($request->hasFile('image')) {
-            $validated['image_url'] = handlePhotoUpload($request, 'admin/products/images', 'image');
-        }
-
-        unset($validated['image']);
-
+        [$validated, $currentUser] = $this->handleSubmit($request);
         $validated['created_by'] = $currentUser->id;
         $product = Product::create($validated);
 
@@ -101,12 +69,50 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        if (! isAdmin()) {
-            return abort(403, 'Acesso negado. Apenas administradores podem editar produtos.');
-        }
+        $product = Product::findOrFail($id);
+        [$validated, $currentUser] = $this->handleSubmit($request, true);
+        $validated['updated_by'] = $currentUser->id;
+        $product->update($validated);
+
+        Log::info('Produto atualizado com sucesso', [
+            'product_id' => $product->id,
+            'product_name' => $product->name,
+            'updated_by' => $currentUser->id,
+        ]);
+
+        return redirect()->route('admin.products.index')
+            ->with('success', 'Produto atualizado com sucesso.');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        checkIfIsAdmin('apagar', self::ENTITY);
+
+        $product = Product::findOrFail($id);
+        $productName = $product->name;
+        $product->delete();
+
+        Log::info('Produto removido com sucesso', [
+            'product_id' => $id,
+            'product_name' => $productName,
+            'deleted_by' => getCurrentUser('admin')->id,
+        ]);
+
+        return redirect()->route('admin.products.index')
+            ->with('success', 'Produto removido com sucesso.');
+    }
+
+    /** ------------------------------
+     * Helpers (Reusable code)
+     * ------------------------------ */
+    private function handleSubmit(Request $request, bool $isUpdate = false)
+    {
+        checkIfIsAdmin($isUpdate ? 'editar' : 'criar', self::ENTITY);
 
         $currentUser = getCurrentUser('admin');
-        $product = Product::findOrFail($id);
         $isPromotion = $request->boolean('is_featured');
 
         $request->merge([
@@ -137,45 +143,8 @@ class ProductController extends Controller
 
         unset($validated['image']);
 
-        $validated['updated_by'] = $currentUser->id;
-        $product->update($validated);
-
-        Log::info('Produto atualizado com sucesso', [
-            'product_id' => $product->id,
-            'product_name' => $product->name,
-            'updated_by' => $currentUser->id,
-        ]);
-
-        return redirect()->route('admin.products.index')
-            ->with('success', 'Produto atualizado com sucesso.');
+        return [$validated, $currentUser];
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        if (! isAdmin()) {
-            return abort(403, 'Acesso negado. Apenas administradores podem remover produtos.');
-        }
-
-        $product = Product::findOrFail($id);
-        $productName = $product->name;
-        $product->delete();
-
-        Log::info('Produto removido com sucesso', [
-            'product_id' => $id,
-            'product_name' => $productName,
-            'deleted_by' => getCurrentUser('admin')->id,
-        ]);
-
-        return redirect()->route('admin.products.index')
-            ->with('success', 'Produto removido com sucesso.');
-    }
-
-    /** ------------------------------
-     * Helpers (código reutilizável)
-     * ------------------------------ */
 
     /**
      * Converte uma string de preço formatada (ex: "50.000,00") para decimal (ex: "50000.00").
