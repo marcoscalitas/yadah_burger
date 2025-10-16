@@ -4,20 +4,9 @@
 
 @section('content')
     <form method="POST" action="{{ route('admin.password.email') }}">
-        @if ($errors->any())
-            <div class="alert alert-danger d-flex align-items-start mt-4">
-                <div>
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>
-                                <i class="fas fa-exclamation-triangle me-1"></i>
-                                {{ $error }}
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-        @endif
+        <!-- [ Messages ] start -->
+        @include('admin.includes.global-request-msg')
+        <!-- [ Messages ] end -->
 
         @csrf
 

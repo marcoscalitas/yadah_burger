@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 
 class PasswordController extends Controller
 {
-    private const ADMIN_AUTH_PASSWORD = 'admin.auth.password.';
+    private const ADMIN_AUTH_PASSWORD = 'admin.auth.';
 
     public function showForgotForm()
     {

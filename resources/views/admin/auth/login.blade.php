@@ -7,30 +7,9 @@
         {{-- Title --}}
         <h3 class="mb-2"><b>Faça login com o seu email</b></h3>
 
-        @if (session()->has('success'))
-            <div class="alert alert-success message-fade-out">
-                <span>
-                    <i class="fas fa-check-circle fa-lg me-2"></i>
-                </span>
-                {{ session('success') }}
-            </div>
-        @endif
-
-        {{-- Mostra erros globais --}}
-        @if ($errors->any())
-            <div class="alert alert-danger d-flex align-items-start">
-                <div>
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>
-                                <i class="fas fa-exclamation-triangle me-1"></i>
-                                {{ $error }}
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-        @endif
+        <!-- [ Messages ] start -->
+        @include('admin.includes.global-request-msg')
+        <!-- [ Messages ] end -->
 
         {{-- Proteção contra CSRF --}}
         @csrf
@@ -41,9 +20,11 @@
             </label>
             <input type="email" name="email" value="{{ old('email') }}"
                 class="form-control @error('email') is-invalid @enderror" placeholder="email@exemplo.com" />
-            <div class="text-danger d-flex align-items-center mt-1 error-none">
-                <i class="fas fa-exclamation-circle me-1"></i> <span id="email-error"></span>
-            </div>
+            @error('email')
+                <div class="text-danger d-flex align-items-center mt-1">
+                    <i class="fas fa-exclamation-triangle me-1"></i> {{ $message }}
+                </div>
+            @enderror
         </div>
 
         <div class="mb-4">
@@ -52,9 +33,11 @@
             </label>
             <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
                 placeholder="Senha" />
-            <div class="text-danger d-flex align-items-center mt-1 error-none">
-                <i class="fas fa-exclamation-circle me-1"></i> <span id="password-error"></span>
-            </div>
+            @error('password')
+                <div class="text-danger d-flex align-items-center mt-1">
+                    <i class="fas fa-exclamation-triangle me-1"></i> {{ $message }}
+                </div>
+            @enderror
         </div>
 
         <div class="flex mt-1 justify-between items-center flex-wrap">

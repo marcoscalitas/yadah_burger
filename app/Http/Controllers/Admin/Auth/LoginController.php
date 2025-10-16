@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
-    private const ADMIN_AUTH_LOGIN = 'admin.auth.login.';
+    private const ADMIN_AUTH_LOGIN = 'admin.auth.';
 
     public function login()
     {
