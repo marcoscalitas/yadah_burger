@@ -200,11 +200,11 @@ if (! function_exists('handleUserEmailUpdate')) {
             $data['user_status'] = 'p';
             $data['email_verified_at'] = null;
 
-            // SECURITY FIX: Invalidar todos os tokens de verificação antigos
+            // SECURITY FIX: Invalidar todos os tokens antigos
             invalidateOldVerificationTokens($user->id);
-        }
+            invalidatePasswordResetTokens($originalEmail);
+        } // Atualizar usuário
 
-        // Atualizar usuário
         $user->update($data);
 
         // Se email mudou, enviar verificação e log
@@ -239,9 +239,6 @@ if (! function_exists('handleUserEmailUpdate')) {
 if (! function_exists('invalidateOldVerificationTokens')) {
     /**
      * Invalida todos os tokens de verificação de email antigos para um usuário.
-     *
-     * @param int $userId
-     * @return void
      */
     function invalidateOldVerificationTokens(int $userId): void
     {
@@ -252,11 +249,37 @@ if (! function_exists('invalidateOldVerificationTokens')) {
                 ->update(['used' => true, 'updated_at' => now()]);
 
             \Illuminate\Support\Facades\Log::info('Tokens de verificação antigos invalidados', [
-                'user_id' => $userId
+                'user_id' => $userId,
             ]);
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::warning('Erro ao invalidar tokens antigos: ' . $e->getMessage(), [
-                'user_id' => $userId
+            \Illuminate\Support\Facades\Log::warning('Erro ao invalidar tokens antigos: '.$e->getMessage(), [
+                'user_id' => $userId,
+            ]);
+        }
+    }
+}
+
+// Invalidate Password Reset Tokens - Invalida tokens de reset de senha
+if (! function_exists('invalidatePasswordResetTokens')) {
+    /**
+     * Invalida todos os tokens de reset de senha para um email específico.
+     */
+    function invalidatePasswordResetTokens(string $email): void
+    {
+        try {
+            $deleted = \Illuminate\Support\Facades\DB::table('password_reset_tokens')
+                ->where('email', $email)
+                ->delete();
+
+            if ($deleted > 0) {
+                \Illuminate\Support\Facades\Log::info('Tokens de reset de senha invalidados', [
+                    'email' => $email,
+                    'tokens_deleted' => $deleted,
+                ]);
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::warning('Erro ao invalidar tokens de reset: '.$e->getMessage(), [
+                'email' => $email,
             ]);
         }
     }
