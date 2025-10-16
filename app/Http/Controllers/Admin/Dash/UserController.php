@@ -15,6 +15,8 @@ class UserController extends Controller
 {
     private const ADMIN_DASH_USERS = 'admin.dash.users.';
 
+    private const ENTITY = 'utilizadores';
+
     public function index()
     {
         $users = User::orderBy('id', 'desc')->get();
@@ -29,15 +31,13 @@ class UserController extends Controller
 
     public function store(Request $request, UploadService $uploader)
     {
-        if (! isAdmin()) {
-            return abort(403, 'Acesso negado. Apenas administradores podem criar utilizadores.');
-        }
+        checkIfIsAdmin('criar', self::ENTITY);
 
+        $currentUser = getCurrentUser('admin');
         $request->merge([
             'phone' => preg_replace('/\D/', '', $request->input('phone')),
         ]);
 
-        $currentUser = getCurrentUser('admin');
         $validated = $request->validate([
             'fullname' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
@@ -82,14 +82,10 @@ class UserController extends Controller
 
     public function update(Request $request, string $id)
     {
+        checkIfIsAdmin('editar', self::ENTITY);
 
-        if (! isAdmin()) {
-            return abort(403, 'Acesso negado. Apenas administradores podem editar utilizadores.');
-        }
-
-        $currentUser = getCurrentUser('admin');
         $user = User::findOrFail($id);
-
+        $currentUser = getCurrentUser('admin');
         $request->merge([
             'phone' => preg_replace('/\D/', '', $request->input('phone')),
         ]);
@@ -144,12 +140,10 @@ class UserController extends Controller
 
     public function destroy(string $id)
     {
-        if (! isAdmin()) {
-            return abort(403, 'Acesso negado. Apenas administradores podem editar utilizadores.');
-        }
+        checkIfIsAdmin('apagar', self::ENTITY);
 
-        $currentUser = getCurrentUser('admin');
         $user = User::findOrFail($id);
+        $currentUser = getCurrentUser('admin');
 
         if ($currentUser->id == $user->id) {
             return $this->redirectWithError('Não é possível eliminar a sua própria conta.');
