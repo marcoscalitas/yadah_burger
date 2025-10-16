@@ -176,6 +176,58 @@ if (! function_exists('getFormattedDate')) {
 if (! function_exists('checkIfIsAdmin')) {
     function checkIfIsAdmin(string $crudAction, string $entity)
     {
-        if (! isAdmin()) return abort(403, "Acesso negado. Apenas administradores podem {$crudAction} {$entity}.");
+        if (! isAdmin()) {
+            return abort(403, "Acesso negado. Apenas administradores podem {$crudAction} {$entity}.");
+        }
+    }
+}
+
+// Handle User Email Update - Processa atualização de email com verificação automática
+if (! function_exists('handleUserEmailUpdate')) {
+    /**
+     * Processa a atualização de dados do usuário, verificando mudança de email
+     * e aplicando reset de status e envio de verificação automaticamente.
+     *
+     * @return string Mensagem de sucesso
+     */
+    function handleUserEmailUpdate(\App\Models\User $user, array $data, bool $isSelfUpdate = false, ?int $updatedBy = null): string
+    {
+        $originalEmail = $user->email;
+        $emailChanged = $originalEmail !== ($data['email'] ?? $originalEmail);
+
+        // Reset status se email mudou
+        if ($emailChanged) {
+            $data['user_status'] = 'p';
+            $data['email_verified_at'] = null;
+        }
+
+        // Atualizar usuário
+        $user->update($data);
+
+        // Se email mudou, enviar verificação e log
+        if ($emailChanged) {
+            event(new \Illuminate\Auth\Events\Registered($user));
+
+            $logData = [
+                'user_id' => $user->id,
+                'old_email' => $originalEmail,
+                'new_email' => $data['email'],
+            ];
+
+            if ($isSelfUpdate) {
+                $logData['self_update'] = true;
+                $logMessage = 'Email do próprio utilizador alterado - Status resetado e email de verificação enviado';
+            } else {
+                $logData['updated_by'] = $updatedBy;
+                $logMessage = 'Email do utilizador alterado - Status resetado e email de verificação enviado';
+            }
+
+            \Illuminate\Support\Facades\Log::info($logMessage, $logData);
+        }
+
+        // Retornar mensagem apropriada
+        $baseMessage = $isSelfUpdate ? 'Perfil atualizado com sucesso' : 'Utilizador atualizado com sucesso';
+
+        return $emailChanged ? $baseMessage.'! Email de verificação enviado para o novo endereço.' : $baseMessage.'!';
     }
 }
