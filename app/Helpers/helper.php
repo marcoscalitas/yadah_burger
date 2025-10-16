@@ -171,3 +171,11 @@ if (! function_exists('getFormattedDate')) {
         return $date->format($format);
     }
 }
+
+// Check if is Admin
+if (! function_exists('checkIfIsAdmin')) {
+    function checkIfIsAdmin(string $crudAction, string $entity)
+    {
+        if (! isAdmin()) return abort(403, "Acesso negado. Apenas administradores podem {$crudAction} {$entity}.");
+    }
+}
