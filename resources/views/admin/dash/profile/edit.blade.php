@@ -109,7 +109,7 @@
                                     </label>
                                     <input type="date" class="form-control @error('birthdate') is-invalid @enderror"
                                         name="birthdate"
-                                        value="{{ old('birthdate', getCurrentUser('admin')->birthdate) }}" />
+                                        value="{{ old('birthdate', getCurrentUser('admin')->birthdate->format('Y-m-d')) }}" />
                                     @error('birthdate')
                                         <div class="text-danger d-flex align-items-center mt-1">
                                             <i class="fas fa-exclamation-triangle me-1"></i>
