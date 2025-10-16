@@ -51,9 +51,11 @@
                             </div>
                         </div>
                         <hr class="my-4 border-secondary-500/10" />
-                        <div class="inline-flex items-center gap-3 w-full mb-3">
-                            <i class="ti ti-mail"></i>
-                            <p class="mb-0">{{ $user->email }}</p>
+                        <div class="flex items-start gap-3 w-full mb-3" style="align-items: flex-start; text-align: left;">
+                            <i class="ti ti-mail" style="margin-top: 2px; flex-shrink: 0;"></i>
+                            <p style="margin: 0; word-break: break-word; white-space: normal; text-align: left; flex: 1;">
+                                {{ $user->email }}
+                            </p>
                         </div>
                         <div class="inline-flex items-center gap-3 w-full mb-3">
                             <i class="ti ti-phone"></i>
@@ -217,7 +219,8 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <input type="date" class="form-control @error('birthdate') is-invalid @enderror"
-                                        name="birthdate" value="{{ old('birthdate', $user->birthdate->format('Y-m-d')) }}" />
+                                        name="birthdate"
+                                        value="{{ old('birthdate', $user->birthdate->format('Y-m-d')) }}" />
                                     @error('birthdate')
                                         <div class="text-danger d-flex align-items-center mt-1">
                                             <i class="fas fa-exclamation-triangle me-1"></i>
