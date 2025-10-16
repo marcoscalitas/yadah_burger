@@ -19,7 +19,9 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
 
 Route::middleware('guest.admin')->group(function () {
     Route::get('/login', [LoginController::class, 'login'])->name('login');
-    Route::post('/login-attempt', [LoginController::class, 'loginAttempt'])->name('login.attempt');
+    Route::post('/login-attempt', [LoginController::class, 'loginAttempt'])
+        ->middleware('throttle:5,1') // Máximo 5 tentativas por minuto por IP
+        ->name('login.attempt');
 
     // Forget & reset password
     Route::controller(PasswordController::class)->group(function () {

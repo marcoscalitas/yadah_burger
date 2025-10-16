@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
@@ -74,55 +76,77 @@ class LoginController extends Controller
 
     public function loginAttempt(Request $request)
     {
+        // Guarda de autenticação
         $auth = auth('admin');
         $this->validateLogin($request);
 
+        $remember = $request->boolean('remember', false);
+
+        // === 1. Buscar usuário de forma segura ===
         $user = User::where('email', $request->email)->first();
-        $remember = $request->has('remember');
 
-        if ($user) {
-            if ($msg = $this->checkAccountLocked($user)) {
-                return $this->showFormError($request, $msg);
-            }
+        // Hash dummy (para timing seguro mesmo se o usuário não existir)
+        $dummyHash = '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi';
+        $passwordHash = $user ? $user->password : $dummyHash;
+
+        // Verificação de senha — timing-safe
+        $passwordValid = Hash::check($request->password, $passwordHash);
+
+        // === 2. Falha imediata se usuário não existe (tempo igual) ===
+        if (! $user) {
+            // Mesmo retorno para não revelar existência de conta
+            return $this->showFormError($request, 'Email ou senha incorretos. Tente novamente.');
         }
 
-        $credentials = $request->only('email', 'password');
-
-        if (! $auth->attempt($credentials, $remember)) {
-            return $user
-                ? $this->showFormError($request, $this->incrementFailedAttempts($user))
-                : $this->showFormError($request, 'Email ou senha incorretos. Tente novamente.');
+        // === 3. Verificar se a conta está bloqueada ou suspensa ===
+        if ($msg = $this->checkAccountLocked($user)) {
+            return $this->showFormError($request, $msg);
         }
 
-        $user = $auth->user();
-
+        // === 4. Checar role ===
         if (! in_array($user->role, ['admin', 'staff'])) {
-            $auth->logout();
-
             return $this->showFormError($request, 'Acesso restrito. Você não tem permissão para acessar esta área.');
         }
 
-        // Verificar se o email foi verificado ou se o status impede o acesso
-        if (($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail()) ||
-            in_array($user->user_status, ['p', 'sp', 'd'])) {
-
-            // Mantém o usuário logado mas redireciona para verificação
-            $this->resetLoginAttempts($user);
-            $request->session()->regenerate();
-
-            $message = match ($user->user_status) {
-                'p' => 'Sua conta está pendente de verificação. Por favor, verifique seu email para ativar sua conta.',
-                'sp' => 'Sua conta foi suspensa. Entre em contato com o administrador para reativá-la.',
-                'd' => 'Sua conta foi desativada. Entre em contato com o administrador.',
-                default => 'Por favor, verifique seu email antes de acessar o dashboard.'
-            };
-
-            return redirect()->route('admin.verification.notice')
-                ->with('message', $message);
+        // === 5. Validar senha ===
+        if (! $passwordValid) {
+            return $this->showFormError($request, $this->incrementFailedAttempts($user));
         }
 
+        // === 6. Verificar status da conta antes do login ===
+        $isEmailVerifiable = $user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail;
+        $emailNotVerified = $isEmailVerifiable && ! $user->hasVerifiedEmail();
+        $restrictedStatus = in_array($user->user_status, ['p', 'sp', 'd']);
+
+        if ($emailNotVerified || $restrictedStatus) {
+            // Reseta tentativas mesmo se login não permitido
+            $this->resetLoginAttempts($user);
+
+            $message = match (true) {
+                $emailNotVerified => 'Por favor, verifique seu email antes de acessar o sistema.',
+                $user->user_status === 'p' => 'Sua conta está pendente de verificação. Verifique seu email.',
+                $user->user_status === 'sp' => 'Sua conta foi suspensa. Contate o administrador.',
+                $user->user_status === 'd' => 'Sua conta foi desativada. Contate o administrador.',
+                default => 'Acesso temporariamente bloqueado. Tente novamente mais tarde.',
+            };
+
+            return $this->showFormError($request, $message);
+        }
+
+        // === 7. Autenticar o usuário somente agora ===
+        $auth->login($user, $remember);
+
+        // === 8. Segurança pós-login ===
         $this->resetLoginAttempts($user);
         $request->session()->regenerate();
+
+        Log::info('Login bem-sucedido', [
+            'user_id' => $user->id,
+            'email' => $user->email,
+            'role' => $user->role,
+            'ip' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+        ]);
 
         return redirect()->route('admin.index');
     }
