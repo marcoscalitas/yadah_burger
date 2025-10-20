@@ -1,9 +1,9 @@
 @extends('admin.dash.layouts.main')
 
-@section('title', 'Produtos')
+@section('title', 'Utilizadores')
 
 @section('breadcrumb')
-    @include('admin.dash.components.breadcrumb', getBreadcrumb('admin.products.index'))
+    @include('admin.dash.components.breadcrumb', getBreadcrumb('admin.users.trashed'))
 @endsection
 
 @section('content')
@@ -13,13 +13,10 @@
             <div class="card table-card">
                 <div class="card-header">
                     <div class="sm:flex items-center justify-between">
-                        <h5 class="mb-3 sm:mb-0">Lista de produtos</h5>
+                        <h5 class="mb-3 sm:mb-0">Lista de utilizadores apagados</h5>
                         <div>
-                            <a href="{{ route('admin.products.trashed') }}" class="btn btn-outline-secondary mr-1">
-                                Ver produtos apagados
-                            </a>
-                            <a href="{{ route('admin.products.create') }}" class="btn btn-primary">
-                                <i class="ti ti-plus me-2"></i>Adicionar Produto
+                            <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
+                                Adicionar Utilizador
                             </a>
                         </div>
                     </div>
@@ -34,66 +31,54 @@
                                             <th data-sortable="true" style="width: 6%;">
                                                 <button class="datatable-sorter">#</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 20%;">
-                                                <button class="datatable-sorter">Produto</button>
+                                            <th data-sortable="true" style="width: 22.605694564279553%;">
+                                                <button class="datatable-sorter">Utilizador</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 20%;">
-                                                <button class="datatable-sorter">Categoria</button>
+                                            <th data-sortable="true" style="width: 18.809318377911993%;">
+                                                <button class="datatable-sorter">E-mail</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 10%;">
-                                                <button class="datatable-sorter">Descrição</button>
+                                            <th data-sortable="true" style="width: 18.809318377911993%;">
+                                                <button class="datatable-sorter">Telefone</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 15%;">
-                                                <button class="datatable-sorter">Preço</button>
+                                            <th data-sortable="true" style="width: 15.875754961173424%;">
+                                                <button class="datatable-sorter">Sexo</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 15%;">
-                                                <button class="datatable-sorter">Status</button>
+                                            <th data-sortable="true" style="width: 13.805004314063849%;">
+                                                <button class="datatable-sorter">Função</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 15%;">
-                                                <button class="datatable-sorter">Criada por</button>
+                                            <th data-sortable="true" style="width: 14.667817083692839%;">
+                                                <button class="datatable-sorter">Estado</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 14%;">
-                                                <button class="datatable-sorter">Ações</button>
+                                            <th data-sortable="true" style="width: 14.236410698878343%;">
+                                                <button class="datatable-sorter">Ação</button>
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($products as $index => $product)
-                                            <tr data-index="{{ $index }}" data-id="{{ $product->id }}">
+                                        @forelse ($users as $index => $user)
+                                            <tr data-index="{{ $index }}" data-id="{{ $user->id }}">
                                                 <td>{{ $index + 1 }}</td>
                                                 <td>
                                                     <div class="flex items-center w-44">
                                                         <div class="shrink-0">
                                                             <img class="shrink-0 w-[100px] h-[100px] round-image"
-                                                                src="{{ $product->getImageUrl() }}" alt="user-image"
+                                                                src="{{ $user->getImageUrl() }}" alt="user-image"
                                                                 style="height: 50px; width: 50px;" />
                                                         </div>
 
                                                         <div class="grow ltr:ml-3 rtl:mr-3">
-                                                            <h6 class="mb-0">{{ $product->name }}</h6>
+                                                            <h6 class="mb-0">{{ $user->getShortName() }}</h6>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td>
-                                                    <span
-                                                        class="text-sm text-gray-600">{{ $product->category->name ?? 'Sem categoria' }}</span>
-                                                </td>
-                                                <td>
-                                                    <div class="max-w-xs overflow-hidden">
-                                                        <span class="text-sm text-gray-600 block truncate"
-                                                            title="{{ $product->description }}">
-                                                            {{ $product->getShortDescription(60) }}
-                                                        </span>
-                                                    </div>
-                                                </td>
-                                                <td>{{ number_format($product->price, 2, ',', '.') . ' Kz' }}</td>
-                                                <td>{!! getStatusBadge($product->product_status) !!}</td>
-                                                <td>
-                                                    {{ $product->createdBy ? $product->createdBy->getShortName() : 'Sistema' }}
-                                                </td>
+                                                <td>{{ $user->email }}</td>
+                                                <td>{{ $user->getFormattedPhone() }}</td>
+                                                <td>{{ $user->getGender() }}</td>
+                                                <td>{{ $user->getRoleLabel() }}</td>
+                                                <td>{!! getStatusBadge($user->user_status) !!}</td>
                                                 <td class="d-flex gap-2">
-                                                    {{-- Editar --}}
-                                                    <a href="{{ route('admin.products.edit', $product->id) }}"
+                                                    {{-- Restaurar --}}
+                                                    <a href="{{ route('admin.users.restore', $user->id) }}"
                                                         class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
                                                         <i class="ti ti-edit text-xl leading-none"></i>
                                                     </a>
@@ -102,7 +87,7 @@
                                                     <button type="button"
                                                         class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
                                                         data-pc-toggle="modal"
-                                                        data-pc-target="#deleteProductModal{{ $product->id }}"
+                                                        data-pc-target="#deleteUserModal{{ $user->id }}"
                                                         data-pc-animate="sticky-up">
                                                         <i class="ti ti-trash text-xl leading-none"></i>
                                                     </button>
@@ -110,23 +95,22 @@
                                             </tr>
 
                                             <!-- Modal de Confirmação de Exclusão -->
-                                            <div id="deleteProductModal{{ $product->id }}" class="modal fade"
-                                                tabindex="-1" role="dialog"
-                                                aria-labelledby="deleteProductModalLabel{{ $product->id }}"
+                                            <div id="deleteUserModal{{ $user->id }}" class="modal fade" tabindex="-1"
+                                                role="dialog" aria-labelledby="deleteUserModalLabel{{ $user->id }}"
                                                 aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                                     <div class="modal-content">
                                                         <form method="POST"
-                                                            action="{{ route('admin.products.destroy', $product->id) }}">
+                                                            action="{{ route('admin.users.force.destroy', $user->id) }}">
                                                             @csrf
                                                             @method('DELETE')
 
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title font-semibold text-danger text-lg">
-                                                                    <i class="fas fa-tag me-2"></i> Apagar Produto
+                                                                    <i class="fas fa-user me-2"></i> Apagar Utilizador
                                                                 </h5>
                                                                 <button type="button"
-                                                                    data-pc-modal-dismiss="#deleteProductModal{{ $product->id }}"
+                                                                    data-pc-modal-dismiss="#deleteUserModal{{ $user->id }}"
                                                                     class="text-lg flex items-center justify-center rounded w-7 h-7 text-secondary-500 hover:bg-danger-500/10 hover:text-danger-500">
                                                                     <i class="ti ti-x"></i>
                                                                 </button>
@@ -136,30 +120,30 @@
                                                                 <div class="flex items-center gap-3 mb-4">
                                                                     <div class="shrink-0">
                                                                         <img class="shrink-0 w-[100px] h-[100px] round-image"
-                                                                            src="{{ $product->getImageUrl() }}"
-                                                                            alt="produto"
+                                                                            src="{{ $user->getImageUrl() }}" alt="produto"
                                                                             style="height: 50px; width: 50px;" />
                                                                     </div>
                                                                     <div>
-                                                                        <h6 class="font-semibold">{{ $product->name }}
-                                                                        </h6>
-                                                                        <span
-                                                                            class="text-sm text-gray-500">{{ $product->getShortDescription(50) }}</span>
+                                                                        <h6 class="font-semibold">
+                                                                            {{ $user->getShortName() }}</h6>
                                                                     </div>
                                                                 </div>
                                                                 <p class="text-muted">
                                                                     Tem certeza de que deseja
-                                                                    <strong>
-                                                                        <span class="text-danger">apagar</span>
-                                                                    </strong>
-                                                                    este produto? Esta ação só pode ser desfeita por um
-                                                                    administrador.
+                                                                    <span class="text-danger">
+                                                                        <strong>apagar</strong>
+                                                                    </span>
+                                                                    este utilizador de forma
+                                                                    <span class="text-danger">
+                                                                        <strong> permanente?</strong>
+                                                                    </span>
+                                                                    Esta ação não poderá ser desfeita.
                                                                 </p>
                                                             </div>
 
                                                             <div class="modal-footer flex justify-end gap-3 border-t">
                                                                 <button type="button" class="btn btn-secondary"
-                                                                    data-pc-modal-dismiss="#deleteProductModal{{ $product->id }}">
+                                                                    data-pc-modal-dismiss="#deleteUserModal{{ $user->id }}">
                                                                     Cancelar
                                                                 </button>
                                                                 <button type="submit" class="btn btn-danger">
@@ -175,12 +159,13 @@
                                                 <td colspan="6" class="text-center py-8">
                                                     <div class="flex flex-col items-center justify-center">
                                                         <i class="ti ti-tag text-6xl text-gray-300 mb-4"></i>
-                                                        <h5 class="text-gray-500 mb-2">Nenhum produto encontrado</h5>
-                                                        <p class="text-gray-400 mb-4">Ainda não há produtos cadastrados no
+                                                        <h5 class="text-gray-500 mb-2">Nenhum utilizador encontrado.</h5>
+                                                        <p class="text-gray-400 mb-4">Ainda não há utilizadores cadastrados
+                                                            no
                                                             sistema.</p>
-                                                        <a href="{{ route('admin.products.create') }}"
+                                                        <a href="{{ route('admin.users.create') }}"
                                                             class="btn btn-primary">
-                                                            <i class="ti ti-plus me-2"></i>Adicionar primeiro produto
+                                                            <i class="ti ti-plus me-2"></i>Adicionar primeiro utilizador
                                                         </a>
                                                     </div>
                                                 </td>

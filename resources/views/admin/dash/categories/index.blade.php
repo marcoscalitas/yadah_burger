@@ -15,6 +15,9 @@
                     <div class="sm:flex items-center justify-between">
                         <h5 class="mb-3 sm:mb-0">Lista de categorias</h5>
                         <div>
+                            <a href="{{ route('admin.categories.trashed') }}" class="btn btn-outline-secondary mr-1">
+                                Ver categorias apagadas
+                            </a>
                             <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">
                                 <i class="ti ti-plus me-2"></i>Adicionar Categoria
                             </a>
@@ -113,7 +116,7 @@
 
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title font-semibold text-danger text-lg">
-                                                                    <i class="fas fa-tag me-2"></i> Confirmar exclusão
+                                                                    <i class="fas fa-tag me-2"></i> Apagar Categoria
                                                                 </h5>
                                                                 <button type="button"
                                                                     data-pc-modal-dismiss="#deleteCategoryModal{{ $category->id }}"
@@ -140,18 +143,20 @@
                                                                 <p class="text-muted">
                                                                     Tem certeza de que deseja
                                                                     <strong>
-                                                                        <span class="text-danger">excluir</span>
+                                                                        <span class="text-danger">apagar</span>
                                                                     </strong>
-                                                                    esta categoria? Esta ação não pode ser desfeita.
+                                                                    esta categoria? Esta ação só pode ser desfeita por um
+                                                                    administrador.
                                                                 </p>
                                                             </div>
-                                                            <div class="modal-footer flex justify-center gap-3 border-t">
+
+                                                            <div class="modal-footer flex justify-end gap-3 border-t">
                                                                 <button type="button" class="btn btn-secondary"
                                                                     data-pc-modal-dismiss="#deleteCategoryModal{{ $category->id }}">
                                                                     Cancelar
                                                                 </button>
                                                                 <button type="submit" class="btn btn-danger">
-                                                                    <i class="fas fa-trash me-2"></i> Excluir
+                                                                    <i class="fas fa-trash me-2"></i> Apagar
                                                                 </button>
                                                             </div>
                                                         </form>

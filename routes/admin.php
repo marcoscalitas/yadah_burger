@@ -89,4 +89,29 @@ Route::middleware(['auth.admin', 'verified'])->group(function () {
 
     // Utils
     Route::post('/users/{id}/update-photo', [UserController::class, 'uploadPhoto'])->name('users.update.photo');
+
+    // =======================================================================
+    // SOFT DELETE ROUTES - Trashed, Restore, Force Delete
+    // =======================================================================
+
+    // Users - Soft Delete Routes
+    Route::prefix('users')->name('users.')->controller(UserController::class)->group(function () {
+        Route::get('trashed', 'trashed')->name('trashed');
+        Route::patch('{id}/restore', 'restore')->name('restore');
+        Route::delete('{id}/force-destroy', 'forceDestroy')->name('force.destroy');
+    });
+
+    // Categories - Soft Delete Routes
+    Route::prefix('categories')->name('categories.')->controller(CategoryController::class)->group(function () {
+        Route::get('trashed', 'trashed')->name('trashed');
+        Route::patch('{id}/restore', 'restore')->name('restore');
+        Route::delete('{id}/force-destroy', 'forceDestroy')->name('force.destroy');
+    });
+
+    // Products - Soft Delete Routes
+    Route::prefix('products')->name('products.')->controller(ProductController::class)->group(function () {
+        Route::get('trashed', 'trashed')->name('trashed');
+        Route::patch('{id}/restore', 'restore')->name('restore');
+        Route::delete('{id}/force-destroy', 'forceDestroy')->name('force.destroy');
+    });
 });

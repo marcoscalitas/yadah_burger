@@ -15,7 +15,12 @@
                     <div class="sm:flex items-center justify-between">
                         <h5 class="mb-3 sm:mb-0">Lista de utilizadores</h5>
                         <div>
-                            <a href="{{ route('admin.users.create') }}" class="btn btn-primary">Adicionar Utilizador</a>
+                            <a href="{{ route('admin.users.trashed') }}" class="btn btn-outline-secondary mr-1">
+                                Ver utilizadores apagados
+                            </a>
+                            <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
+                                <i class="ti ti-plus me-2"></i>Adicionar Utilizador
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -105,8 +110,7 @@
 
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title font-semibold text-danger text-lg">
-                                                                    <i class="fas fa-user-times me-2"></i> Confirmar
-                                                                    exclusão
+                                                                    <i class="fas fa-user me-2"></i> Apagar Utilizador
                                                                 </h5>
                                                                 <button type="button"
                                                                     data-pc-modal-dismiss="#deleteUserModal{{ $user->id }}"
@@ -115,27 +119,35 @@
                                                                 </button>
                                                             </div>
 
-                                                            <div class="modal-body text-center">
-                                                                <p
-                                                                    class="text-base text-gray-600 font-medium max-w-[420px] mx-auto leading-relaxed">
-                                                                    Tem certeza de que deseja excluir o utilizador<br>
-                                                                    <strong
-                                                                        class="text-danger">“{{ $user->getShortName() }}”</strong>?
-                                                                    <br>Essa ação é <strong
-                                                                        class="text-danger">permanente</strong> e não poderá
-                                                                    ser desfeita.
+                                                            <div class="modal-body">
+                                                                <div class="flex items-center gap-3 mb-4">
+                                                                    <div class="shrink-0">
+                                                                        <img class="shrink-0 w-[100px] h-[100px] round-image"
+                                                                            src="{{ $user->getImageUrl() }}" alt="produto"
+                                                                            style="height: 50px; width: 50px;" />
+                                                                    </div>
+                                                                    <div>
+                                                                        <h6 class="font-semibold">
+                                                                            {{ $user->getShortName() }}</h6>
+                                                                    </div>
+                                                                </div>
+                                                                <p class="text-muted">
+                                                                    Tem certeza de que deseja
+                                                                    <strong>
+                                                                        <span class="text-danger">apagar</span>
+                                                                    </strong>
+                                                                    este utilizador? Esta ação só pode ser desfeita por um
+                                                                    administrador.
                                                                 </p>
                                                             </div>
 
-                                                            <div class="modal-footer flex justify-center gap-3 border-t">
-                                                                <button type="button"
-                                                                    data-pc-modal-dismiss="#deleteUserModal{{ $user->id }}"
-                                                                    class="btn btn-outline-secondary px-4">
+                                                            <div class="modal-footer flex justify-end gap-3 border-t">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-pc-modal-dismiss="#deleteUserModal{{ $user->id }}">
                                                                     Cancelar
                                                                 </button>
-                                                                <button type="submit" class="btn btn-danger px-5">
-                                                                    <i class="fas fa-trash-alt me-1"></i> Excluir
-                                                                    definitivamente
+                                                                <button type="submit" class="btn btn-danger">
+                                                                    <i class="fas fa-trash me-2"></i> Apagar
                                                                 </button>
                                                             </div>
                                                         </form>

@@ -44,6 +44,14 @@ return [
         ],
     ],
 
+    'admin.users.trashed' => [
+        'title' => 'Utilizadores Apagados',
+        'items' => [
+            ['label' => 'Utilizadores', 'route' => 'admin.users.index'],
+            ['label' => 'Utilizadores Apagados', 'route' => 'admin.users.trashed'],
+        ],
+    ],
+
     // Produtos
     'admin.products.index' => [
         'title' => 'Produtos',
@@ -65,6 +73,14 @@ return [
         'items' => [
             ['label' => 'Produtos', 'route' => 'admin.products.index'],
             // O nome do produto e editar serão adicionados dinamicamente na view
+        ],
+    ],
+
+    'admin.products.trashed' => [
+        'title' => 'Produtos Apagados',
+        'items' => [
+            ['label' => 'Produtos', 'route' => 'admin.products.index'],
+            ['label' => 'Produtos Apagados', 'route' => 'admin.products.trashed'],
         ],
     ],
 
@@ -92,6 +108,14 @@ return [
         ],
     ],
 
+    'admin.categories.trashed' => [
+        'title' => 'Categorias Apagadas',
+        'items' => [
+            ['label' => 'Categorias', 'route' => 'admin.categories.index'],
+            ['label' => 'Categorias Apagadas', 'route' => 'admin.categories.trashed'],
+        ],
+    ],
+
     // Pedidos
     'admin.orders.index' => [
         'title' => 'Pedidos',
@@ -105,6 +129,14 @@ return [
         'items' => [
             ['label' => 'Pedidos', 'route' => 'admin.orders.index'],
             ['label' => 'Adicionar Pedido', 'route' => 'admin.orders.create'],
+        ],
+    ],
+
+    'admin.orders.trashed' => [
+        'title' => 'Pedidos Apagados',
+        'items' => [
+            ['label' => 'Pedidos', 'route' => 'admin.orders.index'],
+            ['label' => 'Pedidos Apagados', 'route' => 'admin.orders.trashed'],
         ],
     ],
 

@@ -3,7 +3,7 @@
 @section('title', 'Produtos')
 
 @section('breadcrumb')
-    @include('admin.dash.components.breadcrumb', getBreadcrumb('admin.products.index'))
+    @include('admin.dash.components.breadcrumb', getBreadcrumb('admin.products.trashed'))
 @endsection
 
 @section('content')
@@ -15,9 +15,6 @@
                     <div class="sm:flex items-center justify-between">
                         <h5 class="mb-3 sm:mb-0">Lista de produtos</h5>
                         <div>
-                            <a href="{{ route('admin.products.trashed') }}" class="btn btn-outline-secondary mr-1">
-                                Ver produtos apagados
-                            </a>
                             <a href="{{ route('admin.products.create') }}" class="btn btn-primary">
                                 <i class="ti ti-plus me-2"></i>Adicionar Produto
                             </a>
@@ -92,11 +89,18 @@
                                                     {{ $product->createdBy ? $product->createdBy->getShortName() : 'Sistema' }}
                                                 </td>
                                                 <td class="d-flex gap-2">
-                                                    {{-- Editar --}}
-                                                    <a href="{{ route('admin.products.edit', $product->id) }}"
-                                                        class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                        <i class="ti ti-edit text-xl leading-none"></i>
-                                                    </a>
+                                                    {{-- Restaurar --}}
+                                                    <form method="POST"
+                                                        action="{{ route('admin.products.restore', $product->id) }}"
+                                                        style="display: inline;">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <button type="submit"
+                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
+                                                            title="Restaurar produto">
+                                                            <i class="ti ti-refresh text-xl leading-none"></i>
+                                                        </button>
+                                                    </form>
 
                                                     {{-- Excluir --}}
                                                     <button type="button"
@@ -117,13 +121,13 @@
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                                     <div class="modal-content">
                                                         <form method="POST"
-                                                            action="{{ route('admin.products.destroy', $product->id) }}">
+                                                            action="{{ route('admin.products.force.destroy', $product->id) }}">
                                                             @csrf
                                                             @method('DELETE')
 
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title font-semibold text-danger text-lg">
-                                                                    <i class="fas fa-tag me-2"></i> Apagar Produto
+                                                                    <i class="fas fa-box me-2"></i> Apagar Produto
                                                                 </h5>
                                                                 <button type="button"
                                                                     data-pc-modal-dismiss="#deleteProductModal{{ $product->id }}"
@@ -149,14 +153,16 @@
                                                                 </div>
                                                                 <p class="text-muted">
                                                                     Tem certeza de que deseja
-                                                                    <strong>
-                                                                        <span class="text-danger">apagar</span>
-                                                                    </strong>
-                                                                    este produto? Esta ação só pode ser desfeita por um
-                                                                    administrador.
+                                                                    <span class="text-danger">
+                                                                        <strong>apagar</strong>
+                                                                    </span>
+                                                                    este produto de forma
+                                                                    <span class="text-danger">
+                                                                        <strong> permanente?</strong>
+                                                                    </span>
+                                                                    Esta ação não poderá ser desfeita.
                                                                 </p>
                                                             </div>
-
                                                             <div class="modal-footer flex justify-end gap-3 border-t">
                                                                 <button type="button" class="btn btn-secondary"
                                                                     data-pc-modal-dismiss="#deleteProductModal{{ $product->id }}">

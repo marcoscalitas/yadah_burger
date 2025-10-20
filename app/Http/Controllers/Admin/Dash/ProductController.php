@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -93,6 +94,8 @@ class ProductController extends Controller
 
         $product = Product::findOrFail($id);
         $productName = $product->name;
+
+        $product->update(['product_status' => 'd']);
         $product->delete();
 
         Log::info('Produto removido com sucesso', [
@@ -103,6 +106,65 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Produto removido com sucesso.');
+    }
+
+    /**
+     * Display a listing of trashed products.
+     */
+    public function trashed()
+    {
+        checkIfIsAdmin('visualizar', self::ENTITY);
+
+        $products = Product::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
+
+        return view('admin.dash.products.trashed', compact('products'));
+    }
+
+    /**
+     * Restore the specified product from trash.
+     */
+    public function restore(string $id)
+    {
+        checkIfIsAdmin('restaurar', self::ENTITY);
+
+        $product = Product::onlyTrashed()->findOrFail($id);
+        $product->restore();
+        $product->update(['product_status' => 'a']);
+
+        Log::info('Produto restaurado com sucesso', [
+            'product_id' => $id,
+            'product_name' => $product->name,
+            'restored_by' => getCurrentUser('admin')->id,
+        ]);
+
+        return redirect()->route('admin.products.trashed')
+            ->with('success', 'Produto restaurado com sucesso.');
+    }
+
+    /**
+     * Permanently delete the specified product.
+     */
+    public function forceDestroy(string $id)
+    {
+        checkIfIsAdmin('apagar_permanente', self::ENTITY);
+
+        $product = Product::onlyTrashed()->findOrFail($id);
+
+        if ($product->image_url && fileExists($product->image_url)) {
+            Storage::disk('public')->delete($product->image_url);
+        }
+
+        $productName = $product->name;
+        $product->forceDelete();
+
+        Log::info('Produto eliminado permanentemente', [
+            'product_id' => $id,
+            'product_name' => $productName,
+            'force_deleted_by' => getCurrentUser('admin')->id,
+        ]);
+
+        return redirect()->route('admin.products.trashed')
+            ->with('success', 'Produto eliminado permanentemente.');
     }
 
     /** ------------------------------

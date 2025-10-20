@@ -152,10 +152,8 @@ class UserController extends Controller
             return $this->redirectWithError('Não é possível eliminar o último administrador do sistema.');
         }
 
-        if ($user->image_url && Storage::disk('public')->exists($user->image_url)) {
-            Storage::disk('public')->delete($user->image_url);
-        }
-
+        // Soft delete - preservar imagem para possível restauração
+        $user->update(['user_status' => 'd']);
         $user->delete();
 
         Log::info('Utilizador eliminado com sucesso', [
@@ -165,6 +163,67 @@ class UserController extends Controller
 
         return redirect()->route('admin.users.index')
             ->with('success', 'Utilizador eliminado com sucesso!');
+    }
+
+    /**
+     * Display a listing of trashed users.
+     */
+    public function trashed()
+    {
+        checkIfIsAdmin('visualizar', self::ENTITY);
+
+        $users = User::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
+
+        return view('admin.dash.users.trashed', compact('users'));
+    }
+
+    /**
+     * Restore the specified user from trash.
+     */
+    public function restore(string $id)
+    {
+        checkIfIsAdmin('restaurar', self::ENTITY);
+
+        $user = User::onlyTrashed()->findOrFail($id);
+        $user->restore();
+        $user->update(['user_status' => 'a']);
+
+        Log::info('Utilizador restaurado com sucesso', [
+            'user_id' => $id,
+            'restored_by' => getCurrentUser('admin')->id,
+        ]);
+
+        return redirect()->route('admin.users.trashed')
+            ->with('success', 'Utilizador restaurado com sucesso!');
+    }
+
+    /**
+     * Permanently delete the specified user.
+     */
+    public function forceDestroy(string $id)
+    {
+        checkIfIsAdmin('apagar_permanente', self::ENTITY);
+
+        $user = User::onlyTrashed()->findOrFail($id);
+        $currentUser = getCurrentUser('admin');
+
+        if ($currentUser->id == $user->id) {
+            return $this->redirectWithError('Não é possível eliminar permanentemente a sua própria conta.');
+        }
+
+        if ($user->image_url && fileExists($user->image_url)) {
+            Storage::disk('public')->delete($user->image_url);
+        }
+
+        $user->forceDelete();
+
+        Log::info('Utilizador eliminado permanentemente', [
+            'user_id' => $id,
+            'force_deleted_by' => $currentUser->id,
+        ]);
+
+        return redirect()->route('admin.users.trashed')
+            ->with('success', 'Utilizador eliminado permanentemente!');
     }
 
     /** ------------------------------

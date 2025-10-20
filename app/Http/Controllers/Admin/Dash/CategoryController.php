@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -88,7 +89,9 @@ class CategoryController extends Controller
         checkIfIsAdmin('apagar', self::ENTITY);
 
         $currentUser = getCurrentUser('admin');
+
         $category = Category::findOrFail($id);
+        $category->update(['category_status' => 'd']);
         $category->delete();
 
         Log::info('Categoria apagada com sucesso', [
@@ -99,6 +102,66 @@ class CategoryController extends Controller
 
         return redirect()->route('admin.categories.index')
             ->with('success', 'Categoria apagada com sucesso.');
+    }
+
+    /**
+     * Display a listing of trashed categories.
+     */
+    public function trashed()
+    {
+        checkIfIsAdmin('visualizar', self::ENTITY);
+
+        $categories = Category::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
+
+        return view('admin.dash.categories.trashed', compact('categories'));
+    }
+
+    /**
+     * Restore the specified category from trash.
+     */
+    public function restore(string $id)
+    {
+        checkIfIsAdmin('restaurar', self::ENTITY);
+
+        $category = Category::onlyTrashed()->findOrFail($id);
+        $category->restore();
+        $category->update(['category_status' => 'a']);
+
+        Log::info('Categoria restaurada com sucesso', [
+            'category_id' => $id,
+            'category_name' => $category->name,
+            'restored_by' => getCurrentUser('admin')->id,
+        ]);
+
+        return redirect()->route('admin.categories.trashed')
+            ->with('success', 'Categoria restaurada com sucesso.');
+    }
+
+    /**
+     * Permanently delete the specified category.
+     */
+    public function forceDestroy(string $id)
+    {
+        checkIfIsAdmin('apagar_permanente', self::ENTITY);
+
+        $category = Category::onlyTrashed()->findOrFail($id);
+        $currentUser = getCurrentUser('admin');
+
+        if ($category->image_url && fileExists($category->image_url)) {
+            Storage::disk('public')->delete($category->image_url);
+        }
+
+        $categoryName = $category->name;
+        $category->forceDelete();
+
+        Log::info('Categoria eliminada permanentemente', [
+            'category_id' => $id,
+            'category_name' => $categoryName,
+            'force_deleted_by' => $currentUser->id,
+        ]);
+
+        return redirect()->route('admin.categories.trashed')
+            ->with('success', 'Categoria eliminada permanentemente.');
     }
 
     /** ------------------------------
