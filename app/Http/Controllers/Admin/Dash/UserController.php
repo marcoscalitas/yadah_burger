@@ -226,6 +226,37 @@ class UserController extends Controller
             ->with('success', 'Utilizador eliminado permanentemente!');
     }
 
+    /**
+     * Reset user password
+     */
+    public function resetPassword(string $id)
+    {
+        checkIfIsAdmin('editar', self::ENTITY);
+
+        $user = User::findOrFail($id);
+        $currentUser = getCurrentUser('admin');
+
+        if ($currentUser->id == $user->id) {
+            return back()->withErrors(['error' => 'Não é possível resetar a sua própria senha.'])->withInput();
+        }
+
+        // Generate password based on user role
+        $temporaryPassword = 'Yadah123#';
+
+        $user->update([
+            'password' => Hash::make($temporaryPassword),
+            'updated_by' => $currentUser->id,
+        ]);
+
+        Log::info('Senha do utilizador resetada', [
+            'user_id' => $user->id,
+            'user_role' => $user->role,
+            'reset_by' => $currentUser->id,
+        ]);
+
+        return back()->with('success', 'Senha resetada com sucesso! Nova senha temporária: '.$temporaryPassword.'. O utilizador deve alterar esta senha no próximo login.');
+    }
+
     /** ------------------------------
      * Helpers (código reutilizável)
      * ------------------------------ */

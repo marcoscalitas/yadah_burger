@@ -89,6 +89,7 @@ Route::middleware(['auth.admin', 'verified'])->group(function () {
 
     // Utils
     Route::post('/users/{id}/update-photo', [UserController::class, 'uploadPhoto'])->name('users.update.photo');
+    Route::patch('/users/{id}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset.password');
 
     // =======================================================================
     // SOFT DELETE ROUTES - Trashed, Restore, Force Delete

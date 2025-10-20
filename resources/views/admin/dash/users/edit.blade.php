@@ -121,6 +121,52 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal Reset Password -->
+        @if(getCurrentUser('admin')->id !== $user->id)
+            <div id="resetPasswordModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="resetPasswordModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <form action="{{ route('admin.users.reset.password', $user->id) }}" method="POST">
+                            @csrf
+                            @method('PATCH')
+                            <div class="modal-header">
+                                <h5 class="modal-title font-semibold">Resetar Senha</h5>
+                                <button type="button" data-pc-modal-dismiss="#resetPasswordModal"
+                                    class="text-lg flex items-center justify-center rounded w-7 h-7 text-secondary-500 hover:bg-danger-500/10 hover:text-danger-500">
+                                    <i class="ti ti-x"></i>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="text-center mb-4">
+                                    <i class="ti ti-key text-warning" style="font-size: 3rem;"></i>
+                                </div>
+                                <p class="text-center mb-3">
+                                    Tem certeza que deseja resetar a senha do utilizador
+                                    <strong>{{ $user->fullname }}</strong>?
+                                </p>
+                                <div class="alert alert-warning text-center">
+                                    <i class="ti ti-alert-triangle me-2"></i>
+                                    Uma nova senha temporária será gerada e exibida após a confirmação.
+                                    O utilizador deve alterar esta senha no próximo login.
+                                </div>
+                            </div>
+                            <div class="modal-footer flex justify-center gap-3 border-t">
+                                <button type="button" class="btn btn-outline-secondary px-4" data-pc-modal-dismiss="#resetPasswordModal">
+                                    Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-warning px-4">
+                                    <i class="ti ti-key me-1"></i>
+                                    Resetar Senha
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <div class="col-span-12 lg:col-span-8 2xl:col-span-9">
             <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
                 @csrf
@@ -303,6 +349,12 @@
                 </div>
 
                 <div class="col-span-12 text-right">
+                    @if(getCurrentUser('admin')->id !== $user->id)
+                        <button type="button" class="btn btn-warning me-2" data-pc-toggle="modal" data-pc-target="#resetPasswordModal" data-pc-animate="sticky-up">
+                            <i class="ti ti-key me-1"></i>
+                            Resetar Senha
+                        </button>
+                    @endif
                     <button type="submit" class="btn btn-primary">Salvar alterações</button>
                 </div>
             </form>
