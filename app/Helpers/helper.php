@@ -284,3 +284,188 @@ if (! function_exists('invalidatePasswordResetTokens')) {
         }
     }
 }
+
+
+if (! function_exists('fileExists')) {
+    /**
+     * Verifica se um arquivo existe no caminho especificado.
+     *
+     * Suporta diferentes tipos de caminhos:
+     * - Caminhos absolutos do sistema
+     * - Caminhos relativos ao storage/app/public
+     * - URLs de storage público
+     * - Caminhos de assets públicos
+     *
+     * @param  string  $path  Caminho do arquivo
+     * @param  string  $disk  Disco de armazenamento (padrão: 'public')
+     * @return bool
+     */
+    function fileExists(string $path, string $disk = 'public'): bool
+    {
+        // Se estiver vazio, retorna false
+        if (empty($path)) {
+            return false;
+        }
+
+        // Se for um URL completo (http/https), verifica se o arquivo existe via cURL
+        if (filter_var($path, FILTER_VALIDATE_URL)) {
+            return urlExists($path);
+        }
+
+        // Se for um caminho absoluto no sistema
+        if (file_exists($path)) {
+            return true;
+        }
+
+        // Se começar com /storage/, remove o prefixo para verificar no disco
+        if (str_starts_with($path, '/storage/')) {
+            $path = str_replace('/storage/', '', $path);
+        }
+
+        // Verifica no disco especificado (normalmente 'public')
+        try {
+            return \Illuminate\Support\Facades\Storage::disk($disk)->exists($path);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::warning('Erro ao verificar existência do arquivo: '.$e->getMessage(), [
+                'path' => $path,
+                'disk' => $disk,
+            ]);
+            return false;
+        }
+    }
+}
+
+if (! function_exists('urlExists')) {
+    /**
+     * Verifica se uma URL existe fazendo uma requisição HEAD.
+     * Usa diferentes métodos dependendo da disponibilidade das extensões.
+     *
+     * @param  string  $url  URL para verificar
+     * @return bool
+     */
+    function urlExists(string $url): bool
+    {
+        try {
+            // Tenta usar cURL se disponível
+            if (function_exists('curl_init')) {
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_NOBODY, true);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+                curl_exec($ch);
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                curl_close($ch);
+
+                return $httpCode >= 200 && $httpCode < 400;
+            }
+
+            // Fallback usando file_get_contents com context
+            $context = stream_context_create([
+                'http' => [
+                    'method' => 'HEAD',
+                    'timeout' => 10,
+                    'ignore_errors' => true
+                ]
+            ]);
+
+            $headers = @get_headers($url, 1, $context);
+            if ($headers) {
+                $httpCode = (int) substr($headers[0], 9, 3);
+                return $httpCode >= 200 && $httpCode < 400;
+            }
+
+            return false;
+
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+}if (! function_exists('getFileInfo')) {
+    /**
+     * Retorna informações detalhadas sobre um arquivo.
+     *
+     * @param  string  $path  Caminho do arquivo
+     * @param  string  $disk  Disco de armazenamento (padrão: 'public')
+     * @return array|null
+     */
+    function getFileInfo(string $path, string $disk = 'public'): ?array
+    {
+        if (!fileExists($path, $disk)) {
+            return null;
+        }
+
+        try {
+            // Se for um caminho absoluto
+            if (file_exists($path)) {
+                return [
+                    'exists' => true,
+                    'path' => $path,
+                    'size' => filesize($path),
+                    'size_human' => formatBytes(filesize($path)),
+                    'modified' => filemtime($path),
+                    'modified_human' => date('d/m/Y H:i:s', filemtime($path)),
+                    'extension' => pathinfo($path, PATHINFO_EXTENSION),
+                    'basename' => basename($path),
+                    'type' => 'local'
+                ];
+            }
+
+            // Se for no storage
+            $storage = \Illuminate\Support\Facades\Storage::disk($disk);
+
+            if (str_starts_with($path, '/storage/')) {
+                $path = str_replace('/storage/', '', $path);
+            }
+
+            return [
+                'exists' => true,
+                'path' => $path,
+                'full_path' => $storage->path($path),
+                'url' => $storage->url($path),
+                'size' => $storage->size($path),
+                'size_human' => formatBytes($storage->size($path)),
+                'modified' => $storage->lastModified($path),
+                'modified_human' => date('d/m/Y H:i:s', $storage->lastModified($path)),
+                'extension' => pathinfo($path, PATHINFO_EXTENSION),
+                'basename' => basename($path),
+                'type' => 'storage'
+            ];
+
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::warning('Erro ao obter informações do arquivo: '.$e->getMessage(), [
+                'path' => $path,
+                'disk' => $disk,
+            ]);
+            return null;
+        }
+    }
+}
+
+if (! function_exists('formatBytes')) {
+    /**
+     * Converte bytes para formato legível (KB, MB, GB, etc.).
+     *
+     * @param  int  $size  Tamanho em bytes
+     * @param  int  $precision  Precisão decimal
+     * @return string
+     */
+    function formatBytes(int $size, int $precision = 2): string
+    {
+        if ($size === 0) {
+            return '0 B';
+        }
+
+        $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+        $i = 0;
+
+        while ($size >= 1024 && $i < count($units) - 1) {
+            $size /= 1024;
+            $i++;
+        }
+
+        return round($size, $precision) . ' ' . $units[$i];
+    }
+}
