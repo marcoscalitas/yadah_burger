@@ -41,45 +41,99 @@
                         <span class="pc-mtext" data-i18n="Dashboard">Dashboard</span>
                     </a>
                 </li>
-                <li class="pc-item {{ getActiveClass('admin.users.*', 'active') }}">
-                    <a href="{{ route('admin.users.index') }}" class="pc-link">
+                <li class="pc-item pc-hasmenu {{ getActiveClass('admin.users.*', 'active') }}">
+                    <a class="pc-link" href="#!">
                         <span class="pc-micon">
                             <svg class="pc-icon">
                                 <use xlink:href="#custom-user"></use>
                             </svg>
                         </span>
                         <span class="pc-mtext" data-i18n="Utilizadores">Utilizadores</span>
+                        <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
                     </a>
+                    <ul class="pc-submenu">
+                        <li class="pc-item {{ getActiveClass('admin.users.index', 'active') }}">
+                            <a class="pc-link" href="{{ route('admin.users.index') }}" data-i18n="Lista">Lista</a>
+                        </li>
+                        <li class="pc-item {{ getActiveClass('admin.users.create', 'active') }}">
+                            <a class="pc-link" href="{{ route('admin.users.create') }}" data-i18n="Criar">Criar</a>
+                        </li>
+                        <li class="pc-item {{ getActiveClass('admin.users.trashed', 'active') }}">
+                            <a class="pc-link" href="{{ route('admin.users.trashed') }}"
+                                data-i18n="Eliminados">Eliminados</a>
+                        </li>
+                    </ul>
                 </li>
-                <li class="pc-item {{ getActiveClass('admin.orders.*', 'active') }}">
-                    <a href="{{ route('admin.orders.index') }}" class="pc-link">
+                <li class="pc-item pc-hasmenu {{ getActiveClass('admin.orders.*', 'active') }}">
+                    <a class="pc-link" href="#!">
                         <span class="pc-micon">
                             <svg class="pc-icon">
                                 <use xlink:href="#custom-bag"></use>
                             </svg>
                         </span>
                         <span class="pc-mtext" data-i18n="Pedidos">Pedidos</span>
+                        <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
                     </a>
+                    <ul class="pc-submenu">
+                        <li class="pc-item {{ getActiveClass('admin.orders.index', 'active') }}">
+                            <a class="pc-link" href="{{ route('admin.orders.index') }}" data-i18n="Lista">Lista</a>
+                        </li>
+                        <li class="pc-item {{ getActiveClass('admin.orders.create', 'active') }}">
+                            <a class="pc-link" href="{{ route('admin.orders.create') }}" data-i18n="Criar">Criar</a>
+                        </li>
+                        <li class="pc-item {{ getActiveClass('admin.orders.pending', 'active') }}">
+                            <a class="pc-link" href="#" data-i18n="Pendentes">Pendentes</a>
+                        </li>
+                        <li class="pc-item {{ getActiveClass('admin.orders.completed', 'active') }}">
+                            <a class="pc-link" href="#" data-i18n="Concluídos">Concluídos</a>
+                        </li>
+                    </ul>
                 </li>
-                <li class="pc-item {{ getActiveClass('admin.products.*', 'active') }}">
-                    <a href="{{ route('admin.products.index') }}" class="pc-link">
+                <li class="pc-item pc-hasmenu {{ getActiveClass('admin.products.*', 'active') }}">
+                    <a class="pc-link" href="#!">
                         <span class="pc-micon">
                             <svg class="pc-icon">
                                 <use xlink:href="#custom-box-1"></use>
                             </svg>
                         </span>
                         <span class="pc-mtext" data-i18n="Produtos">Produtos</span>
+                        <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
                     </a>
+                    <ul class="pc-submenu">
+                        <li class="pc-item {{ getActiveClass('admin.products.index', 'active') }}">
+                            <a class="pc-link" href="{{ route('admin.products.index') }}" data-i18n="Lista">Lista</a>
+                        </li>
+                        <li class="pc-item {{ getActiveClass('admin.products.create', 'active') }}">
+                            <a class="pc-link" href="{{ route('admin.products.create') }}" data-i18n="Criar">Criar</a>
+                        </li>
+                        <li class="pc-item {{ getActiveClass('admin.products.trashed', 'active') }}">
+                            <a class="pc-link" href="#" data-i18n="Eliminados">Eliminados</a>
+                        </li>
+                    </ul>
                 </li>
-                <li class="pc-item {{ getActiveClass('admin.categories.*', 'active') }}">
-                    <a href="{{ route('admin.categories.index') }}" class="pc-link">
+                <li class="pc-item pc-hasmenu {{ getActiveClass('admin.categories.*', 'active') }}">
+                    <a class="pc-link" href="#!">
                         <span class="pc-micon">
                             <svg class="pc-icon">
                                 <use xlink:href="#custom-layer"></use>
                             </svg>
                         </span>
                         <span class="pc-mtext" data-i18n="Categorias">Categorias</span>
+                        <span class="pc-arrow"><i data-feather="chevron-right"></i></span>
                     </a>
+                    <ul class="pc-submenu">
+                        <li class="pc-item {{ getActiveClass('admin.categories.index', 'active') }}">
+                            <a class="pc-link" href="{{ route('admin.categories.index') }}"
+                                data-i18n="Lista">Lista</a>
+                        </li>
+                        <li class="pc-item {{ getActiveClass('admin.categories.create', 'active') }}">
+                            <a class="pc-link" href="{{ route('admin.categories.create') }}"
+                                data-i18n="Criar">Criar</a>
+                        </li>
+                        <li class="pc-item {{ getActiveClass('admin.categories.trashed', 'active') }}">
+                            <a class="pc-link" href="#" data-i18n="Eliminados">Eliminados</a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="pc-item pc-caption">
                     <label data-i18n="Outros">Outros</label>
