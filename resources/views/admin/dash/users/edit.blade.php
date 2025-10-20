@@ -123,7 +123,7 @@
         </div>
 
         <!-- Modal Reset Password -->
-        @if(getCurrentUser('admin')->id !== $user->id)
+        @if($canManageUser)
             <div id="resetPasswordModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="resetPasswordModalLabel"
                 aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -159,6 +159,47 @@
                                 <button type="submit" class="btn btn-warning px-4">
                                     <i class="ti ti-key me-1"></i>
                                     Resetar Senha
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Send Verification Email -->
+            <div id="sendVerificationEmailModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sendVerificationEmailModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <form action="{{ route('admin.users.send.verification.email', $user->id) }}" method="POST">
+                            @csrf
+                            <div class="modal-header">
+                                <h5 class="modal-title font-semibold">Enviar Email de Verificação</h5>
+                                <button type="button" data-pc-modal-dismiss="#sendVerificationEmailModal"
+                                    class="text-lg flex items-center justify-center rounded w-7 h-7 text-secondary-500 hover:bg-danger-500/10 hover:text-danger-500">
+                                    <i class="ti ti-x"></i>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="text-center mb-4">
+                                    <i class="ti ti-mail text-primary" style="font-size: 3rem;"></i>
+                                </div>
+                                <p class="text-center mb-3">
+                                    Tem certeza que deseja enviar um email de verificação para
+                                    <strong>{{ $user->fullname }}</strong>?
+                                </p>
+                                <div class="alert alert-info text-center">
+                                    <i class="ti ti-info-circle me-2"></i>
+                                    Um email será enviado para <strong>{{ $user->email }}</strong> com o link de verificação.
+                                </div>
+                            </div>
+                            <div class="modal-footer flex justify-center gap-3 border-t">
+                                <button type="button" class="btn btn-outline-secondary px-4" data-pc-modal-dismiss="#sendVerificationEmailModal">
+                                    Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-primary px-4">
+                                    <i class="ti ti-mail me-1"></i>
+                                    Enviar Email
                                 </button>
                             </div>
                         </form>
@@ -349,7 +390,14 @@
                 </div>
 
                 <div class="col-span-12 text-right">
-                    @if(getCurrentUser('admin')->id !== $user->id)
+                    @if($canManageUser)
+                        @if($emailNotVerified)
+                            <button type="button" class="btn btn-info me-2" data-pc-toggle="modal" data-pc-target="#sendVerificationEmailModal" data-pc-animate="sticky-up">
+                                <i class="ti ti-mail me-1"></i>
+                                Enviar Email de Verificação
+                            </button>
+                        @endif
+
                         <button type="button" class="btn btn-warning me-2" data-pc-toggle="modal" data-pc-target="#resetPasswordModal" data-pc-animate="sticky-up">
                             <i class="ti ti-key me-1"></i>
                             Resetar Senha

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -114,17 +115,16 @@ class LoginController extends Controller
         }
 
         // === 6. Verificar status da conta antes do login ===
-        $isEmailVerifiable = $user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail;
-        $emailNotVerified = $isEmailVerifiable && ! $user->hasVerifiedEmail();
-        $restrictedStatus = in_array($user->user_status, ['p', 'sp', 'd']);
+        $isEmailVerifiable = $user instanceof MustVerifyEmail;
+        $isPendingVerification = $user->user_status === 'p' || ($isEmailVerifiable && ! $user->hasVerifiedEmail());
+        $restrictedStatus = in_array($user->user_status, ['sp', 'd']);
 
-        if ($emailNotVerified || $restrictedStatus) {
+        if ($isPendingVerification || $restrictedStatus) {
             // Reseta tentativas mesmo se login não permitido
             $this->resetLoginAttempts($user);
 
             $message = match (true) {
-                $emailNotVerified => 'Por favor, verifique seu email antes de acessar o sistema.',
-                $user->user_status === 'p' => 'Sua conta está pendente de verificação. Verifique seu email.',
+                $isPendingVerification => 'Sua conta está pendente de verificação. Contate o administrador.',
                 $user->user_status === 'sp' => 'Sua conta foi suspensa. Contate o administrador.',
                 $user->user_status === 'd' => 'Sua conta foi desativada. Contate o administrador.',
                 default => 'Acesso temporariamente bloqueado. Tente novamente mais tarde.',

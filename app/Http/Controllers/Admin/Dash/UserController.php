@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\UploadService;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -76,8 +77,19 @@ class UserController extends Controller
     public function edit(string $id)
     {
         $user = User::with(['createdBy', 'updatedBy'])->findOrFail($id);
+        $currentUser = getCurrentUser('admin');
 
-        return view(self::ADMIN_DASH_USERS.'edit', compact('user'));
+        // Email verification checks
+        $isEmailVerifiable = $user instanceof MustVerifyEmail;
+        $emailNotVerified = $isEmailVerifiable && !$user->hasVerifiedEmail();
+        $canManageUser = $currentUser->id !== $user->id;
+
+        return view(self::ADMIN_DASH_USERS.'edit', compact(
+            'user',
+            'isEmailVerifiable',
+            'emailNotVerified',
+            'canManageUser'
+        ));
     }
 
     public function update(Request $request, string $id)
@@ -255,6 +267,52 @@ class UserController extends Controller
         ]);
 
         return back()->with('success', 'Senha resetada com sucesso! Nova senha temporária: '.$temporaryPassword.'. O utilizador deve alterar esta senha no próximo login.');
+    }
+
+    /**
+     * Send verification email to user
+     */
+    public function sendVerificationEmail(string $id)
+    {
+        checkIfIsAdmin('editar', self::ENTITY);
+
+        $user = User::findOrFail($id);
+        $currentUser = getCurrentUser('admin');
+
+        if ($currentUser->id == $user->id) {
+            return back()->withErrors(['error' => 'Não é possível enviar email de verificação para a sua própria conta.'])->withInput();
+        }
+
+        // Check if user is email verifiable
+        if (! $user instanceof MustVerifyEmail) {
+            return back()->withErrors(['error' => 'Este utilizador não requer verificação de email.'])->withInput();
+        }
+
+        // Check if email is already verified
+        if ($user->hasVerifiedEmail()) {
+            return back()->withErrors(['error' => 'O email deste utilizador já está verificado.'])->withInput();
+        }
+
+        try {
+            // Send verification email
+            $user->sendEmailVerificationNotification();
+
+            Log::info('Email de verificação enviado', [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+                'sent_by' => $currentUser->id,
+            ]);
+
+            return back()->with('success', 'Email de verificação enviado com sucesso para: '.$user->email);
+        } catch (\Exception $e) {
+            Log::error('Erro ao enviar email de verificação', [
+                'user_id' => $user->id,
+                'user_email' => $user->email,
+                'error' => $e->getMessage(),
+            ]);
+
+            return back()->withErrors(['error' => 'Erro ao enviar email de verificação. Tente novamente.'])->withInput();
+        }
     }
 
     /** ------------------------------
