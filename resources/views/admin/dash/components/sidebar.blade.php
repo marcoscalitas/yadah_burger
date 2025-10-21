@@ -16,14 +16,43 @@
             <div class="card pc-user-card mx-[15px] mb-[15px] bg-theme-sidebaruserbg dark:bg-themedark-sidebaruserbg">
                 <div class="card-body !p-5">
                     <div class="flex items-center">
-                        <img class="shrink-0 w-[55px] h-[55px] round-image"
+                        <img class="shrink-0 w-[45px] h-[45px] rounded-full"
                             src="{{ getCurrentUser('admin')->getImageUrl() }}" alt="user-image" />
                         <div class="ml-4 mr-2 grow">
-                            <h6 class="mb-0" data-i18n="{{ getCurrentUser('admin')->getShortName() }} ">
-                                {{ getCurrentUser('admin')->getShortName() }}
-                            </h6>
-                            <small>{{ getCurrentUser('admin')->getRoleLabel() }}</small>
+                            <h6 class="mb-0 text-base font-semibold truncate max-w-[130px]"
+                                title="{{ getCurrentUser('admin')->getShortName() }}">
+                                {{ getCurrentUser('admin')->getShortName() }}</h6>
+                            <small class="text-xs opacity-75">{{ getCurrentUser('admin')->getRoleLabel() }}</small>
                         </div>
+                        <a class="shrink-0 btn btn-icon inline-flex btn-link-secondary" data-pc-toggle="collapse"
+                            href="#pc_sidebar_userlink_top">
+                            <svg class="pc-icon w-[22px] h-[22px]">
+                                <use xlink:href="#custom-sort-outline"></use>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="pt-3 *:flex *:items-center *:py-2 *:gap-2.5 *:hover:text-primary-500 pc-user-links bg-theme-sidebaruserbg dark:bg-themedark-sidebaruserbg mt-2"
+                        id="pc_sidebar_userlink_top" style="display: none;">
+                        <a href="{{ route('admin.profile.index') }}"
+                            class="flex items-center py-2 px-2 gap-2.5 text-theme-bodycolor dark:text-themedark-bodycolor hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded transition-all duration-200">
+                            <i class="text-lg leading-none ti ti-user"></i>
+                            <span data-i18n="Meu Perfil">Meu Perfil</span>
+                        </a>
+                        <a href="{{ route('admin.settings.index') }}"
+                            class="flex items-center py-2 px-2 gap-2.5 text-theme-bodycolor dark:text-themedark-bodycolor hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded transition-all duration-200">
+                            <i class="text-lg leading-none ti ti-settings"></i>
+                            <span data-i18n="Definições">Definições</span>
+                        </a>
+                        <a href="{{ route('admin.logout') }}"
+                            class="flex items-center py-2 px-2 gap-2.5 text-theme-bodycolor dark:text-themedark-bodycolor hover:text-danger-500 hover:bg-danger-50 dark:hover:bg-danger-900/20 rounded transition-all duration-200"
+                            onclick="event.preventDefault(); document.getElementById('top-logout-form').submit();">
+                            <i class="text-lg leading-none ti ti-power"></i>
+                            <span data-i18n="Sair">Sair</span>
+                        </a>
+                        <form id="top-logout-form" action="{{ route('admin.logout') }}" method="POST"
+                            style="display:none;">
+                            @csrf
+                        </form>
                     </div>
                 </div>
             </div>
@@ -101,13 +130,16 @@
                     </a>
                     <ul class="pc-submenu">
                         <li class="pc-item {{ getActiveClass('admin.products.index', 'active') }}">
-                            <a class="pc-link" href="{{ route('admin.products.index') }}" data-i18n="Lista">Lista</a>
+                            <a class="pc-link" href="{{ route('admin.products.index') }}"
+                                data-i18n="Lista">Lista</a>
                         </li>
                         <li class="pc-item {{ getActiveClass('admin.products.create', 'active') }}">
-                            <a class="pc-link" href="{{ route('admin.products.create') }}" data-i18n="Criar">Criar</a>
+                            <a class="pc-link" href="{{ route('admin.products.create') }}"
+                                data-i18n="Criar">Criar</a>
                         </li>
                         <li class="pc-item {{ getActiveClass('admin.products.trashed', 'active') }}">
-                            <a class="pc-link" href="{{ route('admin.products.trashed') }}" data-i18n="Eliminados">Eliminados</a>
+                            <a class="pc-link" href="{{ route('admin.products.trashed') }}"
+                                data-i18n="Eliminados">Eliminados</a>
                         </li>
                     </ul>
                 </li>
@@ -131,7 +163,8 @@
                                 data-i18n="Criar">Criar</a>
                         </li>
                         <li class="pc-item {{ getActiveClass('admin.categories.trashed', 'active') }}">
-                            <a class="pc-link" href="{{ route('admin.categories.trashed') }}" data-i18n="Eliminados">Eliminados</a>
+                            <a class="pc-link" href="{{ route('admin.categories.trashed') }}"
+                                data-i18n="Eliminados">Eliminados</a>
                         </li>
                     </ul>
                 </li>
