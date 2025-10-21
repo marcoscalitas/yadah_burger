@@ -16,7 +16,7 @@
                         <h5 class="mb-3 sm:mb-0">Lista de categorias</h5>
                         <div>
                             <a href="{{ route('admin.categories.trashed') }}" class="btn btn-outline-secondary mr-1">
-                                Ver categorias apagadas
+                                Ver categorias eliminados
                             </a>
                             <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">
                                 <i class="ti ti-plus me-2"></i>Adicionar Categoria

@@ -16,7 +16,7 @@
                         <h5 class="mb-3 sm:mb-0">Lista de utilizadores</h5>
                         <div>
                             <a href="{{ route('admin.users.trashed') }}" class="btn btn-outline-secondary mr-1">
-                                Ver utilizadores apagados
+                                Ver utilizadores eliminados
                             </a>
                             <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
                                 <i class="ti ti-plus me-2"></i>Adicionar Utilizador

@@ -16,7 +16,7 @@
                         <h5 class="mb-3 sm:mb-0">Lista de produtos</h5>
                         <div>
                             <a href="{{ route('admin.products.trashed') }}" class="btn btn-outline-secondary mr-1">
-                                Ver produtos apagados
+                                Ver produtos eliminados
                             </a>
                             <a href="{{ route('admin.products.create') }}" class="btn btn-primary">
                                 <i class="ti ti-plus me-2"></i>Adicionar Produto

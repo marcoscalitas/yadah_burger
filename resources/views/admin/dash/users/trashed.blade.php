@@ -13,10 +13,10 @@
             <div class="card table-card">
                 <div class="card-header">
                     <div class="sm:flex items-center justify-between">
-                        <h5 class="mb-3 sm:mb-0">Lista de utilizadores apagados</h5>
+                        <h5 class="mb-3 sm:mb-0">Lista de utilizadores eliminados</h5>
                         <div>
                             <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
-                                Adicionar Utilizador
+                                <i class="ti ti-plus me-2"></i>Adicionar Utilizador
                             </a>
                         </div>
                     </div>
@@ -78,10 +78,17 @@
                                                 <td>{!! getStatusBadge($user->user_status) !!}</td>
                                                 <td class="d-flex gap-2">
                                                     {{-- Restaurar --}}
-                                                    <a href="{{ route('admin.users.restore', $user->id) }}"
-                                                        class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                        <i class="ti ti-edit text-xl leading-none"></i>
-                                                    </a>
+                                                    <form method="POST"
+                                                        action="{{ route('admin.users.restore', $user->id) }}"
+                                                        style="display: inline;">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <button type="submit"
+                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
+                                                            title="Restaurar usuário">
+                                                            <i class="ti ti-refresh text-xl leading-none"></i>
+                                                        </button>
+                                                    </form>
 
                                                     {{-- Excluir --}}
                                                     <button type="button"
@@ -158,14 +165,14 @@
                                             <tr>
                                                 <td colspan="8" class="text-center py-8">
                                                     <div class="flex flex-col items-center justify-center">
-                                                        <i class="ti ti-tag text-6xl text-gray-300 mb-4"></i>
+                                                        <i class="ti ti-user text-6xl text-gray-300 mb-4"></i>
                                                         <h5 class="text-gray-500 mb-2">Nenhum utilizador encontrado.</h5>
-                                                        <p class="text-gray-400 mb-4">Ainda não há utilizadores cadastrados
-                                                            no
-                                                            sistema.</p>
-                                                        <a href="{{ route('admin.users.create') }}"
-                                                            class="btn btn-primary">
-                                                            <i class="ti ti-plus me-2"></i>Adicionar primeiro utilizador
+                                                        <p class="text-gray-400 mb-4">
+                                                            Ainda não há utilizadores eliminados no sistema.
+                                                        </p>
+                                                        <a href="{{ route('admin.users.index') }}"
+                                                            class="btn btn-danger">
+                                                            <i class="fas fa-trash me-2"></i>Eliminar primeiro utilizador
                                                         </a>
                                                     </div>
                                                 </td>

@@ -45,10 +45,10 @@ return [
     ],
 
     'admin.users.trashed' => [
-        'title' => 'Utilizadores Apagados',
+        'title' => 'Utilizadores Eliminados',
         'items' => [
             ['label' => 'Utilizadores', 'route' => 'admin.users.index'],
-            ['label' => 'Utilizadores Apagados', 'route' => 'admin.users.trashed'],
+            ['label' => 'Utilizadores Eliminados', 'route' => 'admin.users.trashed'],
         ],
     ],
 
@@ -77,10 +77,10 @@ return [
     ],
 
     'admin.products.trashed' => [
-        'title' => 'Produtos Apagados',
+        'title' => 'Produtos Eliminados',
         'items' => [
             ['label' => 'Produtos', 'route' => 'admin.products.index'],
-            ['label' => 'Produtos Apagados', 'route' => 'admin.products.trashed'],
+            ['label' => 'Produtos Eliminados', 'route' => 'admin.products.trashed'],
         ],
     ],
 
@@ -109,10 +109,10 @@ return [
     ],
 
     'admin.categories.trashed' => [
-        'title' => 'Categorias Apagadas',
+        'title' => 'Categorias Eliminadas',
         'items' => [
             ['label' => 'Categorias', 'route' => 'admin.categories.index'],
-            ['label' => 'Categorias Apagadas', 'route' => 'admin.categories.trashed'],
+            ['label' => 'Categorias Eliminadas', 'route' => 'admin.categories.trashed'],
         ],
     ],
 
@@ -133,10 +133,10 @@ return [
     ],
 
     'admin.orders.trashed' => [
-        'title' => 'Pedidos Apagados',
+        'title' => 'Pedidos Eliminados',
         'items' => [
             ['label' => 'Pedidos', 'route' => 'admin.orders.index'],
-            ['label' => 'Pedidos Apagados', 'route' => 'admin.orders.trashed'],
+            ['label' => 'Pedidos Eliminados', 'route' => 'admin.orders.trashed'],
         ],
     ],
 

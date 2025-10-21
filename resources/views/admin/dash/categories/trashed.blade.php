@@ -13,7 +13,7 @@
             <div class="card table-card">
                 <div class="card-header">
                     <div class="sm:flex items-center justify-between">
-                        <h5 class="mb-3 sm:mb-0">Lista de categorias</h5>
+                        <h5 class="mb-3 sm:mb-0">Lista de categorias eliminadas</h5>
                         <div>
                             <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">
                                 <i class="ti ti-plus me-2"></i>Adicionar Categoria
@@ -171,16 +171,16 @@
                                             </div>
                                         @empty
                                             <tr>
-                                                <td colspan="6" class="text-center py-8">
+                                                <td colspan="8" class="text-center py-8">
                                                     <div class="flex flex-col items-center justify-center">
                                                         <i class="ti ti-tag text-6xl text-gray-300 mb-4"></i>
-                                                        <h5 class="text-gray-500 mb-2">Nenhuma categoria encontrada</h5>
-                                                        <p class="text-gray-400 mb-4">Ainda não há categorias cadastradas
-                                                            no
-                                                            sistema.</p>
-                                                        <a href="{{ route('admin.categories.create') }}"
-                                                            class="btn btn-primary">
-                                                            <i class="ti ti-plus me-2"></i>Adicionar primeira categoria
+                                                        <h5 class="text-gray-500 mb-2">Nenhuma categoria encontrada.</h5>
+                                                        <p class="text-gray-400 mb-4">
+                                                            Ainda não há categorias eliminadas no sistema.
+                                                        </p>
+                                                        <a href="{{ route('admin.categories.index') }}"
+                                                            class="btn btn-danger">
+                                                            <i class="fas fa-trash me-2"></i>Eliminar primeira categoria
                                                         </a>
                                                     </div>
                                                 </td>
