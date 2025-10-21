@@ -78,6 +78,14 @@
             responsive: true,
             pagingType: "full_numbers",
             order: [[0, 'asc']],
+            destroy: true, // Permite reinicializar a tabela
+            autoWidth: false, // Desabilita o cálculo automático de largura
+            scrollX: true, // Permite scroll horizontal se necessário
+            columnDefs: [{
+                targets: '_all',
+                defaultContent: '', // Conteúdo padrão para colunas vazias
+                width: null // Remove larguras predefinidas
+            }],
             language: {
                 decimal: ",",
                 thousands: ".",

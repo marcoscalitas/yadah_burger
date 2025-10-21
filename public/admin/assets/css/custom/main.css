@@ -37,3 +37,162 @@
 .card-body {
     padding: 15px 24px;
 }
+
+/* DataTables - Largura completa */
+#pc-dt-simple {
+    width: 100% !important;
+    table-layout: fixed; /* Layout fixo para distribuição uniforme */
+}
+
+#pc-dt-simple thead th,
+#pc-dt-simple tbody td {
+    width: auto !important;
+    max-width: none !important;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+/* Remove larguras inline dos cabeçalhos das tabelas */
+#pc-dt-simple thead th[style*="width"] {
+    width: auto !important;
+}
+
+/* Força distribuição uniforme das colunas */
+#pc-dt-simple thead th {
+    width: auto !important;
+}
+
+/* Container da tabela */
+.dataTables_wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.dataTables_wrapper .dataTables_scroll {
+    width: 100%;
+}
+
+.dataTables_wrapper .dataTables_scrollBody {
+    width: 100%;
+}
+
+.dataTables_wrapper .dataTables_scrollHead {
+    width: 100%;
+}
+
+.dataTables_wrapper .dataTables_scrollHeadInner {
+    width: 100% !important;
+}
+
+.dataTables_wrapper .dataTables_scrollHeadInner table {
+    width: 100% !important;
+}
+
+/* Força a tabela a ocupar toda a largura disponível */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling */
+}
+
+.table-responsive .table {
+    width: 100% !important;
+    margin-bottom: 0;
+}
+
+/* Estilo da barra de scroll */
+.table-responsive::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Ajuste específico para colunas de ação (normalmente menores) */
+#pc-dt-simple thead th:last-child,
+#pc-dt-simple tbody td:last-child {
+    width: 120px !important; /* Largura fixa para coluna de ações */
+    min-width: 120px;
+}
+
+/* Ajuste para coluna de numeração/ID (primeira coluna) */
+#pc-dt-simple thead th:first-child,
+#pc-dt-simple tbody td:first-child {
+    width: 60px !important; /* Largura fixa para coluna # */
+    min-width: 60px;
+    text-align: center;
+}
+
+/* Melhora o layout responsivo com scroll lateral */
+@media (max-width: 768px) {
+    /* Força scroll horizontal em mobile */
+    .table-responsive {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling no iOS */
+    }
+
+    #pc-dt-simple {
+        table-layout: fixed; /* Mantém layout fixo para forçar scroll */
+        min-width: 800px; /* Largura mínima para forçar scroll lateral */
+        width: 100% !important;
+    }
+
+    /* Mantém as colunas com larguras mínimas em mobile */
+    #pc-dt-simple thead th,
+    #pc-dt-simple tbody td {
+        white-space: nowrap !important; /* Previne quebra de linha */
+        min-width: 100px; /* Largura mínima para cada coluna */
+        padding: 8px 12px;
+    }
+
+    /* Mantém larguras específicas para colunas especiais */
+    #pc-dt-simple thead th:first-child,
+    #pc-dt-simple tbody td:first-child {
+        width: 50px !important;
+        min-width: 50px;
+    }
+
+    #pc-dt-simple thead th:last-child,
+    #pc-dt-simple tbody td:last-child {
+        width: 100px !important;
+        min-width: 100px;
+    }
+
+    /* Container da DataTable em mobile */
+    .dataTables_wrapper {
+        overflow-x: auto !important;
+    }
+
+    .dataTables_wrapper .dataTables_scroll {
+        overflow-x: auto !important;
+    }
+}
+
+/* Layout para tablets (768px a 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .table-responsive {
+        overflow-x: auto !important;
+    }
+
+    #pc-dt-simple {
+        min-width: 900px; /* Largura mínima para tablets */
+    }
+
+    #pc-dt-simple thead th,
+    #pc-dt-simple tbody td {
+        min-width: 120px;
+        white-space: nowrap;
+    }
+}
