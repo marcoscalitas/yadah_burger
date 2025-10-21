@@ -42,7 +42,7 @@
                     </a>
                 </li>
                 <li class="pc-item pc-hasmenu {{ getActiveClass('admin.users.*', 'active') }}">
-                    <a class="pc-link" href="#!">
+                    <a class="pc-link" href="javascript:void(0)">
                         <span class="pc-micon">
                             <svg class="pc-icon">
                                 <use xlink:href="#custom-user"></use>
@@ -65,7 +65,7 @@
                     </ul>
                 </li>
                 <li class="pc-item pc-hasmenu {{ getActiveClass('admin.orders.*', 'active') }}">
-                    <a class="pc-link" href="#!">
+                    <a class="pc-link" href="javascript:void(0)">
                         <span class="pc-micon">
                             <svg class="pc-icon">
                                 <use xlink:href="#custom-bag"></use>
@@ -82,15 +82,15 @@
                             <a class="pc-link" href="{{ route('admin.orders.create') }}" data-i18n="Criar">Criar</a>
                         </li>
                         <li class="pc-item {{ getActiveClass('admin.orders.pending', 'active') }}">
-                            <a class="pc-link" href="#" data-i18n="Pendentes">Pendentes</a>
+                            <a class="pc-link" href="javascript:void(0)" data-i18n="Pendentes">Pendentes</a>
                         </li>
                         <li class="pc-item {{ getActiveClass('admin.orders.completed', 'active') }}">
-                            <a class="pc-link" href="#" data-i18n="Concluídos">Concluídos</a>
+                            <a class="pc-link" href="javascript:void(0)" data-i18n="Concluídos">Concluídos</a>
                         </li>
                     </ul>
                 </li>
                 <li class="pc-item pc-hasmenu {{ getActiveClass('admin.products.*', 'active') }}">
-                    <a class="pc-link" href="#!">
+                    <a class="pc-link" href="javascript:void(0)">
                         <span class="pc-micon">
                             <svg class="pc-icon">
                                 <use xlink:href="#custom-box-1"></use>
@@ -107,12 +107,12 @@
                             <a class="pc-link" href="{{ route('admin.products.create') }}" data-i18n="Criar">Criar</a>
                         </li>
                         <li class="pc-item {{ getActiveClass('admin.products.trashed', 'active') }}">
-                            <a class="pc-link" href="#" data-i18n="Eliminados">Eliminados</a>
+                            <a class="pc-link" href="{{ route('admin.products.trashed') }}" data-i18n="Eliminados">Eliminados</a>
                         </li>
                     </ul>
                 </li>
                 <li class="pc-item pc-hasmenu {{ getActiveClass('admin.categories.*', 'active') }}">
-                    <a class="pc-link" href="#!">
+                    <a class="pc-link" href="javascript:void(0)">
                         <span class="pc-micon">
                             <svg class="pc-icon">
                                 <use xlink:href="#custom-layer"></use>
@@ -131,7 +131,7 @@
                                 data-i18n="Criar">Criar</a>
                         </li>
                         <li class="pc-item {{ getActiveClass('admin.categories.trashed', 'active') }}">
-                            <a class="pc-link" href="#" data-i18n="Eliminados">Eliminados</a>
+                            <a class="pc-link" href="{{ route('admin.categories.trashed') }}" data-i18n="Eliminados">Eliminados</a>
                         </li>
                     </ul>
                 </li>
