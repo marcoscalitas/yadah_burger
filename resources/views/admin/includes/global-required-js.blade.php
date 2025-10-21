@@ -23,13 +23,34 @@
 </div> --}}
 
 <script>
-    layout_change('false');
-    layout_theme_contrast_change('false');
-    change_box_container('false');
-    layout_caption_change('true');
-    layout_rtl_change('false');
-    preset_change('preset-1');
-    main_layout_change('vertical');
+    // Aguarda que as funções sejam carregadas antes de executar
+    document.addEventListener('DOMContentLoaded', function() {
+        // Aguarda um pouco para garantir que o layout-settings.js já executou
+        setTimeout(function() {
+            // Só aplica configurações padrão se não houver configurações salvas
+            if (!localStorage.getItem('theme') && typeof layout_change === 'function') {
+                layout_change('light');
+            }
+            if (!localStorage.getItem('contrast') && typeof layout_theme_contrast_change === 'function') {
+                layout_theme_contrast_change('false');
+            }
+            if (!localStorage.getItem('container') && typeof change_box_container === 'function') {
+                change_box_container('false');
+            }
+            if (!localStorage.getItem('caption') && typeof layout_caption_change === 'function') {
+                layout_caption_change('true');
+            }
+            if (!localStorage.getItem('direction') && typeof layout_rtl_change === 'function') {
+                layout_rtl_change('false');
+            }
+            if (!localStorage.getItem('preset') && typeof preset_change === 'function') {
+                preset_change('preset-1');
+            }
+            if (!localStorage.getItem('layout') && typeof main_layout_change === 'function') {
+                main_layout_change('vertical');
+            }
+        }, 500); // Aguarda 500ms para garantir ordem de execução
+    });
 </script>
 
 <!-- [Page Specific JS] start -->
@@ -59,6 +80,7 @@
 {{-- Data table settings --}}
 {{-- Custom js --}}
 <script src="{{ asset('admin/assets/js/custom/utilities.js') }}"></script>
+<script src="{{ asset('admin/assets/js/custom/layout-settings.js') }}"></script>
 
 <script>
     $(document).ready(function() {
