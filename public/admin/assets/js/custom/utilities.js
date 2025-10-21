@@ -277,3 +277,25 @@ function formatPriceField(fieldId) {
         field.val(value);
     });
 }
+
+function changeThemeMode(theme) {
+    if (theme === 'default') {
+        if (typeof window.layout_change_default === 'function') {
+            window.layout_change_default();
+        } else if (typeof layout_change_default === 'function') {
+            layout_change_default();
+        } else {
+            console.error('Função layout_change_default não encontrada');
+        }
+    } else {
+        if (typeof window.layout_change === 'function') {
+            window.layout_change(theme);
+            localStorage.setItem('theme', theme);
+        } else if (typeof layout_change === 'function') {
+            layout_change(theme);
+            localStorage.setItem('theme', theme);
+        } else {
+            console.error('Função layout_change não encontrada');
+        }
+    }
+}

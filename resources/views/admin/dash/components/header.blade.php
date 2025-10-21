@@ -34,30 +34,30 @@
         <div class="ms-auto">
             <ul class="inline-flex *:min-h-header-height *:inline-flex *:items-center">
                 <li class="dropdown pc-h-item">
-                    <a class="pc-head-link dropdown-toggle me-0" data-pc-toggle="dropdown" href="course-dashboard.html#"
-                        role="button" aria-haspopup="false" aria-expanded="false">
+                    <a class="pc-head-link dropdown-toggle me-0" data-pc-toggle="dropdown" href="#" role="button"
+                        aria-haspopup="false" aria-expanded="false">
                         <svg class="pc-icon">
                             <use xlink:href="#custom-sun-1"></use>
                         </svg>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end pc-h-dropdown">
-                        <a href="course-dashboard.html#!" class="dropdown-item" onclick="layout_change('dark')">
+                        <a href="javascript:void(0)" class="dropdown-item" onclick="changeThemeMode('dark')">
                             <svg class="pc-icon w-[18px] h-[18px]">
                                 <use xlink:href="#custom-moon"></use>
                             </svg>
-                            <span>Dark</span>
+                            <span data-i18n="Escuro">Escuro</span>
                         </a>
-                        <a href="course-dashboard.html#!" class="dropdown-item" onclick="layout_change('light')">
+                        <a href="javascript:void(0)" class="dropdown-item" onclick="changeThemeMode('light')">
                             <svg class="pc-icon w-[18px] h-[18px]">
                                 <use xlink:href="#custom-sun-1"></use>
                             </svg>
-                            <span>Light</span>
+                            <span data-i18n="Claro">Claro</span>
                         </a>
-                        <a href="course-dashboard.html#!" class="dropdown-item" onclick="layout_change_default()">
+                        <a href="javascript:void(0)" class="dropdown-item" onclick="changeThemeMode('default')">
                             <svg class="pc-icon w-[18px] h-[18px]">
                                 <use xlink:href="#custom-setting-2"></use>
                             </svg>
-                            <span>Default</span>
+                            <span data-i18n="Padrão">Padrão</span>
                         </a>
                     </div>
                 </li>
