@@ -137,40 +137,34 @@
                             </div>
 
                             <!-- Senha -->
-                            <div class="col-span-12 sm:col-span-6">
-                                <div class="mb-1">
-                                    <label class="form-label">
-                                        Senha
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                        name="password" />
-                                    @error('password')
-                                        <div class="text-danger d-flex align-items-center mt-1">
-                                            <i class="fas fa-exclamation-triangle me-1"></i>
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
+                            <div class="col-span-12 sm:col-span-6 password-wrapper">
+                                <label class="form-label">Senha <span class="text-danger">*</span></label>
+                                <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                    name="password">
+                                <a href="#" class="password-toggle">
+                                    <i class="ti ti-eye text-xl leading-none"></i>
+                                </a>
+                                @error('password')
+                                    <div class="text-danger d-flex align-items-center mt-1">
+                                        <i class="fas fa-exclamation-triangle me-1"></i> {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
 
                             <!-- Confirmação de Senha -->
-                            <div class="col-span-12 sm:col-span-6">
-                                <div class="mb-1">
-                                    <label class="form-label">
-                                        Confirmar Senha
-                                        <span class="text-danger">*</span>
-                                    </label>
-                                    <input type="password"
-                                        class="form-control @error('password_confirmation') is-invalid @enderror"
-                                        name="password_confirmation" />
-                                    @error('password_confirmation')
-                                        <div class="text-danger d-flex align-items-center mt-1">
-                                            <i class="fas fa-exclamation-triangle me-1"></i>
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
+                            <div class="col-span-12 sm:col-span-6 password-wrapper">
+                                <label class="form-label">Confirmar Senha <span class="text-danger">*</span></label>
+                                <input type="password"
+                                    class="form-control @error('password_confirmation') is-invalid @enderror"
+                                    name="password_confirmation">
+                                <a href="#" class="password-toggle">
+                                    <i class="ti ti-eye text-xl leading-none"></i>
+                                </a>
+                                @error('password_confirmation')
+                                    <div class="text-danger d-flex align-items-center mt-1">
+                                        <i class="fas fa-exclamation-triangle me-1"></i> {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
 
                             <!-- User photo -->
@@ -206,6 +200,7 @@
     <script>
         $(document).ready(function() {
             formatPhoneNumber('phone-number');
+            togglePasswordVisibility();
         });
     </script>
 @endsection

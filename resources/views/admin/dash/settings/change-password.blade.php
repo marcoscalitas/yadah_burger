@@ -21,9 +21,12 @@
                     <div class="card-body">
                         <div class="grid grid-cols-12 gap-6">
                             <div class="col-span-12 sm:col-span-6">
-                                <div class="mb-3">
+                                <div class="mb-3 password-wrapper">
                                     <label class="form-label">Senha antiga</label>
-                                    <input type="password" name="current_password" class="form-control" />
+                                    <input type="password" name="current_password" class="form-control">
+                                    <a href="#" class="password-toggle">
+                                        <i class="ti ti-eye text-xl leading-none"></i>
+                                    </a>
                                     @error('current_password')
                                         <div class="text-danger d-flex align-items-center mt-1">
                                             <i class="fas fa-exclamation-triangle me-1"></i> {{ $message }}
@@ -31,9 +34,12 @@
                                     @enderror
                                 </div>
 
-                                <div class="mb-3">
+                                <div class="mb-3 password-wrapper">
                                     <label class="form-label">Nova senha</label>
-                                    <input type="password" name="password" id="password" class="form-control" />
+                                    <input type="password" name="password" id="password" class="form-control">
+                                    <a href="#" class="password-toggle">
+                                        <i class="ti ti-eye text-xl leading-none"></i>
+                                    </a>
                                     @error('password')
                                         <div class="text-danger d-flex align-items-center mt-1">
                                             <i class="fas fa-exclamation-triangle me-1"></i> {{ $message }}
@@ -41,9 +47,12 @@
                                     @enderror
                                 </div>
 
-                                <div class="mb-3">
+                                <div class="mb-3 password-wrapper">
                                     <label class="form-label">Confirmar senha</label>
-                                    <input type="password" name="password_confirmation" class="form-control" />
+                                    <input type="password" name="password_confirmation" class="form-control">
+                                    <a href="#" class="password-toggle">
+                                        <i class="ti ti-eye text-xl leading-none"></i>
+                                    </a>
                                     @error('password_confirmation')
                                         <div class="text-danger d-flex align-items-center mt-1">
                                             <i class="fas fa-exclamation-triangle me-1"></i> {{ $message }}
@@ -98,6 +107,7 @@
     {{-- Calls --}}
     <script>
         $(document).ready(function() {
+            togglePasswordVisibility();
             validatePassword();
         });
     </script>

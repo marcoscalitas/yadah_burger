@@ -39,10 +39,13 @@
                                     </div>
 
                                     <!-- Senha Atual -->
-                                    <div class="mb-4">
+                                    <div class="mb-4 password-wrapper">
                                         <label class="form-label">Senha atual</label>
                                         <input type="password" name="current_password" class="form-control"
                                             placeholder="Digite sua senha atual">
+                                        <a href="#" class="password-toggle">
+                                            <i class="ti ti-eye text-xl leading-none"></i>
+                                        </a>
                                         @error('current_password')
                                             <div class="text-danger d-flex align-items-center mt-1">
                                                 <i class="fas fa-exclamation-triangle me-1"></i> {{ $message }}
@@ -67,4 +70,13 @@
         <!-- [ sample-page ] end -->
     </div>
     <!-- [ Main Content ] end -->
+@endsection
+
+@section('custom-scripts')
+    {{-- Calls --}}
+    <script>
+        $(document).ready(function() {
+            togglePasswordVisibility();
+        });
+    </script>
 @endsection

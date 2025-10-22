@@ -18,19 +18,34 @@
             <p class="text-muted">Por favor, crie uma nova senha</p>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3 password-wrapper">
             <label class="form-label">Senha</label>
-            <input type="password" class="form-control" name="password" placeholder="Senha" />
+            <input type="password" class="form-control" name="password" placeholder="Senha">
+            <a href="#" class="password-toggle">
+                <i class="ti ti-eye text-xl leading-none"></i>
+            </a>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3 password-wrapper">
             <label class="form-label">Confirmar senha</label>
-            <input type="password" class="form-control" name="password_confirmation"
-                placeholder="Confirmar senha" />
+            <input type="password" class="form-control" name="password_confirmation" placeholder="Confirmar senha">
+            <a href="#" class="password-toggle">
+                <i class="ti ti-eye text-xl leading-none"></i>
+            </a>
         </div>
 
         <div class="grid mt-4">
             <button type="submit" class="btn btn-primary">Redefinir senha</button>
         </div>
     </form>
+@endsection
+
+
+@section('custom-scripts')
+    {{-- Calls --}}
+    <script>
+        $(document).ready(function() {
+            togglePasswordVisibility();
+        });
+    </script>
 @endsection

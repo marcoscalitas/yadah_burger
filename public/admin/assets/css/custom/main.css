@@ -41,7 +41,8 @@
 /* DataTables - Largura completa */
 #pc-dt-simple {
     width: 100% !important;
-    table-layout: fixed; /* Layout fixo para distribuição uniforme */
+    table-layout: fixed;
+    /* Layout fixo para distribuição uniforme */
 }
 
 #pc-dt-simple thead th,
@@ -93,7 +94,8 @@
 .table-responsive {
     width: 100%;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling */
+    -webkit-overflow-scrolling: touch;
+    /* Smooth scrolling */
 }
 
 .table-responsive .table {
@@ -123,37 +125,45 @@
 /* Ajuste específico para colunas de ação (normalmente menores) */
 #pc-dt-simple thead th:last-child,
 #pc-dt-simple tbody td:last-child {
-    width: 120px !important; /* Largura fixa para coluna de ações */
+    width: 120px !important;
+    /* Largura fixa para coluna de ações */
     min-width: 120px;
 }
 
 /* Ajuste para coluna de numeração/ID (primeira coluna) */
 #pc-dt-simple thead th:first-child,
 #pc-dt-simple tbody td:first-child {
-    width: 60px !important; /* Largura fixa para coluna # */
+    width: 60px !important;
+    /* Largura fixa para coluna # */
     min-width: 60px;
     text-align: center;
 }
 
 /* Melhora o layout responsivo com scroll lateral */
 @media (max-width: 768px) {
+
     /* Força scroll horizontal em mobile */
     .table-responsive {
         overflow-x: auto !important;
-        -webkit-overflow-scrolling: touch; /* Smooth scrolling no iOS */
+        -webkit-overflow-scrolling: touch;
+        /* Smooth scrolling no iOS */
     }
 
     #pc-dt-simple {
-        table-layout: fixed; /* Mantém layout fixo para forçar scroll */
-        min-width: 800px; /* Largura mínima para forçar scroll lateral */
+        table-layout: fixed;
+        /* Mantém layout fixo para forçar scroll */
+        min-width: 800px;
+        /* Largura mínima para forçar scroll lateral */
         width: 100% !important;
     }
 
     /* Mantém as colunas com larguras mínimas em mobile */
     #pc-dt-simple thead th,
     #pc-dt-simple tbody td {
-        white-space: nowrap !important; /* Previne quebra de linha */
-        min-width: 100px; /* Largura mínima para cada coluna */
+        white-space: nowrap !important;
+        /* Previne quebra de linha */
+        min-width: 100px;
+        /* Largura mínima para cada coluna */
         padding: 8px 12px;
     }
 
@@ -187,7 +197,8 @@
     }
 
     #pc-dt-simple {
-        min-width: 900px; /* Largura mínima para tablets */
+        min-width: 900px;
+        /* Largura mínima para tablets */
     }
 
     #pc-dt-simple thead th,
@@ -195,4 +206,25 @@
         min-width: 120px;
         white-space: nowrap;
     }
+}
+
+/* Estilo para centralizar o ícone no eixo Y */
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper .password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    height: 100%;
+    display: flex;
+    transform: translateY(-31%);
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.password-wrapper .password-toggle-auth {
+    transform: translateY(-35%);
 }

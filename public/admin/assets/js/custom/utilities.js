@@ -335,3 +335,29 @@ function changeThemeMode(theme) {
         }
     }
 }
+
+/**
+ * Alterna a visibilidade dos campos de senha ao clicar no ícone.
+ */
+function togglePasswordVisibility() {
+    const passwordFields = document.querySelectorAll('.password-wrapper input[type="password"], .password-wrapper input[type="text"]');
+
+    passwordFields.forEach((field) => {
+        const wrapper = field.closest('.password-wrapper');
+        const icon = wrapper.querySelector('.password-toggle i');
+
+        wrapper.querySelector('.password-toggle').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.classList.remove('ti-eye');
+                icon.classList.add('ti-eye-off');
+            } else {
+                field.type = 'password';
+                icon.classList.remove('ti-eye-off');
+                icon.classList.add('ti-eye');
+            }
+        });
+    });
+}
+

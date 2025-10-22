@@ -27,12 +27,15 @@
             @enderror
         </div>
 
-        <div class="mb-4">
+        <div class="mb-4 password-wrapper">
             <label class="col-span-12 lg:col-span-4 col-form-label lg:text-right">
                 Senha <span class="text-danger">*</span>
             </label>
             <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
                 placeholder="Senha" />
+            <a href="#" class="password-toggle password-toggle-auth">
+                <i class="ti ti-eye text-xl leading-none"></i>
+            </a>
             @error('password')
                 <div class="text-danger d-flex align-items-center mt-1">
                     <i class="fas fa-exclamation-triangle me-1"></i> {{ $message }}
@@ -59,4 +62,13 @@
             <a href="register-v1.html" class="text-primary-500">Criar uma conta</a>
         </div>
     </form>
+@endsection
+
+@section('custom-scripts')
+    {{-- Calls --}}
+    <script>
+        $(document).ready(function() {
+            togglePasswordVisibility();
+        });
+    </script>
 @endsection
