@@ -194,14 +194,15 @@ class UserController extends Controller
         $currentUser = getCurrentUser('admin');
 
         if ($currentUser->id == $user->id) {
-            return $this->redirectWithError('Não é possível eliminar a sua própria conta.');
+            return redirect()->route('admin.users.index')
+                ->with('error', 'Não é possível eliminar a sua própria conta.');
         }
 
         if ($user->role === 'admin' && User::where('role', 'admin')->count() <= 1) {
-            return $this->redirectWithError('Não é possível eliminar o último administrador do sistema.');
+            return redirect()->route('admin.users.index')
+                ->with('error', 'Não é possível eliminar o último administrador do sistema.');
         }
 
-        // Soft delete - preservar imagem para possível restauração
         $user->update(['user_status' => 'd']);
         $user->delete();
 
@@ -257,7 +258,8 @@ class UserController extends Controller
         $currentUser = getCurrentUser('admin');
 
         if ($currentUser->id == $user->id) {
-            return $this->redirectWithError('Não é possível eliminar permanentemente a sua própria conta.');
+            return redirect()->route('admin.users.index')
+                ->with('error', 'Não é possível eliminar permanentemente a sua própria conta.');
         }
 
         if ($user->image_url && fileExists($user->image_url)) {
@@ -377,10 +379,5 @@ class UserController extends Controller
         return $user->role === 'admin'
             && $data['role'] !== 'admin'
             && User::where('role', 'admin')->count() <= 1;
-    }
-
-    private function redirectWithError(string $message)
-    {
-        return redirect()->route('admin.users.index')->withErrors(['error' => $message]);
     }
 }
