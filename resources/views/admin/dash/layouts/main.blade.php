@@ -38,7 +38,7 @@
     <div class="pc-container">
         <div class="pc-content">
             <!-- [ Email verification reminder ] start -->
-            @if (session('email_verified') === false && is_null(getCurrentUser('admin')->email_verified_at))
+            @if (session('is_email_verified') === false || !is_null(getCurrentUser('admin')->email_verified_at))
                 <div class="alert alert-warning">
                     <i class="fas fa-exclamation-triangle me-2"></i>
                     O seu e-mail ainda não foi verificado. Verifique sua caixa de entrada.

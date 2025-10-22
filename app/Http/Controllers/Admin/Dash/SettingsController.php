@@ -82,15 +82,12 @@ class SettingsController extends Controller
             return back()->withErrors(['new_email' => 'O novo e-mail deve ser diferente do atual.']);
         }
 
-        $user->email = $request->new_email;
-        $user->email_verified_at = null;
-        $user->save();
-
-        session(['email_verified' => false]);
+        $data['email'] = $request->new_email;
+        $successMessage = handleUserEmailUpdate($user, $data, true);
 
         return redirect()
             ->route('admin.settings.change.email')
-            ->with('success', 'E-mail atualizado com sucesso! Confirme seu novo e-mail para continuar.');
+            ->with('success', $successMessage);
     }
 
     public function deleteAccount(Request $request)

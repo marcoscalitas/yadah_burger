@@ -17,7 +17,7 @@ class EmailVerificationController extends Controller
     {
         $user = $request->user('admin') ?? auth('admin')->user();
 
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('admin.login');
         }
 
@@ -39,7 +39,7 @@ class EmailVerificationController extends Controller
         $user = \App\Models\User::find($userId);
 
         // Check if user exists
-        if (!$user) {
+        if (! $user) {
             abort(404, 'Usuário não encontrado.');
         }
 
@@ -54,6 +54,7 @@ class EmailVerificationController extends Controller
         if ($user->hasVerifiedEmail() && $user->user_status === 'a') {
             // Email já verificado e conta já ativa - link desnecessário mas válido
             auth('admin')->login($user);
+
             return redirect()->intended(route('admin.index', absolute: false).'?verified=1')
                 ->with('info', 'Email já estava verificado! Bem-vindo de volta.');
         }
@@ -66,6 +67,7 @@ class EmailVerificationController extends Controller
         // Ativar automaticamente usuários que verificaram o email
         if ($user->user_status === 'p') {
             $user->update(['user_status' => 'a']);
+            session()->forget('is_email_verified');
         }
 
         // Log the user in after verification
@@ -83,7 +85,7 @@ class EmailVerificationController extends Controller
     {
         $user = $request->user('admin') ?? auth('admin')->user();
 
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('admin.login');
         }
 

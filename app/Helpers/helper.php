@@ -199,6 +199,7 @@ if (! function_exists('handleUserEmailUpdate')) {
         if ($emailChanged) {
             $data['user_status'] = 'p';
             $data['email_verified_at'] = null;
+            session(['is_email_verified' => false]);
 
             // SECURITY FIX: Invalidar todos os tokens antigos
             invalidateOldVerificationTokens($user->id);
