@@ -56,7 +56,7 @@ class SettingsController extends Controller
         $user->password = Hash::make($request->password);
         $user->save();
 
-        return redirect()->route('admin.settings.change.password')->with('success', 'Palavra-passe alterada com sucesso!');
+        return redirect()->route('admin.settings.change.password')->with('success', 'Senha alterada com sucesso!');
     }
 
     public function changeEmail()

@@ -140,7 +140,7 @@
                             <div class="col-span-12 sm:col-span-6">
                                 <div class="mb-1">
                                     <label class="form-label">
-                                        Palavra-passe
+                                        Senha
                                         <span class="text-danger">*</span>
                                     </label>
                                     <input type="password" class="form-control @error('password') is-invalid @enderror"
@@ -158,7 +158,7 @@
                             <div class="col-span-12 sm:col-span-6">
                                 <div class="mb-1">
                                     <label class="form-label">
-                                        Confirmar Palavra-passe
+                                        Confirmar Senha
                                         <span class="text-danger">*</span>
                                     </label>
                                     <input type="password"

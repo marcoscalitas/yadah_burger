@@ -1,6 +1,6 @@
 @extends('admin.auth.layouts.main')
 
-@section('title', 'Esqueceu sua palavra-passe')
+@section('title', 'Esqueceu sua senha')
 
 @section('content')
     <div class="mb-4">

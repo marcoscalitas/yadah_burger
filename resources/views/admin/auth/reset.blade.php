@@ -1,6 +1,6 @@
 @extends('admin.auth.layouts.main')
 
-@section('title', 'Esqueceu sua palavra-passe')
+@section('title', 'Esqueceu sua senha')
 
 @section('content')
     <form method="POST" action="{{ route('admin.password.update') }}">
@@ -14,23 +14,23 @@
         <input type="hidden" name="email" value="{{ $email }}">
 
         <div class="mb-4">
-            <h3 class="mb-2"><b>Redefinir palavra-passe</b></h3>
-            <p class="text-muted">Por favor, crie uma nova palavra-passe</p>
+            <h3 class="mb-2"><b>Redefinir senha</b></h3>
+            <p class="text-muted">Por favor, crie uma nova senha</p>
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Palavra-passe</label>
-            <input type="password" class="form-control" name="password" placeholder="Palavra-passe" />
+            <label class="form-label">Senha</label>
+            <input type="password" class="form-control" name="password" placeholder="Senha" />
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Confirmar palavra-passe</label>
+            <label class="form-label">Confirmar senha</label>
             <input type="password" class="form-control" name="password_confirmation"
-                placeholder="Confirmar palavra-passe" />
+                placeholder="Confirmar senha" />
         </div>
 
         <div class="grid mt-4">
-            <button type="submit" class="btn btn-primary">Redefinir palavra-passe</button>
+            <button type="submit" class="btn btn-primary">Redefinir senha</button>
         </div>
     </form>
 @endsection
