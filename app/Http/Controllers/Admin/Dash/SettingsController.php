@@ -26,6 +26,8 @@ class SettingsController extends Controller
 
     public function updatePassword(Request $request)
     {
+        $messages = getPasswordValidationMessages();
+
         // Validação principal
         $validatedData = $request->validate([
             'current_password' => 'required',
@@ -34,19 +36,17 @@ class SettingsController extends Controller
                 'string',
                 'min:8',
                 'confirmed',
-                'regex:/[a-z]/',
-                'regex:/[A-Z]/',
-                'regex:/[0-9]/',
-                'regex:/[@$!%*#?&]/',
+                function ($attribute, $value, $fail) use ($messages) {
+                    validatePassword($value, $fail, [
+                        'a_z' => $messages['password.regex.a_z'],
+                        'A_Z' => $messages['password.regex.A_Z'],
+                        '0_9' => $messages['password.regex.0_9'],
+                        'special' => $messages['password.regex.special'],
+                    ]);
+                },
             ],
             'password_confirmation' => 'required',
-        ], [
-            'current_password.required' => 'O campo senha antiga é obrigatório.',
-            'password.required' => 'O campo nova senha é obrigatório.',
-            'password.regex' => 'A nova senha deve conter letra maiúscula, minúscula, número e caractere especial.',
-            'password.confirmed' => 'A confirmação da senha não coincide.',
-            'password_confirmation.required' => 'O campo confirmar senha é obrigatório.',
-        ]);
+        ], $messages);
 
         $user = getCurrentUser('admin');
         if (! Hash::check($request->current_password, $user->password)) {

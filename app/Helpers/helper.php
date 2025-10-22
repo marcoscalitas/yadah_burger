@@ -469,3 +469,52 @@ if (! function_exists('formatBytes')) {
         return round($size, $precision) . ' ' . $units[$i];
     }
 }
+
+if (!function_exists('validatePassword')) {
+    /**
+     * Valida os critérios de uma senha.
+     */
+    function validatePassword(string $password, callable $fail, array $messages = []): void
+    {
+        $defaultMessages = [
+            'a_z' => 'A senha deve conter pelo menos uma letra minúscula.',
+            'A_Z' => 'A senha deve conter pelo menos uma letra maiúscula.',
+            '0_9' => 'A senha deve conter pelo menos um número.',
+            'special' => 'A senha deve conter pelo menos um caractere especial (@$!%*#?&).',
+        ];
+
+        $messages = array_merge($defaultMessages, $messages);
+
+        if (!preg_match('/[a-z]/', $password)) {
+            $fail($messages['a_z']);
+        }
+        if (!preg_match('/[A-Z]/', $password)) {
+            $fail($messages['A_Z']);
+        }
+        if (!preg_match('/[0-9]/', $password)) {
+            $fail($messages['0_9']);
+        }
+        if (!preg_match('/[@$!%*#?&]/', $password)) {
+            $fail($messages['special']);
+        }
+    }
+}
+
+if (!function_exists('getPasswordValidationMessages')) {
+    /**
+     * Retorna as mensagens de validação para os critérios de senha.
+     */
+    function getPasswordValidationMessages(): array
+    {
+        return [
+            'password.required' => 'A senha é obrigatória.',
+            'password.string' => 'A senha deve ser um texto.',
+            'password.min' => 'A senha deve ter no mínimo :min caracteres.',
+            'password.confirmed' => 'A confirmação da senha não coincide.',
+            'password.regex.a_z' => 'A senha deve conter pelo menos uma letra minúscula.',
+            'password.regex.A_Z' => 'A senha deve conter pelo menos uma letra maiúscula.',
+            'password.regex.0_9' => 'A senha deve conter pelo menos um número.',
+            'password.regex.special' => 'A senha deve conter pelo menos um caractere especial (@$!%*#?&).',
+        ];
+    }
+}
