@@ -19,19 +19,6 @@ class LoginController extends Controller
         return view(self::ADMIN_AUTH_LOGIN.'login');
     }
 
-    private function validateLogin(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string|min:6',
-        ], [
-            'email.required' => 'O campo de e-mail é obrigatório.',
-            'email.email' => 'Insira um email válido.',
-            'password.required' => 'O campo de senha é obrigatório.',
-            'password.min' => 'A senha deve ter pelo menos 6 caracteres.',
-        ]);
-    }
-
     protected function showFormError(Request $request, string $message)
     {
         return back()->withInput()->withErrors([$message]);
@@ -79,7 +66,15 @@ class LoginController extends Controller
     {
         // Guarda de autenticação
         $auth = auth('admin');
-        $this->validateLogin($request);
+
+        $request->validate([
+            'email' => 'required|email',
+            'password' => ['required', 'string', 'min:8',
+                function ($attribute, $value, $fail) {
+                    validatePassword($value, $fail);
+                },
+            ],
+        ]);
 
         $remember = $request->boolean('remember', false);
 

@@ -69,7 +69,12 @@ class PasswordController extends Controller
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => ['required', 'string', 'min:8', 'confirmed',
+                function ($attribute, $value, $fail) {
+                    validatePassword($value, $fail);
+                },
+            ],
+            'password_confirmation' => 'required',
         ]);
 
         // SECURITY FIX: Verificar se o usuário existe e tem status válido para reset

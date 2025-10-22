@@ -27,29 +27,21 @@ class SettingsController extends Controller
 
     public function updatePassword(Request $request)
     {
-        $messages = getPasswordValidationMessages();
-
-        // Validação principal
+        $user = getCurrentUser('admin');
         $validatedData = $request->validate([
-            'current_password' => 'required',
-            'password' => [
-                'required',
-                'string',
-                'min:8',
-                'confirmed',
-                function ($attribute, $value, $fail) use ($messages) {
-                    validatePassword($value, $fail, [
-                        'a_z' => $messages['password.regex.a_z'],
-                        'A_Z' => $messages['password.regex.A_Z'],
-                        '0_9' => $messages['password.regex.0_9'],
-                        'special' => $messages['password.regex.special'],
-                    ]);
+            'current_password' => ['required', 'string', 'min:8',
+                function ($attribute, $value, $fail) {
+                    validatePassword($value, $fail);
+                },
+            ],
+            'password' => ['required', 'string', 'min:8', 'confirmed',
+                function ($attribute, $value, $fail) {
+                    validatePassword($value, $fail);
                 },
             ],
             'password_confirmation' => 'required',
-        ], $messages);
+        ]);
 
-        $user = getCurrentUser('admin');
         if (! Hash::check($request->current_password, $user->password)) {
             return back()->withErrors(['current_password' => 'Senha atual incorreta'])->withInput();
         }
@@ -70,10 +62,13 @@ class SettingsController extends Controller
         $user = getCurrentUser('admin');
 
         $request->validate([
-            'current_password' => ['required'],
+            'current_password' => ['required', 'string', 'min:8',
+                function ($attribute, $value, $fail) {
+                    validatePassword($value, $fail);
+                },
+            ],
             'new_email' => ['required', 'email', Rule::unique('users', 'email')->ignore($user->id)],
         ], [
-            'current_password.required' => 'Informe sua senha atual.',
             'new_email.required' => 'Informe um novo e-mail.',
             'new_email.email' => 'O e-mail informado não é válido.',
             'new_email.unique' => 'Este e-mail já está em uso.',
@@ -81,6 +76,10 @@ class SettingsController extends Controller
 
         if (! Hash::check($request->current_password, $user->password)) {
             return back()->withErrors(['current_password' => 'Senha incorreta.']);
+        }
+
+        if ($user->email === $request->new_email) {
+            return back()->withErrors(['new_email' => 'O novo e-mail deve ser diferente do atual.']);
         }
 
         $user->email = $request->new_email;

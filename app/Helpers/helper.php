@@ -285,7 +285,6 @@ if (! function_exists('invalidatePasswordResetTokens')) {
     }
 }
 
-
 if (! function_exists('fileExists')) {
     /**
      * Verifica se um arquivo existe no caminho especificado.
@@ -298,7 +297,6 @@ if (! function_exists('fileExists')) {
      *
      * @param  string  $path  Caminho do arquivo
      * @param  string  $disk  Disco de armazenamento (padrão: 'public')
-     * @return bool
      */
     function fileExists(string $path, string $disk = 'public'): bool
     {
@@ -330,6 +328,7 @@ if (! function_exists('fileExists')) {
                 'path' => $path,
                 'disk' => $disk,
             ]);
+
             return false;
         }
     }
@@ -341,7 +340,6 @@ if (! function_exists('urlExists')) {
      * Usa diferentes métodos dependendo da disponibilidade das extensões.
      *
      * @param  string  $url  URL para verificar
-     * @return bool
      */
     function urlExists(string $url): bool
     {
@@ -367,13 +365,14 @@ if (! function_exists('urlExists')) {
                 'http' => [
                     'method' => 'HEAD',
                     'timeout' => 10,
-                    'ignore_errors' => true
-                ]
+                    'ignore_errors' => true,
+                ],
             ]);
 
             $headers = @get_headers($url, 1, $context);
             if ($headers) {
                 $httpCode = (int) substr($headers[0], 9, 3);
+
                 return $httpCode >= 200 && $httpCode < 400;
             }
 
@@ -389,11 +388,10 @@ if (! function_exists('urlExists')) {
      *
      * @param  string  $path  Caminho do arquivo
      * @param  string  $disk  Disco de armazenamento (padrão: 'public')
-     * @return array|null
      */
     function getFileInfo(string $path, string $disk = 'public'): ?array
     {
-        if (!fileExists($path, $disk)) {
+        if (! fileExists($path, $disk)) {
             return null;
         }
 
@@ -409,7 +407,7 @@ if (! function_exists('urlExists')) {
                     'modified_human' => date('d/m/Y H:i:s', filemtime($path)),
                     'extension' => pathinfo($path, PATHINFO_EXTENSION),
                     'basename' => basename($path),
-                    'type' => 'local'
+                    'type' => 'local',
                 ];
             }
 
@@ -431,7 +429,7 @@ if (! function_exists('urlExists')) {
                 'modified_human' => date('d/m/Y H:i:s', $storage->lastModified($path)),
                 'extension' => pathinfo($path, PATHINFO_EXTENSION),
                 'basename' => basename($path),
-                'type' => 'storage'
+                'type' => 'storage',
             ];
 
         } catch (\Exception $e) {
@@ -439,6 +437,7 @@ if (! function_exists('urlExists')) {
                 'path' => $path,
                 'disk' => $disk,
             ]);
+
             return null;
         }
     }
@@ -450,7 +449,6 @@ if (! function_exists('formatBytes')) {
      *
      * @param  int  $size  Tamanho em bytes
      * @param  int  $precision  Precisão decimal
-     * @return string
      */
     function formatBytes(int $size, int $precision = 2): string
     {
@@ -466,55 +464,34 @@ if (! function_exists('formatBytes')) {
             $i++;
         }
 
-        return round($size, $precision) . ' ' . $units[$i];
+        return round($size, $precision).' '.$units[$i];
     }
 }
 
-if (!function_exists('validatePassword')) {
-    /**
-     * Valida os critérios de uma senha.
-     */
-    function validatePassword(string $password, callable $fail, array $messages = []): void
+/**
+ * Validate Password
+ */
+if (! function_exists('validatePassword')) {
+    function validatePassword(string $password, callable $fail): void
     {
-        $defaultMessages = [
-            'a_z' => 'A senha deve conter pelo menos uma letra minúscula.',
-            'A_Z' => 'A senha deve conter pelo menos uma letra maiúscula.',
-            '0_9' => 'A senha deve conter pelo menos um número.',
-            'special' => 'A senha deve conter pelo menos um caractere especial (@$!%*#?&).',
-        ];
+        if (! preg_match('/[a-z]/', $password)) {
+            $fail('A senha deve conter pelo menos uma letra minúscula.');
+        }
 
-        $messages = array_merge($defaultMessages, $messages);
+        if (! preg_match('/[A-Z]/', $password)) {
+            $fail('A senha deve conter pelo menos uma letra maiúscula.');
+        }
 
-        if (!preg_match('/[a-z]/', $password)) {
-            $fail($messages['a_z']);
+        if (! preg_match('/[0-9]/', $password)) {
+            $fail('A senha deve conter pelo menos um número.');
         }
-        if (!preg_match('/[A-Z]/', $password)) {
-            $fail($messages['A_Z']);
-        }
-        if (!preg_match('/[0-9]/', $password)) {
-            $fail($messages['0_9']);
-        }
-        if (!preg_match('/[@$!%*#?&]/', $password)) {
-            $fail($messages['special']);
-        }
-    }
-}
 
-if (!function_exists('getPasswordValidationMessages')) {
-    /**
-     * Retorna as mensagens de validação para os critérios de senha.
-     */
-    function getPasswordValidationMessages(): array
-    {
-        return [
-            'password.required' => 'A senha é obrigatória.',
-            'password.string' => 'A senha deve ser um texto.',
-            'password.min' => 'A senha deve ter no mínimo :min caracteres.',
-            'password.confirmed' => 'A confirmação da senha não coincide.',
-            'password.regex.a_z' => 'A senha deve conter pelo menos uma letra minúscula.',
-            'password.regex.A_Z' => 'A senha deve conter pelo menos uma letra maiúscula.',
-            'password.regex.0_9' => 'A senha deve conter pelo menos um número.',
-            'password.regex.special' => 'A senha deve conter pelo menos um caractere especial (@$!%*#?&).',
-        ];
+        if (! preg_match('/[@$!%*#?&]/', $password)) {
+            $fail('A senha deve conter pelo menos um caractere especial (@$!%*#?&).');
+        }
+
+        if (! preg_match('/[a-zA-Z0-9@$!%*#?&]/', $password)) {
+            $fail('A senha deve conter apenas caracteres válidos (letras, números e caracteres especiais).');
+        }
     }
 }

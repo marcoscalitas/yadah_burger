@@ -39,8 +39,6 @@ class UserController extends Controller
             'phone' => preg_replace('/\D/', '', $request->input('phone')),
         ]);
 
-        $messages = getPasswordValidationMessages();
-
         $validated = $request->validate([
             'fullname' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
@@ -48,22 +46,14 @@ class UserController extends Controller
             'gender' => 'required|in:M,F',
             'birthdate' => 'required|date|before:today',
             'role' => 'required|in:admin,staff',
-            'password' => [
-                'required',
-                'string',
-                'min:8',
-                'confirmed',
-                function ($attribute, $value, $fail) use ($messages) {
-                    validatePassword($value, $fail, [
-                        'a_z' => $messages['password.regex.a_z'],
-                        'A_Z' => $messages['password.regex.A_Z'],
-                        '0_9' => $messages['password.regex.0_9'],
-                        'special' => $messages['password.regex.special'],
-                    ]);
+            'password' => ['required', 'string', 'min:8', 'confirmed',
+                function ($attribute, $value, $fail) {
+                    validatePassword($value, $fail);
                 },
             ],
+            'password_confirmation' => 'required',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:3072',
-        ], $messages);
+        ]);
 
         $validated['password'] = Hash::make($validated['password']);
 
@@ -116,19 +106,6 @@ class UserController extends Controller
         $request->merge([
             'phone' => preg_replace('/\D/', '', $request->input('phone')),
         ]);
-
-        $messages = [
-            'password.required' => 'A senha é obrigatória.',
-            'password.string' => 'A senha deve ser um texto.',
-            'password.min' => 'A senha deve ter no mínimo :min caracteres.',
-            'password.confirmed' => 'A confirmação da senha não coincide.',
-            'password.regex' => 'A senha deve atender aos seguintes critérios:',
-            'password.regex.a_z' => 'A senha deve conter pelo menos uma letra minúscula.',
-            'password.regex.A_Z' => 'A senha deve conter pelo menos uma letra maiúscula.',
-            'password.regex.0_9' => 'A senha deve conter pelo menos um número.',
-            'password.regex.special' => 'A senha deve conter pelo menos um caractere especial (@$!%*#?&).',
-        ];
-
         $validated = $request->validate([
             'fullname' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,'.$user->id,
@@ -136,17 +113,7 @@ class UserController extends Controller
             'gender' => 'required|in:M,F',
             'birthdate' => 'required|date|before:today',
             'role' => 'required|in:admin,staff',
-            'password' => [
-                'nullable', // Senha não é obrigatória na atualização
-                'string',
-                'min:8',
-                'confirmed',
-                'regex:/[a-z]/', // Pelo menos 1 letra minúscula
-                'regex:/[A-Z]/', // Pelo menos 1 letra maiúscula
-                'regex:/[0-9]/', // Pelo menos 1 número
-                'regex:/[@$!%*#?&]/', // Pelo menos 1 caractere especial
-            ],
-        ], $messages);
+        ]);
 
         if ($this->isLastAdminDemotion($user, $validated)) {
             return back()->withErrors(['role' => 'Não é possível alterar o role do último administrador.'])->withInput();
