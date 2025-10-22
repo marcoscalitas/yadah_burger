@@ -199,6 +199,8 @@ function formatPhoneNumber(inputId) {
         });
     }
 
+    $input.val(formatarTelefone($input.val()));
+
     $input.on('input', function () {
         const cursorPos = this.selectionStart;
         const originalLength = this.value.length;
