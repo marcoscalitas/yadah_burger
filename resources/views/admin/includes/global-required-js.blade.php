@@ -31,7 +31,8 @@
             if (!localStorage.getItem('theme') && typeof layout_change === 'function') {
                 layout_change('light');
             }
-            if (!localStorage.getItem('contrast') && typeof layout_theme_contrast_change === 'function') {
+            if (!localStorage.getItem('contrast') && typeof layout_theme_contrast_change ===
+                'function') {
                 layout_theme_contrast_change('false');
             }
             if (!localStorage.getItem('container') && typeof change_box_container === 'function') {
@@ -84,14 +85,20 @@
 
 <script>
     $(document).ready(function() {
-        // Seleciona todos os alerts com a classe message-fade-out
-        $('.message-fade-out').each(function() {
-            var $alert = $(this);
+        // Função genérica para aplicar fade out em alerts
+        function applyFadeOut(selector, timeout) {
+            $(selector).each(function() {
+                var $alert = $(this);
 
-            setTimeout(function() {
-                $alert.fadeOut('slow');
-            }, 5000);
-        });
+                setTimeout(function() {
+                    $alert.fadeOut('slow');
+                }, timeout);
+            });
+        }
+
+        // Apply fade out for alerts
+        applyFadeOut('.message-fade-out', 6000);
+        applyFadeOut('.message-fade-out-err', 16000);
 
         // Data table
         $('#pc-dt-simple').DataTable({
@@ -99,7 +106,9 @@
             lengthMenu: [5, 10, 25, 50, 100],
             responsive: true,
             pagingType: "full_numbers",
-            order: [[0, 'asc']],
+            order: [
+                [0, 'asc']
+            ],
             destroy: true, // Permite reinicializar a tabela
             autoWidth: false, // Desabilita o cálculo automático de largura
             scrollX: true, // Permite scroll horizontal se necessário

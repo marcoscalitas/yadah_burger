@@ -17,7 +17,7 @@
 @endif
 
 @if (session()->has('error'))
-    <div class="alert alert-danger message-fade-out">
+    <div class="alert alert-danger message-fade-out-err">
         <span>
             <i class="fas fa-exclamation-circle fa-lg me-2"></i>
         </span>
@@ -35,7 +35,7 @@
 @endif
 
 @if ($errors->any() && !$errors->has('error'))
-    <div class="alert alert-danger message-fade-out">
+    <div class="alert alert-danger message-fade-out-err">
         <span>
             <i class="fas fa-exclamation-circle fa-lg me-2"></i>
         </span>
