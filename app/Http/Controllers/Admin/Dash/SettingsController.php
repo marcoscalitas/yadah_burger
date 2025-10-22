@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Dash;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -96,11 +97,16 @@ class SettingsController extends Controller
     public function deleteAccount(Request $request)
     {
         $auth = auth('admin');
-        $user = $auth->user();
+        $user = getCurrentUser('admin');
 
+        if ($user->role === 'admin' && User::where('role', 'admin')->count() <= 1) {
+            return redirect()->route('admin.settings.index')->with('error', 'Não é possível eliminar o último administrador do sistema.');
+        }
+
+        $user->update(['user_status' => 'd']);
         $auth->logout();
         $user->delete();
 
-        return redirect()->route('admin.login')->with('success', 'Sua conta foi excluída com sucesso.');
+        return redirect()->route('admin.login')->with('success', 'Sua conta foi eliminada com sucesso.');
     }
 }

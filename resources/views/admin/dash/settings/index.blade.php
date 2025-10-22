@@ -114,7 +114,7 @@
 
                                     <div class="modal-header">
                                         <h5 class="modal-title font-semibold text-danger text-lg">
-                                            <i class="fas fa-user-times me-2"></i> Confirmar exclusão
+                                            <i class="fas fa-user-times me-2"></i> Excluir Conta
                                         </h5>
                                         <button type="button" data-pc-modal-dismiss="#deleteAccountModal"
                                             class="text-lg flex items-center justify-center rounded w-7 h-7 text-secondary-500 hover:bg-danger-500/10 hover:text-danger-500">
@@ -131,7 +131,7 @@
                                         </p>
                                     </div>
 
-                                    <div class="modal-footer flex justify-center gap-3 border-t">
+                                    <div class="modal-footer flex justify-end gap-3 border-t">
                                         <button type="button" data-pc-modal-dismiss="#deleteAccountModal"
                                             class="btn btn-outline-secondary px-4">
                                             Cancelar
