@@ -51,7 +51,7 @@
                                     @enderror
                                 </div>
                             </div>
-                            
+
                             <!-- User image -->
                             <div class="col-span-12 sm:col-span-12">
                                 <div class="mb-1">
@@ -71,9 +71,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-span-12 text-right">
-                        <button type="submit" class="btn btn-primary">Adicionar Categoría</button>
-                    </div>
+                </div>
+                <div class="col-span-12 text-right">
+                    <button type="submit" class="btn btn-primary">Adicionar Categoria</button>
+                </div>
             </form>
         </div>
     </div>

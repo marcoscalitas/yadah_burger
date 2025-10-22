@@ -268,15 +268,7 @@
                                         <svg class="pc-icon text-muted me-2 inline-block">
                                             <use xlink:href="#custom-profile-2user-outline"></use>
                                         </svg>
-                                        <span>Perfil</span>
-                                    </span>
-                                </a>
-                                <a href="{{ route('admin.profile.edit') }}" class="dropdown-item">
-                                    <span>
-                                        <svg class="pc-icon text-muted me-2 inline-block">
-                                            <use xlink:href="#custom-profile-2user-outline"></use>
-                                        </svg>
-                                        <span>Editar perfil</span>
+                                        <span>Meu Perfil</span>
                                     </span>
                                 </a>
                                 <a href="{{ route('admin.settings.index') }}" class="dropdown-item">

@@ -181,6 +181,40 @@ function setupImagePreview(inputSelector, previewSelector) {
     });
 }
 
+// Formate phone number
+function formatPhoneNumber(inputId) {
+    const $input = $('#' + inputId);
+
+    if ($input.length === 0) {
+        console.error(`Elemento com ID "${inputId}" não encontrado.`);
+        return;
+    }
+
+    function formatarTelefone(valor) {
+        let numeros = valor.replace(/\D/g, '');
+        return numeros.replace(/(\d{3})(\d{0,3})(\d{0,3})/, function (_, p1, p2, p3) {
+            if (p3) return `${p1}-${p2}-${p3}`;
+            if (p2) return `${p1}-${p2}`;
+            return p1;
+        });
+    }
+
+    $input.on('input', function () {
+        const cursorPos = this.selectionStart;
+        const originalLength = this.value.length;
+
+        const formattedValue = formatarTelefone(this.value);
+        $(this).val(formattedValue);
+
+        const newLength = formattedValue.length;
+        this.selectionStart = this.selectionEnd = cursorPos + (newLength - originalLength);
+    });
+
+    $input.on('blur focusout', function () {
+        $(this).val(formatarTelefone($(this).val()));
+    });
+}
+
 // Settings - Change Password Validation
 function validatePassword() {
     // Arrow function local para checar cada regra

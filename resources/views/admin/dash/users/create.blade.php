@@ -204,6 +204,8 @@
 
 @section('custom-scripts')
     <script>
-        $(document).ready(function() {});
+        $(document).ready(function() {
+            formatPhoneNumber('phone-number');
+        });
     </script>
 @endsection

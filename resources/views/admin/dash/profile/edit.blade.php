@@ -185,7 +185,7 @@
     {{-- Calls --}}
     <script>
         $(document).ready(function() {
-            formatPhoneInput('phone-number');
+            formatPhoneNumber('phone-number');
         });
     </script>
 @endsection

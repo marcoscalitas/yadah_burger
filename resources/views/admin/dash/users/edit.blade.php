@@ -123,9 +123,9 @@
         </div>
 
         <!-- Modal Reset Password -->
-        @if($canManageUser)
-            <div id="resetPasswordModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="resetPasswordModalLabel"
-                aria-hidden="true">
+        @if ($canManageUser)
+            <div id="resetPasswordModal" class="modal fade" tabindex="-1" role="dialog"
+                aria-labelledby="resetPasswordModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <form action="{{ route('admin.users.reset.password', $user->id) }}" method="POST">
@@ -153,7 +153,8 @@
                                 </div>
                             </div>
                             <div class="modal-footer flex justify-center gap-3 border-t">
-                                <button type="button" class="btn btn-outline-secondary px-4" data-pc-modal-dismiss="#resetPasswordModal">
+                                <button type="button" class="btn btn-outline-secondary px-4"
+                                    data-pc-modal-dismiss="#resetPasswordModal">
                                     Cancelar
                                 </button>
                                 <button type="submit" class="btn btn-warning px-4">
@@ -167,8 +168,8 @@
             </div>
 
             <!-- Modal Send Verification Email -->
-            <div id="sendVerificationEmailModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sendVerificationEmailModalLabel"
-                aria-hidden="true">
+            <div id="sendVerificationEmailModal" class="modal fade" tabindex="-1" role="dialog"
+                aria-labelledby="sendVerificationEmailModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <form action="{{ route('admin.users.send.verification.email', $user->id) }}" method="POST">
@@ -190,11 +191,13 @@
                                 </p>
                                 <div class="alert alert-info text-center">
                                     <i class="ti ti-info-circle me-2"></i>
-                                    Um email será enviado para <strong>{{ $user->email }}</strong> com o link de verificação.
+                                    Um email será enviado para <strong>{{ $user->email }}</strong> com o link de
+                                    verificação.
                                 </div>
                             </div>
                             <div class="modal-footer flex justify-center gap-3 border-t">
-                                <button type="button" class="btn btn-outline-secondary px-4" data-pc-modal-dismiss="#sendVerificationEmailModal">
+                                <button type="button" class="btn btn-outline-secondary px-4"
+                                    data-pc-modal-dismiss="#sendVerificationEmailModal">
                                     Cancelar
                                 </button>
                                 <button type="submit" class="btn btn-primary px-4">
@@ -390,15 +393,17 @@
                 </div>
 
                 <div class="col-span-12 text-right">
-                    @if($canManageUser)
-                        @if($emailNotVerified)
-                            <button type="button" class="btn btn-info me-2" data-pc-toggle="modal" data-pc-target="#sendVerificationEmailModal" data-pc-animate="sticky-up">
+                    @if ($canManageUser)
+                        @if ($emailNotVerified)
+                            <button type="button" class="btn btn-info me-2" data-pc-toggle="modal"
+                                data-pc-target="#sendVerificationEmailModal" data-pc-animate="sticky-up">
                                 <i class="ti ti-mail me-1"></i>
                                 Enviar Email de Verificação
                             </button>
                         @endif
 
-                        <button type="button" class="btn btn-warning me-2" data-pc-toggle="modal" data-pc-target="#resetPasswordModal" data-pc-animate="sticky-up">
+                        <button type="button" class="btn btn-warning me-2" data-pc-toggle="modal"
+                            data-pc-target="#resetPasswordModal" data-pc-animate="sticky-up">
                             <i class="ti ti-key me-1"></i>
                             Resetar Senha
                         </button>
@@ -415,6 +420,7 @@
     {{-- Calls --}}
     <script>
         $(document).ready(function() {
+            formatPhoneNumber('phone-number');
             // Preview
             setupImagePreview('#profilePhotoInput', '#profilePreview', 'photoMessage');
             uploadUserPhoto(
