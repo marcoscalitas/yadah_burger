@@ -252,69 +252,101 @@
     <!-- Product Selection Modal -->
     <div id="productModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="productModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title font-semibold" id="productModalLabel">Selecionar Produto</h5>
+                    <h5 class="modal-title font-semibold" id="productModalLabel">Selecionar Produtos</h5>
                     <button type="button" data-pc-modal-dismiss="#productModal"
                         class="text-lg flex items-center justify-center rounded w-7 h-7 text-secondary-500 hover:bg-danger-500/10 hover:text-danger-500">
                         <i class="ti ti-x"></i>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="grid grid-cols-12 gap-6">
-                        <!-- Product Selection -->
-                        <div class="col-span-12">
-                            <div class="mb-3">
-                                <label class="form-label">Produto <span class="text-danger">*</span></label>
-                                <select class="form-select" id="modalProductSelect">
-                                    <option value="">Selecione um produto</option>
-                                    @foreach ($products as $product)
-                                        <option value="{{ $product->id }}" data-name="{{ $product->name }}"
-                                            data-price="{{ $product->promotion_price ?? $product->price }}"
-                                            data-category="{{ $product->category->name ?? '' }}">
-                                            {{ $product->name }} - {{ $product->category->name ?? 'Sem categoria' }}
-                                            ({{ number_format($product->promotion_price ?? $product->price, 2, ',', '.') }}
-                                            Kz)
-                                        </option>
-                                    @endforeach
-                                </select>
+                    <div class="grid grid-cols-1 gap-4">
+                        @if (isset($categories) && $categories->count() > 0)
+                            @foreach ($categories as $category)
+                                @if ($category->products && $category->products->count() > 0)
+                                    <div>
+                                        <div class="">
+                                            <div
+                                                style="display: flex; align-items: center; gap: 12px; padding: 12px; background-color: #f8f9fa; border-radius: 8px; border-left: 4px solid var(--bs-primary);">
+                                                <div
+                                                    style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;">
+                                                    <img src="{{ $category->getImageUrl() }}"
+                                                        alt="{{ $category->name }}"
+                                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                                </div>
+                                                <h5 style="margin: 0; font-weight: bold; color: #333;">
+                                                    {{ $category->name }}</h5>
+                                                <small
+                                                    style="color: #6c757d; margin-left: auto;">{{ $category->products->count() }}
+                                                    produtos disponíveis</small>
+                                            </div>
+                                        </div>
+                                        <hr class="border-secondary-500/10 my-2 mb-6">
+                                        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px;">
+                                            @foreach ($category->products as $product)
+                                                <!-- Product Card -->
+                                                <div>
+                                                    <div class="mb-3">
+                                                        <div class="border rounded-2xl p-4 text-center shadow-sm hover:shadow-md transition cursor-pointer"
+                                                            data-product-id="{{ $product->id }}"
+                                                            data-product-name="{{ $product->name }}"
+                                                            data-product-price="{{ $product->price }}"
+                                                            data-category-name="{{ $category->name }}">
+                                                            @if ($product->image)
+                                                                <img src="{{ asset('storage/' . $product->image) }}"
+                                                                    alt="{{ $product->name }}"
+                                                                    class="mx-auto mb-3 rounded"
+                                                                    style="width: 120px; height: 120px; object-fit: cover;">
+                                                            @else
+                                                                <div class="mx-auto mb-3 rounded bg-gray-200 d-flex align-items-center justify-content-center"
+                                                                    style="width: 120px; height: 120px;">
+                                                                    <i class="ti ti-photo text-4xl text-gray-400"></i>
+                                                                </div>
+                                                            @endif
+                                                            <h6 class="font-medium">{{ $product->name }}</h6>
+                                                            <p class="text-primary-600 font-semibold mt-1">
+                                                                {{ number_format($product->price, 2, ',', '.') }} Kz
+                                                            </p>
+                                                            <div class="flex items-center justify-center gap-2 mt-2">
+                                                                <button type="button"
+                                                                    class="w-7 h-7 rounded-lg inline-flex items-center justify-center btn-link-secondary"
+                                                                    onclick="changeQuantity({{ $product->id }}, -1)">
+                                                                    <i class="ti ti-minus text-sm leading-none"></i>
+                                                                </button>
+                                                                <span
+                                                                    class="quantity-display font-semibold text-sm px-1 min-w-[20px] text-center"
+                                                                    data-product-id="{{ $product->id }}">0</span>
+                                                                <button type="button"
+                                                                    class="w-7 h-7 rounded-lg inline-flex items-center justify-center btn-link-secondary"
+                                                                    onclick="changeQuantity({{ $product->id }}, 1)">
+                                                                    <i class="ti ti-plus text-sm leading-none"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
+                        @else
+                            <div class="text-center py-5">
+                                <i class="ti ti-shopping-cart-off text-6xl text-gray-400 mb-3 d-block"></i>
+                                <h6 class="text-gray-600">Nenhum produto encontrado</h6>
+                                <p class="text-gray-500 mb-0">Cadastre produtos para começar a criar pedidos</p>
                             </div>
-                        </div>
-
-                        <!-- Quantity -->
-                        <div class="col-span-12 sm:col-span-6">
-                            <div class="mb-3">
-                                <label class="form-label">Quantidade <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="modalQuantity" min="1"
-                                    value="1">
-                            </div>
-                        </div>
-
-                        <!-- Price Display -->
-                        <div class="col-span-12 sm:col-span-6">
-                            <div class="mb-3">
-                                <label class="form-label">Subtotal</label>
-                                <input type="text" class="form-control" id="modalSubtotal" readonly value="0,00 Kz">
-                            </div>
-                        </div>
-
-                        <!-- WhatsApp Message -->
-                        <div class="col-span-12">
-                            <div class="mb-3">
-                                <label class="form-label">Mensagem para WhatsApp</label>
-                                <textarea class="form-control" id="modalWhatsappMessage" rows="3"
-                                    placeholder="Observações específicas do produto (ex: sem cebola, ponto da carne, etc.)"></textarea>
-                            </div>
-                        </div>
+                        @endif
                     </div>
                 </div>
                 <div class="modal-footer flex justify-center gap-3 border-t">
-                    <button type="button" class="btn btn-outline-secondary"
-                        data-pc-modal-dismiss="#productModal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="addProductToOrder"
-                        onclick="handleAddProduct(); return false;">
-                        <i class="fas fa-plus me-2"></i>Adicionar Produto
+                    <button type="button" class="btn btn-outline-secondary" data-pc-modal-dismiss="#productModal">
+                        Cancelar
+                    </button>
+                    <button type="button" class="btn btn-primary" id="addSelectedProducts" disabled>
+                        <i class="fas fa-plus me-2"></i>Adicionar Produtos (<span id="selectedCount">0</span>)
                     </button>
                 </div>
             </div>
@@ -323,315 +355,5 @@
 @endsection
 
 @section('custom-scripts')
-    <script>
-        let productIndex = 0;
-
-        // Função global para adicionar produto
-        function handleAddProduct() {
-            const productId = $('#modalProductSelect').val();
-            const productName = $('#modalProductSelect option:selected').data('name');
-            const productPrice = $('#modalProductSelect option:selected').data('price');
-            const productCategory = $('#modalProductSelect option:selected').data('category');
-            const quantity = parseInt($('#modalQuantity').val());
-            const whatsappMessage = $('#modalWhatsappMessage').val();
-
-            if (!productId || quantity < 1) {
-                alert('Por favor, selecione um produto e uma quantidade válida.');
-                return false;
-            }
-
-            addProductRow(productId, productName, productPrice, productCategory, quantity, whatsappMessage);
-
-            // Close modal - múltiplas tentativas
-            try {
-                $('[data-pc-modal-dismiss="#productModal"]').click();
-            } catch (e) {
-                $('#productModal').modal('hide');
-            }
-
-            updateTotals();
-            return true;
-        }
-
-        // Funções auxiliares globais
-        function formatCurrency(value) {
-            return value.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' Kz';
-        }
-
-        function addProductRow(productId, productName, productPrice, productCategory, quantity, whatsappMessage) {
-            const subtotal = quantity * productPrice;
-            const formattedPrice = formatCurrency(productPrice);
-            const formattedSubtotal = formatCurrency(subtotal);
-
-            const productRow = `
-                <div class="card mb-3 product-row" data-index="${productIndex}">
-                    <div class="card-body">
-                        <div class="grid grid-cols-12 gap-4 items-center">
-                            <div class="col-span-12 md:col-span-4">
-                                <div>
-                                    <h6 class="mb-1 font-medium">${productName}</h6>
-                                    <small class="text-muted">${productCategory}</small>
-                                    <input type="hidden" name="products[${productIndex}][product_id]" value="${productId}">
-                                </div>
-                            </div>
-                            <div class="col-span-6 md:col-span-2">
-                                <div class="text-center">
-                                    <small class="text-muted d-block">Preço Unit.</small>
-                                    <span class="fw-medium text-success">${formattedPrice}</span>
-                                </div>
-                            </div>
-                            <div class="col-span-6 md:col-span-2">
-                                <div>
-                                    <label class="form-label text-sm">Qtd.</label>
-                                    <input type="number" class="form-control quantity-input"
-                                        name="products[${productIndex}][quantity]"
-                                        value="${quantity}" min="1" data-price="${productPrice}">
-                                </div>
-                            </div>
-                            <div class="col-span-6 md:col-span-2">
-                                <div class="text-center">
-                                    <small class="text-muted d-block">Subtotal</small>
-                                    <span class="fw-bold text-primary subtotal-display">${formattedSubtotal}</span>
-                                </div>
-                            </div>
-                            <div class="col-span-6 md:col-span-2 text-center">
-                                <button type="button" class="btn btn-outline-danger btn-sm remove-product" title="Remover produto">
-                                    <i class="ti ti-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                        ${whatsappMessage ? `
-                                            <div class="grid grid-cols-12 mt-3 pt-3 border-t">
-                                                <div class="col-span-12">
-                                                    <small class="text-muted fw-medium d-block mb-1">
-                                                        <i class="ti ti-brand-whatsapp me-1"></i>Obs. WhatsApp:
-                                                    </small>
-                                                    <p class="mb-0 text-sm bg-light p-2 rounded">${whatsappMessage}</p>
-                                                    <input type="hidden" name="products[${productIndex}][whatsapp_message]" value="${whatsappMessage}">
-                                                </div>
-                                            </div>
-                                        ` : ''}
-                    </div>
-                </div>
-            `;
-
-            $('#productsContainer').append(productRow);
-            productIndex++;
-
-            // Hide empty message
-            $('#emptyProductsMessage').hide();
-        }
-
-        function updateTotals() {
-            let subtotal = 0;
-
-            $('.quantity-input').each(function() {
-                const quantity = parseInt($(this).val()) || 0;
-                const price = parseFloat($(this).data('price'));
-                subtotal += quantity * price;
-            });
-
-            const discountText = $('#discount_amount').val().replace(/\./g, '').replace(',', '.');
-            const discount = parseFloat(discountText) || 0;
-            const total = subtotal - discount;
-
-            $('#subtotalDisplay').text(formatCurrency(subtotal));
-            $('#discountDisplay').text(formatCurrency(discount));
-            $('#totalDisplay').text(formatCurrency(total));
-        }
-
-        $(document).ready(function() {
-
-            // Format price fields
-            if (typeof formatPriceField === 'function') {
-                formatPriceField('discount_amount');
-            }
-
-            // Phone mask
-            $('#customer_phone').on('input', function() {
-                let value = this.value.replace(/\D/g, '');
-                if (value.length <= 11) {
-                    value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-                    if (value.length < 14) {
-                        value = value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
-                    }
-                }
-                this.value = value;
-            });
-
-            // Toggle address fields based on pickup type
-            $('#pickup_in_store').change(function() {
-                const isDelivery = $(this).val() === '0';
-                if (isDelivery) {
-                    $('#address_fields, #address_2_field').show();
-                    $('#address_required').show();
-                } else {
-                    $('#address_fields, #address_2_field').hide();
-                    $('#address_required').hide();
-                    $('input[name="address_1"], input[name="address_2"]').val('');
-                }
-            });
-
-            // Initialize address fields visibility
-            if ($('#pickup_in_store').val() === '0') {
-                $('#address_fields, #address_2_field').show();
-            }
-
-            // Reset modal when opened - usando evento genérico
-            $(document).on('click', '[data-pc-toggle="modal"][data-pc-target="#productModal"]', function() {
-                setTimeout(function() {
-                    $('#modalProductSelect').val('');
-                    $('#modalQuantity').val(1);
-                    $('#modalWhatsappMessage').val('');
-                    $('#modalSubtotal').val('0,00 Kz');
-
-                    // Re-bind direct event (caso o framework remova event listeners)
-                    $('#addProductToOrder').off('click').on('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleAddProduct();
-                    });
-                }, 100);
-            });
-
-            // Update subtotal in modal when product or quantity changes
-            $('#modalProductSelect, #modalQuantity').on('change input', function() {
-                updateModalSubtotal();
-            });
-
-            function updateModalSubtotal() {
-                const price = parseFloat($('#modalProductSelect option:selected').data('price')) || 0;
-                const quantity = parseInt($('#modalQuantity').val()) || 0;
-                const subtotal = price * quantity;
-                $('#modalSubtotal').val(formatCurrency(subtotal));
-            }
-
-            // Event delegation
-            $(document).on('click', '#addProductToOrder', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                handleAddProduct();
-            });
-
-            // Direct binding (fallback)
-            $('#addProductToOrder').off('click').on('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                handleAddProduct();
-            });
-
-            // Keyboard support
-            $(document).on('keypress', '#productModal', function(e) {
-                if (e.which === 13 && e.target.id !==
-                    'modalWhatsappMessage') { // Enter key, but not in textarea
-                    e.preventDefault();
-                    handleAddProduct();
-                }
-            });
-
-            // Update discount display when changed
-            $('#discount_amount').on('input', function() {
-                updateTotals();
-            });
-
-
-
-            // Remove product
-            $(document).on('click', '.remove-product', function() {
-                $(this).closest('.product-row').remove();
-                updateTotals();
-
-                // Show empty message if no products
-                if ($('#productsContainer .product-row').length === 0) {
-                    $('#emptyProductsMessage').show();
-                }
-            });
-
-            // Update quantity
-            $(document).on('input', '.quantity-input', function() {
-                const quantity = parseInt($(this).val()) || 0;
-                const price = parseFloat($(this).data('price'));
-                const subtotal = quantity * price;
-
-                $(this).closest('.product-row').find('.subtotal-display').text(formatCurrency(subtotal));
-                updateTotals();
-            });
-
-
-
-            // Form validation
-            $('#orderForm').submit(function(e) {
-                let errors = [];
-
-                // Check if products are added
-                if ($('#productsContainer .product-row').length === 0) {
-                    errors.push('Adicione pelo menos um produto ao pedido');
-                }
-
-                // Check customer name
-                if (!$('input[name="customer_name"]').val().trim()) {
-                    errors.push('Nome do cliente é obrigatório');
-                }
-
-                // Check delivery type
-                if (!$('select[name="pickup_in_store"]').val()) {
-                    errors.push('Selecione o tipo de entrega');
-                }
-
-                // Check payment method
-                if (!$('select[name="payment_method"]').val()) {
-                    errors.push('Selecione o método de pagamento');
-                }
-
-                // Check address if delivery
-                if ($('select[name="pickup_in_store"]').val() === '0' && !$('input[name="address_1"]').val()
-                    .trim()) {
-                    errors.push('Endereço é obrigatório para entrega');
-                }
-
-                if (errors.length > 0) {
-                    e.preventDefault();
-                    alert('Por favor, corrija os seguintes erros:\n\n• ' + errors.join('\n• '));
-                    return false;
-                }
-
-                // Show loading state
-                $(this).find('button[type="submit"]').prop('disabled', true).html(
-                    '<i class="ti ti-loader-2 me-2 animate-spin"></i>Criando Pedido...');
-
-                return true;
-            });
-
-            // Keyboard shortcuts
-            $(document).keydown(function(e) {
-                // Ctrl/Cmd + P to add product
-                if ((e.ctrlKey || e.metaKey) && e.which === 80) {
-                    e.preventDefault();
-                    $('[data-pc-toggle="modal"][data-pc-target="#productModal"]').click();
-                }
-
-                // Escape to close modal
-                if (e.which === 27) {
-                    $('[data-pc-modal-dismiss="#productModal"]').click();
-                }
-            });
-
-            // Auto-focus first input when modal opens
-            $(document).on('click', '[data-pc-toggle="modal"][data-pc-target="#productModal"]', function() {
-                setTimeout(function() {
-                    $('#modalProductSelect').focus();
-                }, 300);
-            });
-
-            // Global click listener para capturar qualquer clique no botão
-            $('body').on('click', function(e) {
-                if ($(e.target).is('#addProductToOrder') || $(e.target).closest('#addProductToOrder')
-                    .length) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleAddProduct();
-                }
-            });
-        });
-    </script>
+    <script></script>
 @endsection

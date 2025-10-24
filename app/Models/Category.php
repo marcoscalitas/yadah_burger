@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Storage;  // Adicionar esta linha
 
 class Category extends Model
 {
@@ -96,5 +96,13 @@ class Category extends Model
     public function updatedBy()
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    /**
+     * Relacionamento com produtos
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);
     }
 }
