@@ -89,9 +89,8 @@
                                                     {{-- Excluir --}}
                                                     <button type="button"
                                                         class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
-                                                        data-pc-toggle="modal"
-                                                        data-pc-target="#deleteUserModal{{ $user->id }}"
-                                                        data-pc-animate="sticky-up">
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#deleteUserModal{{ $user->id }}">
                                                         <i class="ti ti-trash text-xl leading-none"></i>
                                                     </button>
                                                 </td>
@@ -112,11 +111,8 @@
                                                                 <h5 class="modal-title font-semibold text-danger text-lg">
                                                                     <i class="fas fa-user me-2"></i> Apagar Utilizador
                                                                 </h5>
-                                                                <button type="button"
-                                                                    data-pc-modal-dismiss="#deleteUserModal{{ $user->id }}"
-                                                                    class="text-lg flex items-center justify-center rounded w-7 h-7 text-secondary-500 hover:bg-danger-500/10 hover:text-danger-500">
-                                                                    <i class="ti ti-x"></i>
-                                                                </button>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
 
                                                             <div class="modal-body">
@@ -143,7 +139,7 @@
 
                                                             <div class="modal-footer flex justify-end gap-3 border-t">
                                                                 <button type="button" class="btn btn-secondary"
-                                                                    data-pc-modal-dismiss="#deleteUserModal{{ $user->id }}">
+                                                                    data-bs-dismiss="modal">
                                                                     Cancelar
                                                                 </button>
                                                                 <button type="submit" class="btn btn-danger">

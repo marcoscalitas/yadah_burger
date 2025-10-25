@@ -190,16 +190,16 @@
                             <!-- Add Product Button -->
                             <div class="mb-3">
                                 <button type="button" class="btn btn-success" data-pc-toggle="modal"
-                                    data-pc-target="#productModal" data-pc-animate="sticky-up">
+                                    data-pc-target="#productModal">
                                     <i class="fas fa-plus me-2"></i>Adicionar Produto
                                 </button>
                             </div>
 
                             <!-- Products Container -->
-                            <div id="productsContainer">
-                                <div id="emptyProductsMessage" class="text-center py-4 text-muted">
-                                    <i class="ti ti-shopping-cart-off text-4xl mb-2 d-block"></i>
-                                    <p class="mb-0">Nenhum produto adicionado ao pedido</p>
+                            <div id="productsContainer" style="text-align: left;">
+                                <div id="emptyProductsMessage" style="text-align: center; padding: 2rem 0; color: #6b7280;">
+                                    <i class="ti ti-shopping-cart-off" style="font-size: 3rem; display: block; margin-bottom: 0.5rem;"></i>
+                                    <p style="margin-bottom: 0;">Nenhum produto adicionado ao pedido</p>
                                     <small>Clique em "Adicionar Produto" para começar</small>
                                 </div>
                             </div>
@@ -211,20 +211,20 @@
                                         <div class="grid grid-cols-12 gap-3">
                                             <div class="col-span-6 sm:col-span-4">
                                                 <div class="d-flex justify-content-between">
-                                                    <span class="text-muted">Subtotal:</span>
-                                                    <span id="subtotalDisplay" class="fw-medium">0,00 Kz</span>
+                                                    <span class="text-muted fw-bold">Subtotal:</span>
+                                                    <span id="subtotalDisplay" class="fw-bold text-success">0,00 Kz</span>
                                                 </div>
                                             </div>
                                             <div class="col-span-6 sm:col-span-4">
                                                 <div class="d-flex justify-content-between">
-                                                    <span class="text-muted">Desconto:</span>
-                                                    <span id="discountDisplay" class="fw-medium">0,00 Kz</span>
+                                                    <span class="text-muted fw-bold">Desconto:</span>
+                                                    <span id="discountDisplay" class="fw-bold text-danger">0,00 Kz</span>
                                                 </div>
                                             </div>
                                             <div class="col-span-12 sm:col-span-4">
                                                 <div class="d-flex justify-content-between">
-                                                    <span class="text-primary fw-bold">Total Final:</span>
-                                                    <span id="totalDisplay" class="text-primary fw-bold">0,00 Kz</span>
+                                                    <span class="text-muted fw-bold">Total Final:</span>
+                                                    <span id="totalDisplay" class="fw-bold text-success">0,00 Kz</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -262,86 +262,118 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="grid grid-cols-1 gap-4">
-                        @if (isset($categories) && $categories->count() > 0)
-                            @foreach ($categories as $category)
-                                @if ($category->products && $category->products->count() > 0)
-                                    <div>
-                                        <div class="">
-                                            <div
-                                                style="display: flex; align-items: center; gap: 12px; padding: 12px; background-color: #f8f9fa; border-radius: 8px; border-left: 4px solid var(--bs-primary);">
-                                                <div
-                                                    style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;">
-                                                    <img src="{{ $category->getImageUrl() }}"
-                                                        alt="{{ $category->name }}"
-                                                        style="width: 100%; height: 100%; object-fit: cover;">
-                                                </div>
-                                                <h5 style="margin: 0; font-weight: bold; color: #333;">
-                                                    {{ $category->name }}</h5>
-                                                <small
-                                                    style="color: #6c757d; margin-left: auto;">{{ $category->products->count() }}
-                                                    produtos disponíveis</small>
-                                            </div>
+                    <!-- Search and Filter Section -->
+                    <div class="mb-4">
+                        <div class="grid grid-cols-12 gap-4">
+                            <!-- Search Input -->
+                            <div class="col-span-12 md:col-span-8">
+                                <div class="search-input-wrapper">
+                                    <i class="ti ti-search search-input-icon"></i>
+                                    <input type="search" id="productSearch" class="form-control search-input-with-icon"
+                                        placeholder="Pesquisar produtos por nome..." autocomplete="off">
+                                </div>
+                            </div>
+
+                            <!-- Category Filter -->
+                            <div class="col-span-12 md:col-span-4">
+                                <select id="categoryFilter" class="form-select">
+                                    <option value="">Todas as Categorias</option>
+                                    @if (isset($categories) && $categories->count() > 0)
+                                        @foreach ($categories as $category)
+                                            @if ($category->products && $category->products->count() > 0)
+                                                <option value="{{ $category->id }}">
+                                                    {{ $category->name }} ({{ $category->products->count() }})
+                                                </option>
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <!-- Products List -->
+                    <div class="products-list">
+                        @forelse ($categories as $category)
+                            @if ($category->products && $category->products->count() > 0)
+                                <div class="category-section" data-category-section
+                                    data-category-id="{{ $category->id }}">
+                                    <!-- Category Header -->
+                                    <div class="d-flex align-items-center gap-3 p-3 bg-light rounded mb-3"
+                                        style="border-left: 4px solid var(--bs-primary);">
+                                        <div class="category-image">
+                                            <img src="{{ $category->getImageUrl() }}" alt="{{ $category->name }}"
+                                                class="rounded-circle"
+                                                style="width: 40px; height: 40px; object-fit: cover;">
                                         </div>
-                                        <hr class="border-secondary-500/10 my-2 mb-6">
-                                        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px;">
-                                            @foreach ($category->products as $product)
-                                                <!-- Product Card -->
-                                                <div>
-                                                    <div class="mb-3">
-                                                        <div class="border rounded-2xl p-4 text-center shadow-sm hover:shadow-md transition cursor-pointer"
-                                                            data-product-id="{{ $product->id }}"
-                                                            data-product-name="{{ $product->name }}"
-                                                            data-product-price="{{ $product->price }}"
-                                                            data-category-name="{{ $category->name }}">
-                                                            @if ($product->image)
-                                                                <img src="{{ asset('storage/' . $product->image) }}"
-                                                                    alt="{{ $product->name }}"
-                                                                    class="mx-auto mb-3 rounded"
-                                                                    style="width: 120px; height: 120px; object-fit: cover;">
-                                                            @else
-                                                                <div class="mx-auto mb-3 rounded bg-gray-200 d-flex align-items-center justify-content-center"
-                                                                    style="width: 120px; height: 120px;">
-                                                                    <i class="ti ti-photo text-4xl text-gray-400"></i>
-                                                                </div>
-                                                            @endif
-                                                            <h6 class="font-medium">{{ $product->name }}</h6>
-                                                            <p class="text-primary-600 font-semibold mt-1">
-                                                                {{ number_format($product->price, 2, ',', '.') }} Kz
-                                                            </p>
-                                                            <div class="flex items-center justify-center gap-2 mt-2">
-                                                                <button type="button"
-                                                                    class="w-7 h-7 rounded-lg inline-flex items-center justify-center btn-link-secondary"
-                                                                    onclick="changeQuantity({{ $product->id }}, -1)">
-                                                                    <i class="ti ti-minus text-sm leading-none"></i>
-                                                                </button>
-                                                                <span
-                                                                    class="quantity-display font-semibold text-sm px-1 min-w-[20px] text-center"
-                                                                    data-product-id="{{ $product->id }}">0</span>
-                                                                <button type="button"
-                                                                    class="w-7 h-7 rounded-lg inline-flex items-center justify-center btn-link-secondary"
-                                                                    onclick="changeQuantity({{ $product->id }}, 1)">
-                                                                    <i class="ti ti-plus text-sm leading-none"></i>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        </div>
+                                        <h5 class="mb-0 fw-bold">{{ $category->name }}</h5>
+                                        <small class="text-muted ms-auto">{{ $category->products->count() }} produtos
+                                            disponíveis</small>
                                     </div>
-                                @endif
-                            @endforeach
-                        @else
+
+                                    <!-- Products Grid -->
+                                    <div class="products-grid-container mb-4">
+                                        @forelse ($category->products as $product)
+                                            <div class="product-card" data-product-card
+                                                data-product-name="{{ strtolower($product->name) }}"
+                                                data-category-id="{{ $category->id }}"
+                                                data-product-id="{{ $product->id }}"
+                                                data-product-price="{{ $product->price }}"
+                                                data-category-name="{{ $category->name }}"
+                                                data-product-image="{{ $product->image ? asset('storage/' . $product->image) : '' }}">
+
+                                                <!-- Product Image -->
+                                                @if ($product->image)
+                                                    <img src="{{ asset('storage/' . $product->image) }}"
+                                                        alt="{{ $product->name }}" class="product-image">
+                                                @else
+                                                    <div class="product-image-placeholder">
+                                                        <i class="ti ti-photo"></i>
+                                                    </div>
+                                                @endif
+
+                                                <!-- Product Info -->
+                                                <h6 class="product-name">{{ $product->name }}</h6>
+                                                <p class="product-price">{{ number_format($product->price, 2, ',', '.') }}
+                                                    Kz</p>
+
+                                                <!-- Quantity Controls -->
+                                                <div class="quantity-controls">
+                                                    <button type="button" class="btn btn-icon btn-light-secondary"
+                                                        onclick="changeQuantity({{ $product->id }}, -1, event)">
+                                                        <i class="ti ti-minus"></i>
+                                                    </button>
+                                                    <input type="number" class="quantity-input"
+                                                        data-product-id="{{ $product->id }}" value="0"
+                                                        min="0"
+                                                        onchange="updateQuantityFromInput({{ $product->id }}, this.value)"
+                                                        onclick="event.stopPropagation(); this.select()">
+                                                    <button type="button" class="btn btn-icon btn-light-secondary"
+                                                        onclick="changeQuantity({{ $product->id }}, 1, event)">
+                                                        <i class="ti ti-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        @empty
+                                            <div class="text-center py-3 col-span-full">
+                                                <p class="text-muted mb-0">Nenhum produto nesta categoria</p>
+                                            </div>
+                                        @endforelse
+                                    </div>
+                                </div>
+                            @endif
+                        @empty
                             <div class="text-center py-5">
                                 <i class="ti ti-shopping-cart-off text-6xl text-gray-400 mb-3 d-block"></i>
                                 <h6 class="text-gray-600">Nenhum produto encontrado</h6>
                                 <p class="text-gray-500 mb-0">Cadastre produtos para começar a criar pedidos</p>
                             </div>
-                        @endif
+                        @endforelse
                     </div>
                 </div>
-                <div class="modal-footer flex justify-center gap-3 border-t">
+                <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-pc-modal-dismiss="#productModal">
                         Cancelar
                     </button>
@@ -355,5 +387,5 @@
 @endsection
 
 @section('custom-scripts')
-    <script></script>
+    <script src="{{ asset('admin/assets/js/custom/product-modal.js') }}"></script>
 @endsection
