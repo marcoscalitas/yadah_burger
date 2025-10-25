@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->decimal('price', 10, 2);
             $table->decimal('promotion_price', 10, 2)->nullable();
+            $table->decimal('discount', 5, 2)->nullable();
             $table->string('image_url', 255)->nullable();
             $table->enum('product_status', ['a', 'i', 'd'])->default('a');
             $table->boolean('is_featured')->default(false);
