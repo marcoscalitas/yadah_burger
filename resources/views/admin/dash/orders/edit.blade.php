@@ -1,20 +1,33 @@
 @extends('admin.dash.layouts.main')
 
-@section('title', 'Adicionar Pedido')
+@section('title', 'Editar Pedido')
 
 @section('breadcrumb')
-    @include('admin.dash.components.breadcrumb', getBreadcrumb('admin.orders.create'))
+    @include('admin.dash.components.breadcrumb', getBreadcrumb('admin.orders.edit', [['label' => $order->order_number]]))
 @endsection
 
 @section('content')
     <!-- [ Main Content ] start -->
     <div class="grid grid-cols-12 gap-6">
         <div class="col-span-12">
-            <form action="{{ route('admin.orders.store') }}" method="POST" id="orderForm">
+            <form action="{{ route('admin.orders.update', $order) }}" method="POST" id="orderForm">
                 @csrf
+                @method('PUT')
+
                 <div class="card">
                     <div class="card-header">
-                        <h5>Adicionar Pedido</h5>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5>Editar Pedido #{{ $order->order_number }}</h5>
+                            <span class="badge
+                                @if($order->order_status === 'p') bg-warning
+                                @elseif($order->order_status === 'st') bg-info
+                                @elseif($order->order_status === 'c') bg-success
+                                @elseif($order->order_status === 'd') bg-primary
+                                @else bg-danger
+                                @endif">
+                                {{ $order->getStatusName() }}
+                            </span>
+                        </div>
                     </div>
                     <div class="card-body">
                         <!-- Customer Information -->
@@ -31,7 +44,7 @@
                                         </label>
                                         <input type="text"
                                             class="form-control @error('customer_name') is-invalid @enderror"
-                                            name="customer_name" value="{{ old('customer_name') }}"
+                                            name="customer_name" value="{{ old('customer_name', $order->customer_name) }}"
                                             placeholder="Digite o nome do cliente" />
                                         @error('customer_name')
                                             <div class="text-danger d-flex align-items-center mt-1">
@@ -47,7 +60,8 @@
                                         <label class="form-label">Telefone</label>
                                         <input type="text"
                                             class="form-control @error('customer_phone') is-invalid @enderror"
-                                            name="customer_phone" id="customer_phone" value="{{ old('customer_phone') }}"
+                                            name="customer_phone" id="customer_phone"
+                                            value="{{ old('customer_phone', $order->customer_phone) }}"
                                             placeholder="Ex: (11) 99999-9999" />
                                         @error('customer_phone')
                                             <div class="text-danger d-flex align-items-center mt-1">
@@ -74,10 +88,10 @@
                                         <select class="form-select @error('pickup_in_store') is-invalid @enderror"
                                             name="pickup_in_store" id="pickup_in_store">
                                             <option value="">Selecione</option>
-                                            <option value="1" {{ old('pickup_in_store') == '1' ? 'selected' : '' }}>
+                                            <option value="1" {{ old('pickup_in_store', $order->pickup_in_store) == '1' ? 'selected' : '' }}>
                                                 Retirada na Loja
                                             </option>
-                                            <option value="0" {{ old('pickup_in_store') == '0' ? 'selected' : '' }}>
+                                            <option value="0" {{ old('pickup_in_store', $order->pickup_in_store) == '0' ? 'selected' : '' }}>
                                                 Entrega
                                             </option>
                                         </select>
@@ -98,14 +112,13 @@
                                         <select class="form-select @error('payment_method') is-invalid @enderror"
                                             name="payment_method">
                                             <option value="">Selecione</option>
-                                            <option value="cash" {{ old('payment_method') == 'cash' ? 'selected' : '' }}>
+                                            <option value="cash" {{ old('payment_method', $order->payment_method) == 'cash' ? 'selected' : '' }}>
                                                 Dinheiro
                                             </option>
-                                            <option value="transfer"
-                                                {{ old('payment_method') == 'transfer' ? 'selected' : '' }}>
+                                            <option value="transfer" {{ old('payment_method', $order->payment_method) == 'transfer' ? 'selected' : '' }}>
                                                 Transferência
                                             </option>
-                                            <option value="tpa" {{ old('payment_method') == 'tpa' ? 'selected' : '' }}>
+                                            <option value="tpa" {{ old('payment_method', $order->payment_method) == 'tpa' ? 'selected' : '' }}>
                                                 TPA
                                             </option>
                                         </select>
@@ -118,13 +131,14 @@
                                 </div>
 
                                 <!-- Address 1 -->
-                                <div class="col-span-12 sm:col-span-6" id="address_fields" style="display: none;">
+                                <div class="col-span-12 sm:col-span-6" id="address_fields"
+                                     style="{{ old('pickup_in_store', $order->pickup_in_store) ? 'display: none;' : '' }}">
                                     <div class="mb-1">
                                         <label class="form-label">
                                             Endereço Principal <span class="text-danger" id="address_required">*</span>
                                         </label>
                                         <input type="text" class="form-control @error('address_1') is-invalid @enderror"
-                                            name="address_1" value="{{ old('address_1') }}"
+                                            name="address_1" value="{{ old('address_1', $order->address_1) }}"
                                             placeholder="Rua, número, bairro" />
                                         @error('address_1')
                                             <div class="text-danger d-flex align-items-center mt-1">
@@ -135,11 +149,12 @@
                                 </div>
 
                                 <!-- Address 2 -->
-                                <div class="col-span-12 sm:col-span-6" id="address_2_field" style="display: none;">
+                                <div class="col-span-12 sm:col-span-6" id="address_2_field"
+                                     style="{{ old('pickup_in_store', $order->pickup_in_store) ? 'display: none;' : '' }}">
                                     <div class="mb-1">
                                         <label class="form-label">Complemento</label>
                                         <input type="text" class="form-control @error('address_2') is-invalid @enderror"
-                                            name="address_2" value="{{ old('address_2') }}"
+                                            name="address_2" value="{{ old('address_2', $order->address_2) }}"
                                             placeholder="Apartamento, bloco, referência" />
                                         @error('address_2')
                                             <div class="text-danger d-flex align-items-center mt-1">
@@ -156,7 +171,7 @@
                                         <input type="text"
                                             class="form-control @error('discount_amount') is-invalid @enderror"
                                             name="discount_amount" id="discount_amount"
-                                            value="{{ old('discount_amount', '0,00') }}" />
+                                            value="{{ old('discount_amount', number_format($order->discount_amount, 2, ',', '.')) }}" />
                                         @error('discount_amount')
                                             <div class="text-danger d-flex align-items-center mt-1">
                                                 <i class="fas fa-exclamation-triangle me-1"></i> {{ $message }}
@@ -170,7 +185,7 @@
                                     <div class="mb-1">
                                         <label class="form-label">Observações</label>
                                         <textarea class="form-control @error('notes') is-invalid @enderror" name="notes" rows="3"
-                                            placeholder="Observações sobre o pedido">{{ old('notes') }}</textarea>
+                                            placeholder="Observações sobre o pedido">{{ old('notes', $order->notes) }}</textarea>
                                         @error('notes')
                                             <div class="text-danger d-flex align-items-center mt-1">
                                                 <i class="fas fa-exclamation-triangle me-1"></i> {{ $message }}
@@ -197,7 +212,7 @@
 
                             <!-- Products Container -->
                             <div id="productsContainer" class="order-products-grid">
-                                <div id="emptyProductsMessage" style="grid-column: 1 / -1; text-align: center; padding: 2rem 0; color: #6b7280;">
+                                <div id="emptyProductsMessage" style="grid-column: 1 / -1; text-align: center; padding: 2rem 0; color: #6b7280; display: none;">
                                     <i class="ti ti-shopping-cart-off" style="font-size: 3rem; display: block; margin-bottom: 0.5rem;"></i>
                                     <p style="margin-bottom: 0;">Nenhum produto adicionado ao pedido</p>
                                     <small>Clique em "Adicionar Produto" para começar</small>
@@ -237,11 +252,11 @@
 
                 <!-- Submit Buttons -->
                 <div class="col-span-12 text-end mt-4">
-                    <a href="{{ route('admin.orders.index') }}" class="btn btn-outline-secondary me-2">
-                        <i class="ti ti-arrow-left me-2"></i>Cancelar
+                    <a href="{{ route('admin.orders.show', $order) }}" class="btn btn-outline-secondary me-2">
+                        <i class="ti ti-x me-2"></i>Cancelar
                     </a>
                     <button type="submit" class="btn btn-primary">
-                        <i class="ti ti-device-floppy me-2"></i>Criar Pedido
+                        <i class="ti ti-device-floppy me-2"></i>Atualizar Pedido
                     </button>
                 </div>
             </form>
@@ -249,7 +264,7 @@
     </div>
     <!-- [ Main Content ] end -->
 
-    <!-- Product Selection Modal -->
+    <!-- Product Selection Modal (Same as create) -->
     <div id="productModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="productModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
@@ -292,8 +307,6 @@
                         </div>
                     </div>
 
-
-
                     <!-- Products List -->
                     <div class="products-list">
                         @forelse ($categories as $category)
@@ -315,18 +328,17 @@
 
                                     <!-- Products Grid -->
                                     <div class="products-grid-container mb-4">
-                                        @forelse ($category->products as $product)
+                                        @foreach ($category->products as $product)
                                             <div class="product-card" data-product-card
                                                 data-product-name="{{ strtolower($product->name) }}"
                                                 data-category-id="{{ $category->id }}"
                                                 data-product-id="{{ $product->id }}"
                                                 data-product-price="{{ $product->price }}"
                                                 data-category-name="{{ $category->name }}"
-                                                data-product-image="{{ $product->image ? asset('storage/' . $product->image) : '' }}">
+                                                data-product-image="{{ $product->image_url ? asset('storage/' . $product->image_url) : '' }}">
 
-                                                <!-- Product Image -->
-                                                @if ($product->image)
-                                                    <img src="{{ asset('storage/' . $product->image) }}"
+                                                @if ($product->image_url)
+                                                    <img src="{{ asset('storage/' . $product->image_url) }}"
                                                         alt="{{ $product->name }}" class="product-image">
                                                 @else
                                                     <div class="product-image-placeholder">
@@ -334,12 +346,9 @@
                                                     </div>
                                                 @endif
 
-                                                <!-- Product Info -->
                                                 <h6 class="product-name">{{ $product->name }}</h6>
-                                                <p class="product-price">{{ number_format($product->price, 2, ',', '.') }}
-                                                    Kz</p>
+                                                <p class="product-price">{{ number_format($product->price, 2, ',', '.') }} Kz</p>
 
-                                                <!-- Quantity Controls -->
                                                 <div class="quantity-controls">
                                                     <button type="button" class="btn btn-icon btn-light-secondary"
                                                         onclick="changeQuantity({{ $product->id }}, -1, event)">
@@ -356,11 +365,7 @@
                                                     </button>
                                                 </div>
                                             </div>
-                                        @empty
-                                            <div class="text-center py-3 col-span-full">
-                                                <p class="text-muted mb-0">Nenhum produto nesta categoria</p>
-                                            </div>
-                                        @endforelse
+                                        @endforeach
                                     </div>
                                 </div>
                             @endif
@@ -388,52 +393,59 @@
 
 @section('custom-scripts')
     <script src="{{ asset('admin/assets/js/custom/product-modal.js') }}"></script>
-
-    @if(old('products'))
     <script>
-        // Restaura produtos quando há erro de validação
+        // Carrega produtos existentes ao carregar a página
         document.addEventListener('DOMContentLoaded', function() {
-            const oldProducts = @json(old('products'));
+            @if(old('products'))
+                // Se houver produtos no old() (erro de validação), usa esses
+                const oldProducts = @json(old('products'));
 
-            if (oldProducts && Object.keys(oldProducts).length > 0) {
-                // IMPORTANTE: Limpa o localStorage para evitar duplicação
-                localStorage.removeItem('order_products_draft');
+                if (oldProducts && Object.keys(oldProducts).length > 0) {
+                    // IMPORTANTE: Limpa o localStorage para evitar duplicação
+                    localStorage.removeItem('order_products_draft');
 
-                // Limpa produtos que possam ter sido carregados
-                $('#productsContainer').find('[data-order-product-id]').remove();
-                $('#emptyProductsMessage').show();
-                selectedProducts.clear();
+                    // Limpa produtos que possam ter sido carregados
+                    $('#productsContainer').find('[data-order-product-id]').remove();
+                    $('#emptyProductsMessage').show();
+                    selectedProducts.clear();
 
-                // Aguarda a inicialização do modal
-                setTimeout(function() {
-                    Object.keys(oldProducts).forEach(productId => {
-                        const productData = oldProducts[productId];
-                        const $productCard = $(`[data-product-id="${productId}"]`).first();
+                    setTimeout(function() {
+                        Object.keys(oldProducts).forEach(productId => {
+                            const productData = oldProducts[productId];
+                            const $productCard = $(`[data-product-id="${productId}"]`).first();
 
-                        if ($productCard.length) {
-                            const product = {
-                                id: parseInt(productId),
-                                name: $productCard.data('product-name') || '',
-                                price: parseFloat(productData.price) || 0,
-                                quantity: parseInt(productData.quantity) || 0,
-                                category: $productCard.closest('[data-category-section]').find('h6').text().trim() || '',
-                                image: $productCard.find('img').attr('src') || ''
-                            };
+                            if ($productCard.length) {
+                                const product = {
+                                    id: parseInt(productId),
+                                    name: $productCard.data('product-name') || '',
+                                    price: parseFloat(productData.price) || 0,
+                                    quantity: parseInt(productData.quantity) || 0,
+                                    category: $productCard.closest('[data-category-section]').find('h6').text().trim() || '',
+                                    image: $productCard.find('img').attr('src') || ''
+                                };
 
-                            // Adiciona o produto ao pedido
-                            addProductToOrder(product);
+                                addProductToOrder(product);
 
-                            // Atualiza o input de quantidade no modal
-                            const $quantityInput = $(`.quantity-input[data-product-id="${productId}"]`);
-                            $quantityInput.val(product.quantity);
-                            $productCard.addClass('selected');
-                        }
-                    });
+                                const $quantityInput = $(`.quantity-input[data-product-id="${productId}"]`);
+                                $quantityInput.val(product.quantity);
+                                $productCard.addClass('selected');
+                            }
+                        });
 
-                    updateOrderTotals();
-                }, 500);
-            }
+                        updateOrderTotals();
+                    }, 500);
+                }
+            @else
+                // Senão, carrega os produtos do pedido original
+                const existingProducts = @json($existingProducts);
+
+                // Adiciona cada produto existente
+                existingProducts.forEach(product => {
+                    addProductToOrder(product);
+                });
+
+                updateOrderTotals();
+            @endif
         });
     </script>
-    @endif
 @endsection

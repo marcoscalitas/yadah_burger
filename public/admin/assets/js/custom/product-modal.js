@@ -813,11 +813,30 @@ function initFormSubmitHandler() {
 
     if (!$form.length) return;
 
+    // NÃO limpa o localStorage no submit
+    // Só limpa quando o pedido for criado com sucesso (na página de sucesso)
     $form.on('submit', function() {
-        // Limpa o localStorage quando o formulário é enviado
-        clearOrderFromStorage();
+        // Removido: clearOrderFromStorage();
+        // O localStorage só será limpo se houver sucesso
     });
 }
 
+/**
+ * Limpa storage se estiver em página de sucesso
+ */
+function clearStorageOnSuccess() {
+    // Se estiver na página de listagem ou detalhes (não na de criação/edição)
+    // E houver mensagem de sucesso, limpa o storage
+    const isSuccessPage = !window.location.pathname.includes('/create') &&
+                          !window.location.pathname.includes('/edit');
+
+    if (isSuccessPage) {
+        clearOrderFromStorage();
+    }
+}
+
 // Inicializa quando o DOM estiver pronto
-$(document).ready(initProductModal);
+$(document).ready(function() {
+    initProductModal();
+    clearStorageOnSuccess(); // Limpa storage se for página de sucesso
+});

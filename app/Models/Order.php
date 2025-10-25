@@ -17,6 +17,7 @@ class Order extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'order_number',
         'customer_name',
         'customer_phone',
         'pickup_in_store',
@@ -24,6 +25,7 @@ class Order extends Model
         'address_2',
         'notes',
         'payment_method',
+        'subtotal',
         'total_amount',
         'discount_amount',
         'order_status',
@@ -40,6 +42,7 @@ class Order extends Model
     {
         return [
             'pickup_in_store' => 'boolean',
+            'subtotal' => 'decimal:2',
             'total_amount' => 'decimal:2',
             'discount_amount' => 'decimal:2',
             'created_at' => 'datetime',

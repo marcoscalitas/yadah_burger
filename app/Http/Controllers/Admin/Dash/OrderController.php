@@ -6,14 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::with(['products'])
+        $orders = Order::with(['orderItems.product', 'createdBy'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
@@ -22,9 +24,14 @@ class OrderController extends Controller
 
     public function create()
     {
-        // Buscar todas as categorias com seus produtos
-        $categories = Category::with('products')
-            ->whereHas('products')
+        // Buscar todas as categorias com seus produtos ativos
+        $categories = Category::with(['products' => function($query) {
+            $query->where('product_status', 'a')
+                  ->orderBy('name');
+        }])
+            ->whereHas('products', function($query) {
+                $query->where('product_status', 'a');
+            })
             ->orderBy('name')
             ->get();
 
@@ -43,39 +50,62 @@ class OrderController extends Controller
             'discount_amount' => 'nullable|numeric|min:0',
             'notes' => 'nullable|string|max:1000',
             'products' => 'required|array|min:1',
-            'products.*.product_id' => 'required|exists:products,id',
+            'products.*.id' => 'required|exists:products,id',
             'products.*.quantity' => 'required|integer|min:1',
+            'products.*.price' => 'required|numeric|min:0',
         ]);
 
         DB::beginTransaction();
 
         try {
-            // Calcular totais
+            // Calcular totais e validar produtos
             $subtotal = 0;
-            $productData = [];
+            $orderItems = [];
 
-            foreach ($validated['products'] as $productItem) {
-                $product = Product::findOrFail($productItem['product_id']);
-                $quantity = $productItem['quantity'];
-                $price = $product->price;
-                $itemTotal = $price * $quantity;
+            foreach ($validated['products'] as $productData) {
+                // Busca o produto do banco para validar
+                $product = Product::where('id', $productData['id'])
+                    ->where('product_status', 'a')
+                    ->first();
 
-                $subtotal += $itemTotal;
+                if (!$product) {
+                    throw new \Exception("Produto ID {$productData['id']} não está disponível.");
+                }
 
-                $productData[] = [
+                // Valida o preço (não confia no frontend)
+                $priceFromDB = (float) $product->price;
+                $priceFromRequest = (float) $productData['price'];
+
+                if (abs($priceFromDB - $priceFromRequest) > 0.01) {
+                    throw new \Exception("Preço do produto '{$product->name}' foi alterado. Recarregue a página.");
+                }
+
+                $quantity = (int) $productData['quantity'];
+                $itemSubtotal = $priceFromDB * $quantity;
+
+                $subtotal += $itemSubtotal;
+
+                $orderItems[] = [
                     'product_id' => $product->id,
                     'quantity' => $quantity,
-                    'price' => $price,
-                    'total' => $itemTotal
+                    'unit_price' => $priceFromDB,
+                    'subtotal' => $itemSubtotal,
                 ];
             }
 
-            $discountAmount = (float) str_replace(['.', ','], ['', '.'], $validated['discount_amount'] ?? '0');
-            $total = $subtotal - $discountAmount;
+            // Calcula desconto e total
+            $discountAmount = isset($validated['discount_amount'])
+                ? (float) str_replace(['.', ','], ['', '.'], $validated['discount_amount'])
+                : 0;
+
+            $totalAmount = max(0, $subtotal - $discountAmount);
+
+            // Gera número do pedido
+            $orderNumber = $this->generateOrderNumber();
 
             // Criar pedido
             $order = Order::create([
-                'order_number' => $this->generateOrderNumber(),
+                'order_number' => $orderNumber,
                 'customer_name' => $validated['customer_name'],
                 'customer_phone' => $validated['customer_phone'],
                 'pickup_in_store' => $validated['pickup_in_store'],
@@ -84,17 +114,21 @@ class OrderController extends Controller
                 'address_2' => $validated['address_2'],
                 'subtotal' => $subtotal,
                 'discount_amount' => $discountAmount,
-                'total' => $total,
+                'total_amount' => $totalAmount,
                 'notes' => $validated['notes'],
-                'status' => 'pending'
+                'order_status' => Order::STATUS_PENDING,
+                'created_by' => Auth::id(),
             ]);
 
-            // Adicionar produtos ao pedido
-            foreach ($productData as $item) {
-                $order->products()->attach($item['product_id'], [
+            // Adicionar items do pedido
+            foreach ($orderItems as $item) {
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $item['product_id'],
                     'quantity' => $item['quantity'],
-                    'price' => $item['price'],
-                    'total' => $item['total']
+                    'unit_price' => $item['unit_price'],
+                    'subtotal' => $item['subtotal'],
+                    'created_by' => Auth::id(),
                 ]);
             }
 
@@ -115,47 +149,205 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
-        $order->load(['products']);
+        $order->load(['orderItems.product', 'createdBy', 'updatedBy']);
         return view('admin.dash.orders.show', compact('order'));
     }
 
     public function edit(Order $order)
     {
+        // Não permite editar pedidos já concluídos ou entregues
+        if (in_array($order->order_status, [Order::STATUS_COMPLETED, Order::STATUS_DELIVERED])) {
+            return redirect()
+                ->route('admin.orders.show', $order)
+                ->with('error', 'Não é possível editar pedidos concluídos ou entregues.');
+        }
+
         $categories = Category::with(['products' => function($query) {
-            $query->where('is_active', true)
+            $query->where('product_status', 'a')
                   ->orderBy('name');
         }])
         ->whereHas('products', function($query) {
-            $query->where('is_active', true);
+            $query->where('product_status', 'a');
         })
         ->orderBy('name')
         ->get();
 
-        $order->load(['products']);
+        $order->load(['orderItems.product.category']);
 
-        return view('admin.dash.orders.edit', compact('order', 'categories'));
+        // Prepara os produtos existentes para o JavaScript
+        $existingProducts = $order->orderItems->map(function($item) {
+            return [
+                'id' => $item->product_id,
+                'name' => $item->product->name,
+                'price' => (float) $item->unit_price,
+                'category' => $item->product->category?->name ?? '',
+                'image' => $item->product->image_url ? asset('storage/' . $item->product->image_url) : '',
+                'quantity' => $item->quantity
+            ];
+        })->values();
+
+        return view('admin.dash.orders.edit', compact('order', 'categories', 'existingProducts'));
     }
 
     public function update(Request $request, Order $order)
     {
-        // Similar validation and logic as store
-        return redirect()
-            ->route('admin.orders.show', $order)
-            ->with('success', 'Pedido atualizado com sucesso!');
+        // Não permite editar pedidos já concluídos ou entregues
+        if (in_array($order->order_status, [Order::STATUS_COMPLETED, Order::STATUS_DELIVERED])) {
+            return redirect()
+                ->route('admin.orders.show', $order)
+                ->with('error', 'Não é possível editar pedidos concluídos ou entregues.');
+        }
+
+        $validated = $request->validate([
+            'customer_name' => 'required|string|max:255',
+            'customer_phone' => 'nullable|string|max:20',
+            'pickup_in_store' => 'required|boolean',
+            'payment_method' => 'required|in:cash,transfer,tpa',
+            'address_1' => 'required_if:pickup_in_store,0|nullable|string|max:255',
+            'address_2' => 'nullable|string|max:255',
+            'discount_amount' => 'nullable|numeric|min:0',
+            'notes' => 'nullable|string|max:1000',
+            'products' => 'required|array|min:1',
+            'products.*.id' => 'required|exists:products,id',
+            'products.*.quantity' => 'required|integer|min:1',
+            'products.*.price' => 'required|numeric|min:0',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            // Calcular totais e validar produtos
+            $subtotal = 0;
+            $orderItems = [];
+
+            foreach ($validated['products'] as $productData) {
+                $product = Product::where('id', $productData['id'])
+                    ->where('product_status', 'a')
+                    ->first();
+
+                if (!$product) {
+                    throw new \Exception("Produto ID {$productData['id']} não está disponível.");
+                }
+
+                $priceFromDB = (float) $product->price;
+                $priceFromRequest = (float) $productData['price'];
+
+                if (abs($priceFromDB - $priceFromRequest) > 0.01) {
+                    throw new \Exception("Preço do produto '{$product->name}' foi alterado. Recarregue a página.");
+                }
+
+                $quantity = (int) $productData['quantity'];
+                $itemSubtotal = $priceFromDB * $quantity;
+
+                $subtotal += $itemSubtotal;
+
+                $orderItems[] = [
+                    'product_id' => $product->id,
+                    'quantity' => $quantity,
+                    'unit_price' => $priceFromDB,
+                    'subtotal' => $itemSubtotal,
+                ];
+            }
+
+            $discountAmount = isset($validated['discount_amount'])
+                ? (float) str_replace(['.', ','], ['', '.'], $validated['discount_amount'])
+                : 0;
+
+            $totalAmount = max(0, $subtotal - $discountAmount);
+
+            // Atualizar pedido
+            $order->update([
+                'customer_name' => $validated['customer_name'],
+                'customer_phone' => $validated['customer_phone'],
+                'pickup_in_store' => $validated['pickup_in_store'],
+                'payment_method' => $validated['payment_method'],
+                'address_1' => $validated['address_1'],
+                'address_2' => $validated['address_2'],
+                'subtotal' => $subtotal,
+                'discount_amount' => $discountAmount,
+                'total_amount' => $totalAmount,
+                'notes' => $validated['notes'],
+                'updated_by' => Auth::id(),
+            ]);
+
+            // Remove items antigos e cria novos
+            $order->orderItems()->delete();
+
+            foreach ($orderItems as $item) {
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $item['product_id'],
+                    'quantity' => $item['quantity'],
+                    'unit_price' => $item['unit_price'],
+                    'subtotal' => $item['subtotal'],
+                    'created_by' => $order->created_by,
+                    'updated_by' => Auth::id(),
+                ]);
+            }
+
+            DB::commit();
+
+            return redirect()
+                ->route('admin.orders.show', $order)
+                ->with('success', 'Pedido atualizado com sucesso!');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return back()
+                ->withInput()
+                ->with('error', 'Erro ao atualizar pedido: ' . $e->getMessage());
+        }
     }
 
     public function destroy(Order $order)
     {
+        // Só permite excluir pedidos pendentes ou cancelados
+        if (!in_array($order->order_status, [Order::STATUS_PENDING, Order::STATUS_CANCELLED])) {
+            return back()->with('error', 'Apenas pedidos pendentes ou cancelados podem ser excluídos.');
+        }
+
         try {
-            $order->products()->detach();
+            DB::beginTransaction();
+
+            // Remove items do pedido
+            $order->orderItems()->delete();
+
+            // Remove o pedido (soft delete)
             $order->delete();
+
+            DB::commit();
 
             return redirect()
                 ->route('admin.orders.index')
                 ->with('success', 'Pedido excluído com sucesso!');
 
         } catch (\Exception $e) {
+            DB::rollback();
             return back()->with('error', 'Erro ao excluir pedido: ' . $e->getMessage());
+        }
+    }
+
+    public function updateStatus(Request $request, Order $order)
+    {
+        $validated = $request->validate([
+            'order_status' => 'required|in:p,st,c,d,x',
+        ]);
+
+        try {
+            $order->update([
+                'order_status' => $validated['order_status'],
+                'updated_by' => Auth::id(),
+            ]);
+
+            $statusName = $order->getStatusName();
+
+            return redirect()
+                ->route('admin.orders.show', $order)
+                ->with('success', "Status do pedido atualizado para: {$statusName}");
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Erro ao atualizar status: ' . $e->getMessage());
         }
     }
 
@@ -164,6 +356,7 @@ class OrderController extends Controller
         $lastOrder = Order::orderBy('id', 'desc')->first();
         $nextNumber = $lastOrder ? $lastOrder->id + 1 : 1;
 
-        return 'PED-' . str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
+        return 'PED-' . date('Ymd') . '-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
     }
 }
+

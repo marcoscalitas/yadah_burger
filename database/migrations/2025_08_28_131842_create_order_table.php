@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('order_number', 50)->unique();
             $table->string('customer_name', 100);
             $table->string('customer_phone', 20)->nullable();
             $table->boolean('pickup_in_store')->default(false);
@@ -20,8 +21,9 @@ return new class extends Migration
             $table->string('address_2', 255)->nullable();
             $table->text('notes')->nullable();
             $table->enum('payment_method', ['cash','transfer','tpa'])->default('cash');
-            $table->decimal('total_amount', 10, 2)->default(0);
+            $table->decimal('subtotal', 10, 2)->default(0);
             $table->decimal('discount_amount', 10, 2)->default(0);
+            $table->decimal('total_amount', 10, 2)->default(0);
             $table->enum('order_status', ['p','st','c','d','x'])->default('p');
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();

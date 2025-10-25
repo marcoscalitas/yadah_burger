@@ -68,6 +68,14 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+    /**
+     * Accessor para compatibilidade com código que usa $user->name
+     */
+    public function getNameAttribute(): string
+    {
+        return $this->fullname;
+    }
+
     public function getShortName(): string
     {
         $names = explode(' ', trim($this->fullname));
