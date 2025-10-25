@@ -25,8 +25,20 @@
     transform: translateY(0);
 }
 
+/* Order Products Grid - Responsive */
+.order-products-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
+    .order-products-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
     .product-order-card {
         width: 100% !important;
         margin-right: 0 !important;

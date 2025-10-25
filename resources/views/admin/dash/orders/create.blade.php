@@ -196,8 +196,8 @@
                             </div>
 
                             <!-- Products Container -->
-                            <div id="productsContainer" style="text-align: left;">
-                                <div id="emptyProductsMessage" style="text-align: center; padding: 2rem 0; color: #6b7280;">
+                            <div id="productsContainer" class="order-products-grid">
+                                <div id="emptyProductsMessage" style="grid-column: 1 / -1; text-align: center; padding: 2rem 0; color: #6b7280;">
                                     <i class="ti ti-shopping-cart-off" style="font-size: 3rem; display: block; margin-bottom: 0.5rem;"></i>
                                     <p style="margin-bottom: 0;">Nenhum produto adicionado ao pedido</p>
                                     <small>Clique em "Adicionar Produto" para começar</small>

@@ -7,6 +7,9 @@
 const selectedProducts = new Map();
 let isInitialized = false;
 
+// Chave para localStorage
+const STORAGE_KEY = 'order_products_draft';
+
 /**
  * Inicializa o modal de produtos
  */
@@ -21,6 +24,8 @@ function initProductModal() {
     initDiscountField();
     initDeliveryTypeToggle();
     initPhoneMask();
+    loadOrderFromStorage(); // Carrega produtos salvos
+    initFormSubmitHandler(); // Limpa storage ao enviar
 }
 
 /**
@@ -256,6 +261,7 @@ function addProductToOrder(product) {
 
     if (existingCard.length) {
         updateExistingProduct(existingCard, product);
+        saveOrderToStorage(); // Salva no localStorage
         return;
     }
 
@@ -264,6 +270,7 @@ function addProductToOrder(product) {
 
     $container.append(cardHtml);
     addHiddenInputs(product);
+    saveOrderToStorage(); // Salva no localStorage
 }
 
 /**
@@ -276,8 +283,8 @@ function createProductCardHtml(product, subtotal) {
         : `<div class="order-product-image-placeholder"><i class="ti ti-photo"></i></div>`;
 
     return `
-        <div class="product-order-card" data-order-product-id="${product.id}" style="width: 48%; margin-bottom: 15px; display: inline-block; vertical-align: top; margin-right: 2%;">
-            <div style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 16px;">
+        <div class="product-order-card" data-order-product-id="${product.id}">
+            <div style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 16px; height: 100%;">
                 <div style="display: flex; gap: 12px; align-items: flex-start;">
                     <!-- DIV 1: Imagem -->
                     <div style="flex-shrink: 0;">
@@ -295,7 +302,7 @@ function createProductCardHtml(product, subtotal) {
                             <span style="color: #6b7280; margin: 0 4px;">=</span>
                             <span class="order-product-subtotal" style="font-weight: bold; color: #059669;">${formatCurrency(subtotal)}</span>
                         </div>
-                        <div style="display: flex; gap: 6px; align-items: center;">
+                        <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
                             <button type="button" style="width: 32px; height: 32px; background: white; border: 1px solid #d1d5db; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; color: #374151; padding: 0;" onclick="decrementOrderProduct(${product.id}, event)" title="Diminuir">
                                 <i class="ti ti-minus"></i>
                             </button>
@@ -303,7 +310,7 @@ function createProductCardHtml(product, subtotal) {
                             <button type="button" style="width: 32px; height: 32px; background: white; border: 1px solid #d1d5db; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; color: #374151; padding: 0;" onclick="incrementOrderProduct(${product.id}, event)" title="Aumentar">
                                 <i class="ti ti-plus"></i>
                             </button>
-                            <button type="button" style="width: 32px; height: 32px; background: white; border: 1px solid #dc2626; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; color: #dc2626; padding: 0; margin-left: 6px;" onclick="confirmRemoveOrderProduct(${product.id}, '${escapedName}')" title="Remover">
+                            <button type="button" style="width: 32px; height: 32px; background: white; border: 1px solid #dc2626; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; color: #dc2626; padding: 0; margin-left: auto;" onclick="confirmRemoveOrderProduct(${product.id}, '${escapedName}')" title="Remover">
                                 <i class="ti ti-trash"></i>
                             </button>
                         </div>
@@ -352,6 +359,7 @@ function removeOrderProduct(productId) {
         $(`input[name^="products[${productId}]"]`).remove();
         updateOrderTotals();
         checkEmptyProducts();
+        saveOrderToStorage(); // Salva no localStorage
     });
 }
 
@@ -520,6 +528,7 @@ function updateOrderProductQuantity(productId, newQty) {
     $(`input[name="products[${productId}][quantity]"]`).val(quantity);
 
     updateOrderTotals();
+    saveOrderToStorage(); // Salva no localStorage
 }
 
 /**
@@ -724,6 +733,90 @@ function escapeHtml(text) {
         "'": '&#039;'
     };
     return String(text).replace(/[&<>"']/g, m => map[m]);
+}
+
+/**
+ * Salva produtos do pedido no localStorage
+ */
+function saveOrderToStorage() {
+    const orderData = [];
+
+    $('[data-order-product-id]').each(function() {
+        const $card = $(this);
+        const productId = $card.data('order-product-id');
+        const quantity = parseInt($card.find('.order-product-quantity').val()) || 0;
+        const price = parseFloat($(`input[name="products[${productId}][price]"]`).val()) || 0;
+        const name = $card.find('h6').first().text().trim();
+        const category = $card.find('small').first().text().trim();
+        const imageElement = $card.find('.order-product-image');
+        const image = imageElement.length ? imageElement.attr('src') : '';
+
+        orderData.push({
+            id: productId,
+            name: name,
+            price: price,
+            category: category,
+            image: image,
+            quantity: quantity
+        });
+    });
+
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(orderData));
+    } catch (e) {
+        console.error('Erro ao salvar produtos no localStorage:', e);
+    }
+}
+
+/**
+ * Carrega produtos do pedido do localStorage
+ */
+function loadOrderFromStorage() {
+    try {
+        const storedData = localStorage.getItem(STORAGE_KEY);
+
+        if (!storedData) return;
+
+        const orderData = JSON.parse(storedData);
+
+        if (!Array.isArray(orderData) || orderData.length === 0) return;
+
+        // Adiciona cada produto ao pedido
+        orderData.forEach(product => {
+            addProductToOrder(product);
+        });
+
+        updateOrderTotals();
+
+    } catch (e) {
+        console.error('Erro ao carregar produtos do localStorage:', e);
+        localStorage.removeItem(STORAGE_KEY);
+    }
+}
+
+/**
+ * Limpa produtos do localStorage
+ */
+function clearOrderFromStorage() {
+    try {
+        localStorage.removeItem(STORAGE_KEY);
+    } catch (e) {
+        console.error('Erro ao limpar produtos do localStorage:', e);
+    }
+}
+
+/**
+ * Inicializa handler para limpar storage ao enviar formulário
+ */
+function initFormSubmitHandler() {
+    const $form = $('#orderForm');
+
+    if (!$form.length) return;
+
+    $form.on('submit', function() {
+        // Limpa o localStorage quando o formulário é enviado
+        clearOrderFromStorage();
+    });
 }
 
 // Inicializa quando o DOM estiver pronto
