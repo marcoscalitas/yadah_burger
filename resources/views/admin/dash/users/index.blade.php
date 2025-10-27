@@ -31,28 +31,28 @@
                                 <table class="table table-hover datatable-table" id="pc-dt-simple">
                                     <thead>
                                         <tr>
-                                            <th data-sortable="true" style="width: 6%;">
+                                            <th data-sortable="true" style="width: 5%;">
                                                 <button class="datatable-sorter">#</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 22.605694564279553%;">
+                                            <th data-sortable="true" style="width: 22%;">
                                                 <button class="datatable-sorter">Utilizador</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 18.809318377911993%;">
+                                            <th data-sortable="true" style="width: 20%;">
                                                 <button class="datatable-sorter">E-mail</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 18.809318377911993%;">
+                                            <th data-sortable="true" style="width: 15%;">
                                                 <button class="datatable-sorter">Telefone</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 15.875754961173424%;">
+                                            <th data-sortable="true" style="width: 10%;">
                                                 <button class="datatable-sorter">Sexo</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 13.805004314063849%;">
+                                            <th data-sortable="true" style="width: 12%;">
                                                 <button class="datatable-sorter">Função</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 14.667817083692839%;">
+                                            <th data-sortable="true" style="width: 10%;">
                                                 <button class="datatable-sorter">Estado</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 14.236410698878343%;">
+                                            <th data-sortable="true" style="width: 6%;">
                                                 <button class="datatable-sorter">Ação</button>
                                             </th>
                                         </tr>
@@ -79,20 +79,22 @@
                                                 <td>{{ $user->getGender() }}</td>
                                                 <td>{{ $user->getRoleLabel() }}</td>
                                                 <td>{!! getStatusBadge($user->user_status) !!}</td>
-                                                <td class="d-flex gap-2">
-                                                    {{-- Editar --}}
-                                                    <a href="{{ route('admin.users.edit', $user->id) }}"
-                                                        class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                        <i class="ti ti-edit text-xl leading-none"></i>
-                                                    </a>
+                                                <td>
+                                                    <div class="d-flex gap-2 justify-content-center">
+                                                        {{-- Editar --}}
+                                                        <a href="{{ route('admin.users.edit', $user->id) }}"
+                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
+                                                            <i class="ti ti-edit text-xl leading-none"></i>
+                                                        </a>
 
-                                                    {{-- Excluir --}}
-                                                    <button type="button"
-                                                        class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#deleteUserModal{{ $user->id }}">
-                                                        <i class="ti ti-trash text-xl leading-none"></i>
-                                                    </button>
+                                                        {{-- Excluir --}}
+                                                        <button type="button"
+                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#deleteUserModal{{ $user->id }}">
+                                                            <i class="ti ti-trash text-xl leading-none"></i>
+                                                        </button>
+                                                    </div>
                                                 </td>
                                             </tr>
 

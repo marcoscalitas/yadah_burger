@@ -22,40 +22,41 @@
                     </div>
                 </div>
                 <div class="card-body pt-3">
-                    @if($orders->count() > 0)
+                    @if ($orders->count() > 0)
                         <div class="table-responsive">
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Nº Pedido</th>
-                                        <th>Cliente</th>
-                                        <th>Telefone</th>
-                                        <th>Tipo</th>
-                                        <th>Pagamento</th>
-                                        <th>Total</th>
-                                        <th>Status</th>
-                                        <th>Data</th>
-                                        <th class="text-center">Ações</th>
+                                        <th style="width: 10%;">Nº Pedido</th>
+                                        <th style="width: 18%;">Cliente</th>
+                                        <th style="width: 12%;">Telefone</th>
+                                        <th style="width: 10%;">Tipo</th>
+                                        <th style="width: 12%;">Pagamento</th>
+                                        <th style="width: 10%;">Total</th>
+                                        <th style="width: 10%;">Status</th>
+                                        <th style="width: 10%;">Data</th>
+                                        <th style="width: 8%;" class="text-center">Ações</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($orders as $order)
+                                    @foreach ($orders as $order)
                                         <tr>
                                             <td>
                                                 <a href="{{ route('admin.orders.show', $order) }}"
-                                                   class="text-primary fw-bold text-decoration-none">
+                                                    class="text-primary fw-bold text-decoration-none">
                                                     #{{ $order->order_number }}
                                                 </a>
                                             </td>
                                             <td>
                                                 <div class="d-flex flex-column">
                                                     <span class="fw-semibold">{{ $order->customer_name }}</span>
-                                                    <small class="text-muted">{{ $order->orderItems->count() }} itens</small>
+                                                    <small class="text-muted">{{ $order->orderItems->count() }}
+                                                        itens</small>
                                                 </div>
                                             </td>
                                             <td>{{ $order->customer_phone ?? '-' }}</td>
                                             <td>
-                                                @if($order->pickup_in_store)
+                                                @if ($order->pickup_in_store)
                                                     <span class="badge bg-light-info">
                                                         <i class="ti ti-shopping-bag me-1"></i>Retirada
                                                     </span>
@@ -74,20 +75,21 @@
                                                 {{ number_format($order->total_amount, 2, ',', '.') }} Kz
                                             </td>
                                             <td>
-                                                <span class="badge
-                                                    @if($order->order_status === 'p') bg-warning
+                                                <span
+                                                    class="badge
+                                                    @if ($order->order_status === 'p') bg-warning
                                                     @elseif($order->order_status === 'st') bg-info
                                                     @elseif($order->order_status === 'c') bg-success
                                                     @elseif($order->order_status === 'd') bg-primary
-                                                    @else bg-danger
-                                                    @endif">
+                                                    @else bg-danger @endif">
                                                     {{ $order->getStatusName() }}
                                                 </span>
                                             </td>
                                             <td>
                                                 <div class="d-flex flex-column">
                                                     <span>{{ $order->created_at->format('d/m/Y') }}</span>
-                                                    <small class="text-muted">{{ $order->created_at->format('H:i') }}</small>
+                                                    <small
+                                                        class="text-muted">{{ $order->created_at->format('H:i') }}</small>
                                                 </div>
                                             </td>
                                             <td>
@@ -98,7 +100,7 @@
                                                         <i class="ti ti-eye text-xl leading-none"></i>
                                                     </a>
 
-                                                    @if($order->canBeCancelled())
+                                                    @if ($order->canBeCancelled())
                                                         <a href="{{ route('admin.orders.edit', $order) }}"
                                                             class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
                                                             title="Editar">
@@ -106,7 +108,7 @@
                                                         </a>
                                                     @endif
 
-                                                    @if(in_array($order->order_status, ['p', 'x']))
+                                                    @if (in_array($order->order_status, ['p', 'x']))
                                                         <button type="button"
                                                             class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary text-danger"
                                                             onclick="confirmDelete('{{ $order->id }}', '{{ $order->order_number }}')"
@@ -115,9 +117,8 @@
                                                         </button>
 
                                                         <form id="delete-form-{{ $order->id }}"
-                                                              action="{{ route('admin.orders.destroy', $order) }}"
-                                                              method="POST"
-                                                              style="display: none;">
+                                                            action="{{ route('admin.orders.destroy', $order) }}"
+                                                            method="POST" style="display: none;">
                                                             @csrf
                                                             @method('DELETE')
                                                         </form>
