@@ -528,24 +528,35 @@ if (! function_exists('validatePassword')) {
  * Retorna HTML formatado com data e hora em formato brasileiro
  *
  * @param  \Carbon\Carbon|string|null  $datetime
+ * @param  string  $type  Tipo de formatação: 'text' (d/m/Y), 'input' (Y-m-d), 'datetime' (com hora)
  * @return string
  */
 if (! function_exists('getFormattedDateTime')) {
-    function getFormattedDateTime($datetime): string
+    function getFormattedDateTime($datetime, string $type = 'text'): string
     {
         if (empty($datetime)) {
             return '-';
         }
 
-        $date = is_string($datetime) ? Carbon::parse($datetime) : $datetime;
+        $date = is_string($datetime) ? \Carbon\Carbon::parse($datetime) : $datetime;
 
-        return sprintf(
-            '<div class="d-flex flex-column"><span>%s</span> <small class="text-muted">%s</small></div>',
-            $date->format('d/m/Y'),
-            $date->format('H:i')
-        );
+        $formats = [
+            'text' => fn() => $date->format('d/m/Y'),
+            'input' => fn() => $date->format('Y-m-d'),
+            'datetime' => fn() => sprintf(
+                '<div class="d-flex flex-column">
+                    <span>%s</span>
+                    <small class="text-muted">%s</small>
+                </div>',
+                $date->format('d/m/Y'),
+                $date->format('H:i')
+            ),
+        ];
+
+        return ($formats[$type] ?? $formats['text'])();
     }
 }
+
 
 /**
  * Retorna valor formatado em Kwanzas com estilo
