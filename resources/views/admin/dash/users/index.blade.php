@@ -75,7 +75,7 @@
                                                     </div>
                                                 </td>
                                                 <td>{{ $user->email }}</td>
-                                                <td>{{ $user->getFormattedPhone() }}</td>
+                                                <td>{{ getFormattedPhone($user->phone) }}</td>
                                                 <td>{{ $user->getGender() }}</td>
                                                 <td>{{ $user->getRoleLabel() }}</td>
                                                 <td>{!! getStatusBadge($user->user_status) !!}</td>

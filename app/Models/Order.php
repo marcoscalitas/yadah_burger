@@ -60,18 +60,11 @@ class Order extends Model
     public const STATUS_CANCELLED = 'x';    // Cancelado
 
     /**
-     * Payment method constants
-     */
-    public const PAYMENT_CASH = 'cash';
-    public const PAYMENT_TRANSFER = 'transfer';
-    public const PAYMENT_TPA = 'tpa';
-
-    /**
      * Get status name in Portuguese
      */
     public function getStatusName(): string
     {
-        return match($this->order_status) {
+        return match ($this->order_status) {
             self::STATUS_PENDING => 'Pendente',
             self::STATUS_STARTED => 'Iniciado',
             self::STATUS_COMPLETED => 'Concluído',
@@ -86,10 +79,10 @@ class Order extends Model
      */
     public function getPaymentMethodName(): string
     {
-        return match($this->payment_method) {
-            self::PAYMENT_CASH => 'Dinheiro',
-            self::PAYMENT_TRANSFER => 'Transferência',
-            self::PAYMENT_TPA => 'TPA',
+        return match ($this->payment_method) {
+            'cash' => 'Dinheiro',
+            'transfer' => 'Transferência',
+            'tpa' => 'TPA',
             default => 'Desconhecido',
         };
     }

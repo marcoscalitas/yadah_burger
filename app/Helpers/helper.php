@@ -2,6 +2,7 @@
 
 use App\Services\UploadService;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 if (! function_exists('getBreadcrumb')) {
     /**
@@ -57,8 +58,8 @@ if (! function_exists('handlePhotoUpload')) {
 
             return $fileData['path'];
         } catch (\Throwable $e) {
-            Log::error('Erro no upload da foto: '.$e->getMessage());
-            throw new \Exception('Erro ao enviar foto: '.$e->getMessage());
+            Log::error('Erro no upload da foto: ' . $e->getMessage());
+            throw new \Exception('Erro ao enviar foto: ' . $e->getMessage());
         }
     }
 }
@@ -67,19 +68,46 @@ if (! function_exists('handlePhotoUpload')) {
 if (! function_exists('getStatusBadge')) {
     function getStatusBadge($status): string
     {
-        $badge = fn ($class, $label) => "<span class=\"badge text-{$class}-500 bg-{$class}-500/15\">$label</span>";
+        $badge = fn($class, $label) => "<span class=\"badge text-{$class}-500 bg-{$class}-500/15\">$label</span>";
 
         $badges = [
-            'i' => $badge('warning', 'Inativo'),
-            'p' => $badge('primary', 'Pendente'),
-            'a' => $badge('success', 'Ativado'),
+            'p' => $badge('warning', 'Pendente'),
             'sp' => $badge('warning', 'Suspenso'),
+            'i' => $badge('warning', 'Inativo'),
+            'a' => $badge('success', 'Ativado'),
+            'st' => $badge('primary', 'Iniciado'),
+            'c' => $badge('success', 'Concluído'),
+            'x' => $badge('danger', 'Cancelado'),
             'd' => $badge('danger', 'Apagado'),
         ];
 
         return $badges[$status] ?? $badge('dark', '-');
     }
 }
+
+
+// getStatusBadge
+if (! function_exists('getFormattedPhone')) {
+    function getFormattedPhone($phone, $code = true): string
+    {
+        if (empty($phone)) {
+            return '-';
+        }
+
+        $digits = preg_replace('/\D/', '', $phone);
+
+        if (strlen($digits) !== 9) {
+            return $phone;
+        }
+
+        $part1 = substr($digits, 0, 3);
+        $part2 = substr($digits, 3, 3);
+        $part3 = substr($digits, 6, 3);
+
+        return ($code) ? "+244 {$part1}-{$part2}-{$part3}" : "{$part1}-{$part2}-{$part3}";
+    }
+}
+
 
 // Get current User
 if (! function_exists('getCurrentUser')) {
@@ -123,7 +151,7 @@ if (! function_exists('isRouteActive')) {
             if (str_contains($pattern, '*')) {
                 // Escapa os caracteres especiais e substitui * por .*
                 $escaped = preg_quote($pattern, '/');
-                $regex = '/^'.str_replace('\*', '.*', $escaped).'$/';
+                $regex = '/^' . str_replace('\*', '.*', $escaped) . '$/';
 
                 if (preg_match($regex, $currentRoute)) {
                     return true;
@@ -158,11 +186,11 @@ if (! function_exists('getFormattedDate')) {
             return null;
         }
 
-        if ($value instanceof \Carbon\Carbon) {
+        if ($value instanceof Carbon) {
             $date = $value;
         } else {
             try {
-                $date = \Carbon\Carbon::parse($value);
+                $date = Carbon::parse($value);
             } catch (\Exception $e) {
                 return null;
             }
@@ -232,7 +260,7 @@ if (! function_exists('handleUserEmailUpdate')) {
         // Retornar mensagem apropriada
         $baseMessage = $isSelfUpdate ? 'Perfil atualizado com sucesso' : 'Utilizador atualizado com sucesso';
 
-        return $emailChanged ? $baseMessage.'! Email de verificação enviado para o novo endereço.' : $baseMessage.'!';
+        return $emailChanged ? $baseMessage . '! Email de verificação enviado para o novo endereço.' : $baseMessage . '!';
     }
 }
 
@@ -253,7 +281,7 @@ if (! function_exists('invalidateOldVerificationTokens')) {
                 'user_id' => $userId,
             ]);
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::warning('Erro ao invalidar tokens antigos: '.$e->getMessage(), [
+            \Illuminate\Support\Facades\Log::warning('Erro ao invalidar tokens antigos: ' . $e->getMessage(), [
                 'user_id' => $userId,
             ]);
         }
@@ -279,7 +307,7 @@ if (! function_exists('invalidatePasswordResetTokens')) {
                 ]);
             }
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::warning('Erro ao invalidar tokens de reset: '.$e->getMessage(), [
+            \Illuminate\Support\Facades\Log::warning('Erro ao invalidar tokens de reset: ' . $e->getMessage(), [
                 'email' => $email,
             ]);
         }
@@ -325,7 +353,7 @@ if (! function_exists('fileExists')) {
         try {
             return \Illuminate\Support\Facades\Storage::disk($disk)->exists($path);
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::warning('Erro ao verificar existência do arquivo: '.$e->getMessage(), [
+            \Illuminate\Support\Facades\Log::warning('Erro ao verificar existência do arquivo: ' . $e->getMessage(), [
                 'path' => $path,
                 'disk' => $disk,
             ]);
@@ -378,12 +406,12 @@ if (! function_exists('urlExists')) {
             }
 
             return false;
-
         } catch (\Exception $e) {
             return false;
         }
     }
-}if (! function_exists('getFileInfo')) {
+}
+if (! function_exists('getFileInfo')) {
     /**
      * Retorna informações detalhadas sobre um arquivo.
      *
@@ -432,9 +460,8 @@ if (! function_exists('urlExists')) {
                 'basename' => basename($path),
                 'type' => 'storage',
             ];
-
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::warning('Erro ao obter informações do arquivo: '.$e->getMessage(), [
+            \Illuminate\Support\Facades\Log::warning('Erro ao obter informações do arquivo: ' . $e->getMessage(), [
                 'path' => $path,
                 'disk' => $disk,
             ]);
@@ -465,7 +492,7 @@ if (! function_exists('formatBytes')) {
             $i++;
         }
 
-        return round($size, $precision).' '.$units[$i];
+        return round($size, $precision) . ' ' . $units[$i];
     }
 }
 
@@ -494,5 +521,52 @@ if (! function_exists('validatePassword')) {
         if (! preg_match('/[a-zA-Z0-9@$!%*#?&]/', $password)) {
             $fail('A senha deve conter apenas caracteres válidos (letras, números e caracteres especiais).');
         }
+    }
+}
+
+/**
+ * Retorna HTML formatado com data e hora em formato brasileiro
+ *
+ * @param  \Carbon\Carbon|string|null  $datetime
+ * @return string
+ */
+if (! function_exists('getFormattedDateTime')) {
+    function getFormattedDateTime($datetime): string
+    {
+        if (empty($datetime)) {
+            return '-';
+        }
+
+        $date = is_string($datetime) ? Carbon::parse($datetime) : $datetime;
+
+        return sprintf(
+            '<div class="d-flex flex-column"><span>%s</span> <small class="text-muted">%s</small></div>',
+            $date->format('d/m/Y'),
+            $date->format('H:i')
+        );
+    }
+}
+
+/**
+ * Retorna valor formatado em Kwanzas com estilo
+ *
+ * @param  float|int|null  $amount
+ * @param  string  $color  Classe de cor (success, danger, warning, primary, etc)
+ * @return string
+ */
+if (! function_exists('getFormattedCurrency')) {
+    function getFormattedCurrency($amount, string $color = 'success'): string
+    {
+        if (is_null($amount)) {
+            return '<span class="fw-bold text-muted">0,00 Kz</span>';
+        }
+
+        $formatted = number_format($amount, 2, ',', '.');
+
+        return sprintf(
+            '<span class="fw-bold text-%s">%s Kz</span>',
+            $color,
+            $formatted
+        );
     }
 }

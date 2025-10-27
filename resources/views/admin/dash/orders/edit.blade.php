@@ -3,7 +3,9 @@
 @section('title', 'Editar Pedido')
 
 @section('breadcrumb')
-    @include('admin.dash.components.breadcrumb', getBreadcrumb('admin.orders.edit', [['label' => $order->order_number]]))
+    @include(
+        'admin.dash.components.breadcrumb',
+        getBreadcrumb('admin.orders.edit', [['label' => $order->order_number]]))
 @endsection
 
 @section('content')
@@ -18,15 +20,7 @@
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5>Editar Pedido #{{ $order->order_number }}</h5>
-                            <span class="badge
-                                @if($order->order_status === 'p') bg-warning
-                                @elseif($order->order_status === 'st') bg-info
-                                @elseif($order->order_status === 'c') bg-success
-                                @elseif($order->order_status === 'd') bg-primary
-                                @else bg-danger
-                                @endif">
-                                {{ $order->getStatusName() }}
-                            </span>
+                            <span>{!! getStatusBadge($order->order_status) !!}</span>
                         </div>
                     </div>
                     <div class="card-body">
@@ -88,10 +82,12 @@
                                         <select class="form-select @error('pickup_in_store') is-invalid @enderror"
                                             name="pickup_in_store" id="pickup_in_store">
                                             <option value="">Selecione</option>
-                                            <option value="1" {{ old('pickup_in_store', $order->pickup_in_store) == '1' ? 'selected' : '' }}>
+                                            <option value="1"
+                                                {{ old('pickup_in_store', $order->pickup_in_store) == '1' ? 'selected' : '' }}>
                                                 Retirada na Loja
                                             </option>
-                                            <option value="0" {{ old('pickup_in_store', $order->pickup_in_store) == '0' ? 'selected' : '' }}>
+                                            <option value="0"
+                                                {{ old('pickup_in_store', $order->pickup_in_store) == '0' ? 'selected' : '' }}>
                                                 Entrega
                                             </option>
                                         </select>
@@ -112,13 +108,16 @@
                                         <select class="form-select @error('payment_method') is-invalid @enderror"
                                             name="payment_method">
                                             <option value="">Selecione</option>
-                                            <option value="cash" {{ old('payment_method', $order->payment_method) == 'cash' ? 'selected' : '' }}>
+                                            <option value="cash"
+                                                {{ old('payment_method', $order->payment_method) == 'cash' ? 'selected' : '' }}>
                                                 Dinheiro
                                             </option>
-                                            <option value="transfer" {{ old('payment_method', $order->payment_method) == 'transfer' ? 'selected' : '' }}>
+                                            <option value="transfer"
+                                                {{ old('payment_method', $order->payment_method) == 'transfer' ? 'selected' : '' }}>
                                                 Transferência
                                             </option>
-                                            <option value="tpa" {{ old('payment_method', $order->payment_method) == 'tpa' ? 'selected' : '' }}>
+                                            <option value="tpa"
+                                                {{ old('payment_method', $order->payment_method) == 'tpa' ? 'selected' : '' }}>
                                                 TPA
                                             </option>
                                         </select>
@@ -132,7 +131,7 @@
 
                                 <!-- Address 1 -->
                                 <div class="col-span-12 sm:col-span-6" id="address_fields"
-                                     style="{{ old('pickup_in_store', $order->pickup_in_store) ? 'display: none;' : '' }}">
+                                    style="{{ old('pickup_in_store', $order->pickup_in_store) ? 'display: none;' : '' }}">
                                     <div class="mb-1">
                                         <label class="form-label">
                                             Endereço Principal <span class="text-danger" id="address_required">*</span>
@@ -150,7 +149,7 @@
 
                                 <!-- Address 2 -->
                                 <div class="col-span-12 sm:col-span-6" id="address_2_field"
-                                     style="{{ old('pickup_in_store', $order->pickup_in_store) ? 'display: none;' : '' }}">
+                                    style="{{ old('pickup_in_store', $order->pickup_in_store) ? 'display: none;' : '' }}">
                                     <div class="mb-1">
                                         <label class="form-label">Complemento</label>
                                         <input type="text" class="form-control @error('address_2') is-invalid @enderror"
@@ -212,8 +211,10 @@
 
                             <!-- Products Container -->
                             <div id="productsContainer" class="order-products-grid">
-                                <div id="emptyProductsMessage" style="grid-column: 1 / -1; text-align: center; padding: 2rem 0; color: #6b7280; display: none;">
-                                    <i class="ti ti-shopping-cart-off" style="font-size: 3rem; display: block; margin-bottom: 0.5rem;"></i>
+                                <div id="emptyProductsMessage"
+                                    style="grid-column: 1 / -1; text-align: center; padding: 2rem 0; color: #6b7280; display: none;">
+                                    <i class="ti ti-shopping-cart-off"
+                                        style="font-size: 3rem; display: block; margin-bottom: 0.5rem;"></i>
                                     <p style="margin-bottom: 0;">Nenhum produto adicionado ao pedido</p>
                                     <small>Clique em "Adicionar Produto" para começar</small>
                                 </div>
@@ -347,7 +348,8 @@
                                                 @endif
 
                                                 <h6 class="product-name">{{ $product->name }}</h6>
-                                                <p class="product-price">{{ number_format($product->price, 2, ',', '.') }} Kz</p>
+                                                <p class="product-price">{{ number_format($product->price, 2, ',', '.') }}
+                                                    Kz</p>
 
                                                 <div class="quantity-controls">
                                                     <button type="button" class="btn btn-icon btn-light-secondary"
@@ -396,7 +398,7 @@
     <script>
         // Carrega produtos existentes ao carregar a página
         document.addEventListener('DOMContentLoaded', function() {
-            @if(old('products'))
+            @if (old('products'))
                 // Se houver produtos no old() (erro de validação), usa esses
                 const oldProducts = @json(old('products'));
 
@@ -420,13 +422,15 @@
                                     name: $productCard.data('product-name') || '',
                                     price: parseFloat(productData.price) || 0,
                                     quantity: parseInt(productData.quantity) || 0,
-                                    category: $productCard.closest('[data-category-section]').find('h6').text().trim() || '',
+                                    category: $productCard.closest('[data-category-section]')
+                                        .find('h6').text().trim() || '',
                                     image: $productCard.find('img').attr('src') || ''
                                 };
 
                                 addProductToOrder(product);
 
-                                const $quantityInput = $(`.quantity-input[data-product-id="${productId}"]`);
+                                const $quantityInput = $(
+                                    `.quantity-input[data-product-id="${productId}"]`);
                                 $quantityInput.val(product.quantity);
                                 $productCard.addClass('selected');
                             }

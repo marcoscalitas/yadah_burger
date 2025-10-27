@@ -98,25 +98,6 @@ class User extends Authenticatable implements MustVerifyEmail
         };
     }
 
-    public function getFormattedPhone($code = true): string
-    {
-        if (empty($this->phone)) {
-            return '-';
-        }
-
-        $digits = preg_replace('/\D/', '', $this->phone);
-
-        if (strlen($digits) !== 9) {
-            return $this->phone;
-        }
-
-        $part1 = substr($digits, 0, 3);
-        $part2 = substr($digits, 3, 3);
-        $part3 = substr($digits, 6, 3);
-
-        return ($code) ? "(+244) {$part1}-{$part2}-{$part3}" : "{$part1}-{$part2}-{$part3}";
-    }
-
     public function getAge(): ?int
     {
         if (! $this->birthdate) {
@@ -142,21 +123,8 @@ class User extends Authenticatable implements MustVerifyEmail
         return match ($this->gender) {
             'M' => 'Masculino',
             'F' => 'Femenina',
-            default => 'Não especificado',
+            default => '-',
         };
-    }
-
-    public function getFormattedBirthdate(string $format = 'd-m-Y'): ?string
-    {
-        if (! $this->birthdate) {
-            return null;
-        }
-
-        try {
-            return $this->birthdate->format($format);
-        } catch (\Exception $e) {
-            return null;
-        }
     }
 
     /**

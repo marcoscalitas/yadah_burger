@@ -20,14 +20,16 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::orderBy('id', 'desc')->get();
+        $users = User::orderBy('id', 'desc')
+            ->where('user_status', '!=', 'd')
+            ->get();
 
-        return view(self::ADMIN_DASH_USERS.'index', compact('users'));
+        return view(self::ADMIN_DASH_USERS . 'index', compact('users'));
     }
 
     public function create()
     {
-        return view(self::ADMIN_DASH_USERS.'create');
+        return view(self::ADMIN_DASH_USERS . 'create');
     }
 
     public function store(Request $request, UploadService $uploader)
@@ -46,7 +48,11 @@ class UserController extends Controller
             'gender' => 'required|in:M,F',
             'birthdate' => 'required|date|before:today',
             'role' => 'required|in:admin,staff',
-            'password' => ['required', 'string', 'min:8', 'confirmed',
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
                 function ($attribute, $value, $fail) {
                     validatePassword($value, $fail);
                 },
@@ -89,7 +95,7 @@ class UserController extends Controller
         $emailNotVerified = $isEmailVerifiable && ! $user->hasVerifiedEmail();
         $canManageUser = $currentUser->id !== $user->id;
 
-        return view(self::ADMIN_DASH_USERS.'edit', compact(
+        return view(self::ADMIN_DASH_USERS . 'edit', compact(
             'user',
             'isEmailVerifiable',
             'emailNotVerified',
@@ -108,7 +114,7 @@ class UserController extends Controller
         ]);
         $validated = $request->validate([
             'fullname' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,'.$user->id,
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
             'phone' => ['required', 'string', 'size:9', 'regex:/^\d{9}$/'],
             'gender' => 'required|in:M,F',
             'birthdate' => 'required|date|before:today',
@@ -189,10 +195,11 @@ class UserController extends Controller
     {
         checkIfIsAdmin('visualizar', self::ENTITY);
 
-        $users = User::onlyTrashed()->orderBy('deleted_at', 'desc')->get();
+        $users = User::where('user_status', 'd')->orderBy('id', 'desc')->get();
 
         return view('admin.dash.users.trashed', compact('users'));
     }
+
 
     /**
      * Restore the specified user from trash.
@@ -272,7 +279,7 @@ class UserController extends Controller
             'reset_by' => $currentUser->id,
         ]);
 
-        return back()->with('success', 'Senha resetada com sucesso! Nova senha temporária: '.$temporaryPassword.'. O utilizador deve alterar esta senha no próximo login.');
+        return back()->with('success', 'Senha resetada com sucesso! Nova senha temporária: ' . $temporaryPassword . '. O utilizador deve alterar esta senha no próximo login.');
     }
 
     /**
@@ -309,7 +316,7 @@ class UserController extends Controller
                 'sent_by' => $currentUser->id,
             ]);
 
-            return back()->with('success', 'Email de verificação enviado com sucesso para: '.$user->email);
+            return back()->with('success', 'Email de verificação enviado com sucesso para: ' . $user->email);
         } catch (\Exception $e) {
             Log::error('Erro ao enviar email de verificação', [
                 'user_id' => $user->id,
@@ -336,8 +343,8 @@ class UserController extends Controller
 
             return $fileData['path'];
         } catch (\Throwable $e) {
-            Log::error('Erro no upload da foto: '.$e->getMessage());
-            throw new \Exception('Erro ao enviar foto: '.$e->getMessage());
+            Log::error('Erro no upload da foto: ' . $e->getMessage());
+            throw new \Exception('Erro ao enviar foto: ' . $e->getMessage());
         }
     }
 

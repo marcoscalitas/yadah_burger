@@ -15,6 +15,9 @@
                     <div class="sm:flex items-center justify-between">
                         <h5 class="mb-3 sm:mb-0">Lista de pedidos</h5>
                         <div>
+                            {{-- <a href="{{ route('admin.orders.trashed') }}" class="btn btn-outline-secondary mr-1">
+                                Ver pedidos eliminados
+                            </a> --}}
                             <a href="{{ route('admin.orders.create') }}" class="btn btn-primary">
                                 <i class="ti ti-plus me-2"></i>Adicionar Pedido
                             </a>
@@ -22,129 +25,133 @@
                     </div>
                 </div>
                 <div class="card-body pt-3">
-                    @if ($orders->count() > 0)
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 10%;">Nº Pedido</th>
-                                        <th style="width: 18%;">Cliente</th>
-                                        <th style="width: 12%;">Telefone</th>
-                                        <th style="width: 10%;">Tipo</th>
-                                        <th style="width: 12%;">Pagamento</th>
-                                        <th style="width: 10%;">Total</th>
-                                        <th style="width: 10%;">Status</th>
-                                        <th style="width: 10%;">Data</th>
-                                        <th style="width: 8%;" class="text-center">Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($orders as $order)
+                    <div class="table-responsive">
+                        <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
+                            <div class="datatable-container">
+                                <table class="table table-hover datatable-table" id="pc-dt-simple">
+                                    <thead>
                                         <tr>
-                                            <td>
-                                                <a href="{{ route('admin.orders.show', $order) }}"
-                                                    class="text-primary fw-bold text-decoration-none">
-                                                    #{{ $order->order_number }}
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex flex-column">
-                                                    <span class="fw-semibold">{{ $order->customer_name }}</span>
-                                                    <small class="text-muted">{{ $order->orderItems->count() }}
-                                                        itens</small>
-                                                </div>
-                                            </td>
-                                            <td>{{ $order->customer_phone ?? '-' }}</td>
-                                            <td>
-                                                @if ($order->pickup_in_store)
-                                                    <span class="badge bg-light-info">
-                                                        <i class="ti ti-shopping-bag me-1"></i>Retirada
-                                                    </span>
-                                                @else
-                                                    <span class="badge bg-light-warning">
-                                                        <i class="ti ti-truck-delivery me-1"></i>Entrega
-                                                    </span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-light-secondary">
-                                                    {{ $order->getPaymentMethodName() }}
-                                                </span>
-                                            </td>
-                                            <td class="fw-bold text-success">
-                                                {{ number_format($order->total_amount, 2, ',', '.') }} Kz
-                                            </td>
-                                            <td>
-                                                <span
-                                                    class="badge
-                                                    @if ($order->order_status === 'p') bg-warning
-                                                    @elseif($order->order_status === 'st') bg-info
-                                                    @elseif($order->order_status === 'c') bg-success
-                                                    @elseif($order->order_status === 'd') bg-primary
-                                                    @else bg-danger @endif">
-                                                    {{ $order->getStatusName() }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex flex-column">
-                                                    <span>{{ $order->created_at->format('d/m/Y') }}</span>
-                                                    <small
-                                                        class="text-muted">{{ $order->created_at->format('H:i') }}</small>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex gap-2 justify-content-center">
-                                                    <a href="{{ route('admin.orders.show', $order) }}"
-                                                        class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
-                                                        title="Ver detalhes">
-                                                        <i class="ti ti-eye text-xl leading-none"></i>
-                                                    </a>
-
-                                                    @if ($order->canBeCancelled())
-                                                        <a href="{{ route('admin.orders.edit', $order) }}"
-                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
-                                                            title="Editar">
-                                                            <i class="ti ti-edit text-xl leading-none"></i>
-                                                        </a>
-                                                    @endif
-
-                                                    @if (in_array($order->order_status, ['p', 'x']))
-                                                        <button type="button"
-                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary text-danger"
-                                                            onclick="confirmDelete('{{ $order->id }}', '{{ $order->order_number }}')"
-                                                            title="Excluir">
-                                                            <i class="ti ti-trash text-xl leading-none"></i>
-                                                        </button>
-
-                                                        <form id="delete-form-{{ $order->id }}"
-                                                            action="{{ route('admin.orders.destroy', $order) }}"
-                                                            method="POST" style="display: none;">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                        </form>
-                                                    @endif
-                                                </div>
-                                            </td>
+                                            <th data-sortable="true" style="width: 5%;">
+                                                <button class="datatable-sorter">#</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 10%;">
+                                                <button class="datatable-sorter">Nº Pedido</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 18%;">
+                                                <button class="datatable-sorter">Cliente</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 12%;">
+                                                <button class="datatable-sorter">Telefone</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 10%;">
+                                                <button class="datatable-sorter">Tipo</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 10%;">
+                                                <button class="datatable-sorter">Total</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 10%;">
+                                                <button class="datatable-sorter">Estado</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 10%;">
+                                                <button class="datatable-sorter">Data</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 6%;">
+                                                <button class="datatable-sorter">Ação</button>
+                                            </th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($orders as $index => $order)
+                                            <tr data-index="{{ $index }}" data-id="{{ $order->id }}">
+                                                <td>{{ $index + 1 }}</td>
 
-                        <!-- Pagination -->
-                        <div class="mt-4">
-                            {{ $orders->links() }}
+                                                <td>
+                                                    <a href="{{ route('admin.orders.show', $order) }}"
+                                                        class="text-primary fw-bold text-decoration-none">
+                                                        #{{ $order->order_number }}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex flex-column">
+                                                        <span class="fw-semibold">{{ $order->customer_name }}</span>
+                                                        <small class="text-muted">
+                                                            {{ $order->orderItems->count() }} itens
+                                                        </small>
+                                                    </div>
+                                                </td>
+                                                <td>{{ getFormattedPhone($order->customer_phone) }}</td>
+                                                <td>
+                                                    @if ($order->pickup_in_store)
+                                                        <span class="badge bg-light-info">
+                                                            <i class="ti ti-shopping-bag me-1"></i>Retirada
+                                                        </span>
+                                                    @else
+                                                        <span class="badge bg-light-warning">
+                                                            <i class="ti ti-truck-delivery me-1"></i>Entrega
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                                <td>{!! getFormattedCurrency($order->total_amount) !!}</td>
+                                                <td>{!! getStatusBadge($order->order_status) !!}</td>
+                                                <td>{!! getFormattedDateTime($order->created_at) !!}</td>
+                                                <td>
+                                                    <div class="d-flex gap-2 justify-content-center">
+                                                        <a href="{{ route('admin.orders.show', $order) }}"
+                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
+                                                            title="Ver detalhes">
+                                                            <i class="ti ti-eye text-xl leading-none"></i>
+                                                        </a>
+
+                                                        @if ($order->canBeCancelled())
+                                                            <a href="{{ route('admin.orders.edit', $order) }}"
+                                                                class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
+                                                                title="Editar">
+                                                                <i class="ti ti-edit text-xl leading-none"></i>
+                                                            </a>
+                                                        @endif
+
+                                                        @if (in_array($order->order_status, ['p', 'x']))
+                                                            <button type="button"
+                                                                class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary text-danger"
+                                                                title="Excluir">
+                                                                <i class="ti ti-trash text-xl leading-none"></i>
+                                                            </button>
+
+                                                            <form id="delete-form-{{ $order->id }}"
+                                                                action="{{ route('admin.orders.destroy', $order) }}"
+                                                                method="POST" style="display: none;">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                            </form>
+                                                        @endif
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <!-- Modal de Confirmação de Exclusão -->
+
+                                        @empty
+                                            <tr>
+                                                <td colspan="6" class="text-center py-8">
+                                                    <div class="flex flex-col items-center justify-center">
+                                                        <i class="ti ti-tag text-6xl text-gray-300 mb-4"></i>
+                                                        <h5 class="text-gray-500 mb-2">Nenhum pedido encontrado.</h5>
+                                                        <p class="text-gray-400 mb-4">Ainda não há pedidos cadastrados
+                                                            no
+                                                            sistema.</p>
+                                                        <a href="{{ route('admin.orders.create') }}"
+                                                            class="btn btn-primary">
+                                                            <i class="ti ti-plus me-2"></i>Adicionar primeiro pedido
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    @else
-                        <div class="text-center py-5">
-                            <i class="ti ti-shopping-cart-off text-6xl text-gray-400 mb-3 d-block"></i>
-                            <h6 class="text-gray-600">Nenhum pedido encontrado</h6>
-                            <p class="text-gray-500 mb-3">Comece criando seu primeiro pedido</p>
-                            <a href="{{ route('admin.orders.create') }}" class="btn btn-primary">
-                                <i class="ti ti-plus me-2"></i>Criar Pedido
-                            </a>
-                        </div>
-                    @endif
+                    </div>
                 </div>
             </div>
         </div>
@@ -153,11 +160,5 @@
 @endsection
 
 @section('custom-scripts')
-    <script>
-        function confirmDelete(orderId, orderNumber) {
-            if (confirm(`Deseja realmente excluir o pedido #${orderNumber}?\n\nEsta ação não pode ser desfeita.`)) {
-                document.getElementById('delete-form-' + orderId).submit();
-            }
-        }
-    </script>
+    <script></script>
 @endsection

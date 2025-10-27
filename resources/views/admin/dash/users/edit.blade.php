@@ -59,7 +59,7 @@
                         </div>
                         <div class="inline-flex items-center gap-3 w-full mb-3">
                             <i class="ti ti-phone"></i>
-                            <p class="mb-0">{{ $user->getFormattedPhone() }}</p>
+                            <p class="mb-0">{{ getFormattedPhone($user->phone) }}</p>
                         </div>
                         <div class="inline-flex items-center gap-3 w-full mb-3">
                             <i class="ti ti-map-pin"></i>
@@ -269,7 +269,7 @@
                                     <div class="input-group">
                                         <span class="input-group-text">+244</span>
                                         <input type="text" class="form-control @error('phone') is-invalid @enderror"
-                                            name="phone" value="{{ old('phone', $user->getFormattedPhone(false)) }}"
+                                            name="phone" value="{{ old('phone', getFormattedPhone($user->phone, false)) }}"
                                             id="phone-number" maxlength="11" />
                                     </div>
                                     @error('phone')
