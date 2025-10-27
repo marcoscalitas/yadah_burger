@@ -58,7 +58,7 @@
                         </div>
                         <div class="inline-flex items-center gap-3 w-full mb-3">
                             <i class="ti ti-phone"></i>
-                            <p class="mb-0">{{ $user->getFormattedPhone() }}</p>
+                            <p class="mb-0">{{ getFormattedPhone($user->phone) }}</p>
                         </div>
                         <div class="inline-flex items-center gap-3 w-full mb-3">
                             <i class="ti ti-map-pin"></i>
@@ -148,7 +148,7 @@
                             <div class="grid grid-cols-12 gap-6">
                                 <div class="col-span-12 md:col-span-6">
                                     <p class="mb-1 text-muted">Telefone</p>
-                                    <p class="mb-0">{{ $user->getFormattedPhone() }}</p>
+                                    <p class="mb-0">{{ getFormattedPhone($user->phone) }}</p>
                                 </div>
                                 <div class="col-span-12 md:col-span-6">
                                     <p class="mb-1 text-muted">Sexo</p>
@@ -161,7 +161,7 @@
                                 <div class="col-span-12 md:col-span-6">
                                     <p class="mb-1 text-muted">Data de Nascimento</p>
                                     <p class="mb-0">
-                                        {{ $user->birthdate->format('d-m-Y') }}
+                                        {{ getFormattedDateTime($user->birthdate) }}
                                     </p>
                                 </div>
                                 <div class="col-span-12 md:col-span-6">
@@ -174,11 +174,11 @@
                             <div class="grid grid-cols-12 gap-6">
                                 <div class="col-span-12 md:col-span-6">
                                     <p class="mb-1 text-muted">Data de Criação</p>
-                                    <p class="mb-0"> {{ $user->created_at->format('d-m-Y') }}</p>
+                                    <p class="mb-0"> {{ getFormattedDateTime($user->created_at) }}</p>
                                 </div>
                                 <div class="col-span-12 md:col-span-6">
                                     <p class="mb-1 text-muted">Data de Edição</p>
-                                    <p class="mb-0"> {{ $user->updated_at->format('d-m-Y') }}</p>
+                                    <p class="mb-0"> {{ getFormattedDateTime($user->updated_at) }}</p>
                                 </div>
                             </div>
                         </li>

@@ -19,14 +19,14 @@ class ProfileController extends Controller
     {
         $user = User::find(auth('admin')->id());
 
-        return view(self::ADMIN_DASH_PROFILE.'index', compact('user'));
+        return view(self::ADMIN_DASH_PROFILE . 'index', compact('user'));
     }
 
     public function edit()
     {
         $user = User::find(auth('admin')->id());
 
-        return view(self::ADMIN_DASH_PROFILE.'edit', compact('user'));
+        return view(self::ADMIN_DASH_PROFILE . 'edit', compact('user'));
     }
 
     public function update(Request $request)
@@ -35,17 +35,17 @@ class ProfileController extends Controller
         $request->merge(['phone' => preg_replace('/\D/', '', $request->input('phone'))]);
 
         $data = $request->validate([
-            'phone' => ['required', 'string', 'size:9', 'regex:/^\d{9}$/'],
             'fullname' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,'.$currentUser->id,
+            'email' => 'required|email|max:255|unique:users,email,' . $currentUser->id,
+            'phone' => ['required', 'string', 'size:9', 'regex:/^\d{9}$/'],
             'gender' => 'required|in:M,F',
             'birthdate' => 'required|date',
             'role' => 'required|in:admin,staff',
         ]);
 
-        if ($data['role'] === 'staff' && $currentUser->role === 'admin') {
+        if ($currentUser->role === 'admin' && $data['role'] === 'staff') {
             return redirect()->back()->withErrors([
-                'role' => 'Você não pode alterar seu própria função de admin para staff.',
+                'role' => 'Você não pode alterar seu própria função. Por favor, contate outro administrador.',
             ])->withInput();
         }
 
@@ -88,14 +88,13 @@ class ProfileController extends Controller
                 'message' => 'Foto enviada com sucesso!',
                 'url' => $fileData['url'],
             ]);
-
         } catch (\Throwable $e) {
-            Log::error('Erro no upload de foto de perfil: '.$e->getMessage(), [
+            Log::error('Erro no upload de foto de perfil: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString(),
             ]);
 
             return response()->json([
-                'message' => 'Erro ao enviar foto: '.$e->getMessage(),
+                'message' => 'Erro ao enviar foto: ' . $e->getMessage(),
             ], 500);
         }
     }

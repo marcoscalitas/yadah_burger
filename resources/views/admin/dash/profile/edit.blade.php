@@ -28,9 +28,9 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <input type="text" class="form-control @error('fullname') is-invalid @enderror"
-                                        name="fullname" value="{{ old('fullname', getCurrentUser('admin')->fullname) }}" />
+                                        name="fullname" value="{{ old('fullname', $user->fullname) }}" />
                                     <small class="form-text text-muted">
-                                        Utilizador: {{ getCurrentUser('admin')->getShortName() }}
+                                        Utilizador: {{ $user->getShortName() }}
                                     </small>
                                     @error('fullname')
                                         <div class="text-danger d-flex align-items-center mt-1">
@@ -48,7 +48,7 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <input type="text" class="form-control @error('email') is-invalid @enderror"
-                                        name="email" value="{{ old('email', getCurrentUser('admin')->email) }}" />
+                                        name="email" value="{{ old('email', $user->email) }}" />
                                     @error('email')
                                         <div class="text-danger d-flex align-items-center mt-1">
                                             <i class="fas fa-exclamation-triangle me-1"></i> {{ $message }}
@@ -68,7 +68,7 @@
                                         <span class="input-group-text">+244</span>
                                         <input type="text" class="form-control @error('phone') is-invalid @enderror"
                                             name="phone"
-                                            value="{{ old('phone', getCurrentUser('admin')->getFormattedPhone(false)) }}"
+                                            value="{{ old('phone', getFormattedPhone($user->phone, false)) }}"
                                             id="phone-number" maxlength="11" />
                                     </div>
                                     @error('phone')
@@ -82,13 +82,14 @@
                             <!-- Sexo -->
                             <div class="col-span-12 sm:col-span-6">
                                 <div class="mb-1">
-                                    <label class="form-label">Sexo</label>
+                                    <label class="form-label">
+                                        Sexo <span class="text-danger">*</span>
+                                    </label>
                                     <select class="form-select @error('gender') is-invalid @enderror" name="gender">
-                                        <option value="M"
-                                            {{ old('gender', getCurrentUser('admin')->gender) == 'M' ? 'selected' : '' }}>
+                                        <option value="">Selecione</option>
+                                        <option value="M" {{ old('gender', $user->gender) == 'M' ? 'selected' : '' }}>
                                             Masculino</option>
-                                        <option value="F"
-                                            {{ old('gender', getCurrentUser('admin')->gender) == 'F' ? 'selected' : '' }}>
+                                        <option value="F" {{ old('gender', $user->gender) == 'F' ? 'selected' : '' }}>
                                             Feminino</option>
                                     </select>
                                     @error('gender')
@@ -109,7 +110,7 @@
                                     </label>
                                     <input type="date" class="form-control @error('birthdate') is-invalid @enderror"
                                         name="birthdate"
-                                        value="{{ old('birthdate', getCurrentUser('admin')->birthdate->format('Y-m-d')) }}" />
+                                        value="{{ old('birthdate', getFormattedDateTime($user->birthdate, 'input')) }}" />
                                     @error('birthdate')
                                         <div class="text-danger d-flex align-items-center mt-1">
                                             <i class="fas fa-exclamation-triangle me-1"></i>
@@ -122,17 +123,17 @@
                             <!-- Função -->
                             <div class="col-span-12 sm:col-span-6">
                                 <div class="mb-1">
-                                    <label class="form-label">Função</label>
+                                    <label class="form-label">
+                                        Função <span class="text-danger">*</span>
+                                    </label>
                                     <select
-                                        class="form-select @if (getCurrentUser('admin')->role == 'staff') disabled-field @endif
+                                        class="form-select @if ($user->role == 'staff') disabled-field @endif
                                                         @error('role') is-invalid @enderror"
                                         name="role">
-
-                                        <option value="admin"
-                                            {{ old('role', getCurrentUser('admin')->role) == 'admin' ? 'selected' : '' }}>
+                                        <option value="">Selecione</option>
+                                        <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>
                                             Administrador</option>
-                                        <option value="staff"
-                                            {{ old('role', getCurrentUser('admin')->role) == 'staff' ? 'selected' : '' }}>
+                                        <option value="staff" {{ old('role', $user->role) == 'staff' ? 'selected' : '' }}>
                                             Funcionário</option>
                                     </select>
                                     @error('role')
@@ -152,7 +153,7 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <input type="date" name="created_at" class="form-control disabled-field" disabled
-                                        value="{{ old('role', getCurrentUser('admin')->created_at->format('Y-m-d')) }}" />
+                                        value="{{ old('role', getFormattedDateTime($user->created_at, 'input')) }}" />
                                 </div>
                             </div>
 
@@ -164,7 +165,7 @@
                                         <span class="text-danger">*</span>
                                     </label>
                                     <input type="date" name="updated_at" class="form-control disabled-field" disabled
-                                        value="{{ old('role', getCurrentUser('admin')->updated_at->format('Y-m-d')) }}" />
+                                        value="{{ old('role', getFormattedDateTime($user->updated_at, 'input')) }}" />
                                 </div>
                             </div>
 
