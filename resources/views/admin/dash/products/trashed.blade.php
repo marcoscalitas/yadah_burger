@@ -13,13 +13,10 @@
             <div class="card table-card">
                 <div class="card-header">
                     <div class="sm:flex items-center justify-between">
-                        <h5 class="mb-3 sm:mb-0">Lista de produtos</h5>
+                        <h5 class="mb-3 sm:mb-0">Lista de produtos eliminados</h5>
                         <div>
-                            <a href="{{ route('admin.products.trashed') }}" class="btn btn-outline-secondary mr-1">
-                                Ver produtos eliminados
-                            </a>
-                            <a href="{{ route('admin.products.create') }}" class="btn btn-primary">
-                                <i class="ti ti-plus me-2"></i>Adicionar Produto
+                            <a href="{{ route('admin.products.index') }}" class="btn btn-primary">
+                                Ver produtos ativos
                             </a>
                         </div>
                     </div>

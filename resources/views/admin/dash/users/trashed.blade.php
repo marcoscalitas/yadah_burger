@@ -15,8 +15,8 @@
                     <div class="sm:flex items-center justify-between">
                         <h5 class="mb-3 sm:mb-0">Lista de utilizadores eliminados</h5>
                         <div>
-                            <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
-                                <i class="ti ti-plus me-2"></i>Adicionar Utilizador
+                            <a href="{{ route('admin.users.index') }}" class="btn btn-primary">
+                                Ver utilizadores ativos
                             </a>
                         </div>
                     </div>

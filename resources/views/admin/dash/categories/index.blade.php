@@ -16,7 +16,7 @@
                         <h5 class="mb-3 sm:mb-0">Lista de categorias</h5>
                         <div>
                             <a href="{{ route('admin.categories.trashed') }}" class="btn btn-outline-secondary mr-1">
-                                Ver categorias eliminados
+                                Ver categorias eliminadas
                             </a>
                             <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">
                                 <i class="ti ti-plus me-2"></i>Adicionar Categoria
@@ -166,7 +166,7 @@
                                             </div>
                                         @empty
                                             <tr>
-                                                <td colspan="6" class="text-center py-8">
+                                                <td colspan="7" class="text-center py-8">
                                                     <div class="flex flex-col items-center justify-center">
                                                         <i class="ti ti-tag text-6xl text-gray-300 mb-4"></i>
                                                         <h5 class="text-gray-500 mb-2">Nenhuma categoria encontrada</h5>

@@ -3,7 +3,7 @@
 @section('title', 'Categorias')
 
 @section('breadcrumb')
-    @include('admin.dash.components.breadcrumb', getBreadcrumb('admin.categories.index'))
+    @include('admin.dash.components.breadcrumb', getBreadcrumb('admin.categories.trashed'))
 @endsection
 
 @section('content')
@@ -15,8 +15,8 @@
                     <div class="sm:flex items-center justify-between">
                         <h5 class="mb-3 sm:mb-0">Lista de categorias eliminadas</h5>
                         <div>
-                            <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">
-                                <i class="ti ti-plus me-2"></i>Adicionar Categoria
+                            <a href="{{ route('admin.categories.index') }}" class="btn btn-primary">
+                                Ver categorias ativas
                             </a>
                         </div>
                     </div>
