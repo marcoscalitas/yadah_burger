@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
             $table->string('name', 100);
             $table->text('description')->nullable();
-            $table->decimal('price', 10, 2);
-            $table->decimal('promotion_price', 10, 2)->nullable();
+            $table->decimal('price', 12, 2);
+            $table->decimal('promotion_price', 12, 2)->nullable();
             $table->decimal('discount', 5, 2)->nullable();
             $table->string('image_url', 255)->nullable();
             $table->enum('product_status', ['a', 'i', 'd'])->default('a');
