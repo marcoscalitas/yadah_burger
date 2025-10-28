@@ -115,7 +115,7 @@
 
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title font-semibold text-danger text-lg">
-                                                                    <i class="fas fa-user me-2"></i> Apagar Utilizador
+                                                                    Eliminar Utilizador
                                                                 </h5>
                                                                 <button type="button"
                                                                     data-pc-modal-dismiss="#deleteUserModal{{ $user->id }}"
@@ -139,7 +139,7 @@
                                                                 <p class="text-muted">
                                                                     Tem certeza de que deseja
                                                                     <span class="text-danger">
-                                                                        <strong>apagar</strong>
+                                                                        <strong>eliminar</strong>
                                                                     </span>
                                                                     este utilizador de forma
                                                                     <span class="text-danger">
@@ -155,7 +155,7 @@
                                                                     Cancelar
                                                                 </button>
                                                                 <button type="submit" class="btn btn-danger">
-                                                                    <i class="fas fa-trash me-2"></i> Apagar
+                                                                    <i class="fas fa-trash me-2"></i> Eliminar
                                                                 </button>
                                                             </div>
                                                         </form>

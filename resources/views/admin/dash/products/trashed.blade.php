@@ -130,7 +130,7 @@
 
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title font-semibold text-danger text-lg">
-                                                                    <i class="fas fa-box me-2"></i> Apagar Produto
+                                                                    Eliminar Produto
                                                                 </h5>
                                                                 <button type="button"
                                                                     data-pc-modal-dismiss="#deleteProductModal{{ $product->id }}"
@@ -158,7 +158,7 @@
                                                                 <p class="text-muted">
                                                                     Tem certeza de que deseja
                                                                     <span class="text-danger">
-                                                                        <strong>apagar</strong>
+                                                                        <strong>eliminar</strong>
                                                                     </span>
                                                                     este produto de forma
                                                                     <span class="text-danger">
@@ -168,12 +168,12 @@
                                                                 </p>
                                                             </div>
                                                             <div class="modal-footer flex justify-end gap-3 border-t">
-                                                                <button type="button" class="btn btn-secondary"
+                                                                <button type="button" class="btn btn-outline-secondary"
                                                                     data-pc-modal-dismiss="#deleteProductModal{{ $product->id }}">
                                                                     Cancelar
                                                                 </button>
                                                                 <button type="submit" class="btn btn-danger">
-                                                                    <i class="fas fa-trash me-2"></i> Apagar
+                                                                    <i class="fas fa-trash me-2"></i> Eliminar
                                                                 </button>
                                                             </div>
                                                         </form>

@@ -106,7 +106,7 @@
                                     e que tenha no máximo <b>3MB</b>.
                                 </p>
                             </div>
-                            <div class="modal-footer flex justify-center gap-3 border-t">
+                            <div class="modal-footer flex justify-end gap-3 border-t">
                                 <label for="profilePhotoInput" class="btn btn-outline-primary cursor-pointer px-4">
                                     Selecionar foto</label>
                                 <input type="file" id="profilePhotoInput" name="photo" accept="image/png,image/jpeg"
