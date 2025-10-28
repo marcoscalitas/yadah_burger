@@ -85,68 +85,69 @@
 
 <script>
     $(document).ready(function() {
-                // Função genérica para aplicar fade out em alerts
-                function applyFadeOut(selector, timeout) {
-                    $(selector).each(function() {
-                        var $alert = $(this);
+        // Função genérica para aplicar fade out em alerts
+        function applyFadeOut(selector, timeout) {
+            $(selector).each(function() {
+                var $alert = $(this);
 
-                        setTimeout(function() {
-                            $alert.fadeOut('slow');
-                        }, timeout);
-                    });
-                }
+                setTimeout(function() {
+                    $alert.fadeOut('slow');
+                }, timeout);
+            });
+        }
 
-                // Apply fade out for alerts
-                applyFadeOut('.message-fade-out', 6000);
-                applyFadeOut('.message-fade-out-err', 16000);
+        // Apply fade out for alerts
+        applyFadeOut('.message-fade-out', 6000);
+        applyFadeOut('.message-fade-out-err', 16000);
 
-                // Data table
-                var $table = $('#pc-dt-simple');
+        // Data table
+        var $table = $('#pc-dt-simple');
 
-                // Verifica se a tabela tem dados reais (ignora linha de "empty")
-                var hasData = $table.find('tbody tr').length > 0 &&
-                    !$table.find('tbody tr td[colspan]').length;
+        // Verifica se a tabela tem dados reais (ignora linha de "empty")
+        var hasData = $table.find('tbody tr').length > 0 &&
+            !$table.find('tbody tr td[colspan]').length;
 
-                if (hasData) {
-                    $table.DataTable({
-                            pageLength: 10,
-                            lengthMenu: [5, 10, 25, 50, 100],
-                            responsive: true,
-                            pagingType: "full_numbers",
-                            order: [
-                                [0, 'asc']
-                            ],
-                            destroy: true, // Permite reinicializar a tabela
-                            autoWidth: false, // Desabilita o cálculo automático de largura
-                            scrollX: true, // Permite scroll horizontal se necessário
-                            columnDefs: [{
-                                targets: '_all',
-                                defaultContent: '', // Conteúdo padrão para colunas vazias
-                                width: null // Remove larguras predefinidas
-                            }],
-                            language: {
-                                decimal: ",",
-                                thousands: ".",
-                                emptyTable: "Nenhum dado disponível na tabela",
-                                info: "Mostrando _START_ até _END_ de _TOTAL_ registos",
-                                infoEmpty: "Mostrando 0 até 0 de 0 registos",
-                                infoFiltered: "(filtrado de _MAX_ registos no total)",
-                                lengthMenu: "Mostrar _MENU_ registos",
-                                loadingRecords: "A carregar...",
-                                processing: "A processar...",
-                                search: "Pesquisar:",
-                                zeroRecords: "Não foram encontrados resultados",
-                                paginate: {
-                                    first: "Primeiro",
-                                    last: "Último",
-                                    next: ">",
-                                    previous: "<"
-                                },
-                                aria: {
-                                    sortAscending: ": ativar para ordenar a coluna de forma ascendente",
-                                    sortDescending: ": ativar para ordenar a coluna de forma descendente"
-                                }
-                            });
+        if (hasData) {
+            $table.DataTable({
+                pageLength: 10,
+                lengthMenu: [5, 10, 25, 50, 100],
+                responsive: true,
+                pagingType: "full_numbers",
+                order: [
+                    [0, 'asc']
+                ],
+                destroy: true, // Permite reinicializar a tabela
+                autoWidth: false, // Desabilita o cálculo automático de largura
+                scrollX: true, // Permite scroll horizontal se necessário
+                columnDefs: [{
+                    targets: '_all',
+                    defaultContent: '', // Conteúdo padrão para colunas vazias
+                    width: null // Remove larguras predefinidas
+                }],
+                language: {
+                    decimal: ",",
+                    thousands: ".",
+                    emptyTable: "Nenhum dado disponível na tabela",
+                    info: "Mostrando _START_ até _END_ de _TOTAL_ registos",
+                    infoEmpty: "Mostrando 0 até 0 de 0 registos",
+                    infoFiltered: "(filtrado de _MAX_ registos no total)",
+                    lengthMenu: "Mostrar _MENU_ registos",
+                    loadingRecords: "A carregar...",
+                    processing: "A processar...",
+                    search: "Pesquisar:",
+                    zeroRecords: "Não foram encontrados resultados",
+                    paginate: {
+                        first: "Primeiro",
+                        last: "Último",
+                        next: ">",
+                        previous: "<"
+                    },
+                    aria: {
+                        sortAscending: ": ativar para ordenar a coluna de forma ascendente",
+                        sortDescending: ": ativar para ordenar a coluna de forma descendente"
                     }
-                });
+                }
+            });
+        }
+    });
 </script>
