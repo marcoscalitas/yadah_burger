@@ -150,7 +150,7 @@
                                                             </div>
 
                                                             <div class="modal-footer flex justify-end gap-3 border-t">
-                                                                <button type="button" class="btn btn-secondary"
+                                                                <button type="button" class="btn btn-outline-secondary"
                                                                     data-pc-modal-dismiss="#deleteUserModal{{ $user->id }}">
                                                                     Cancelar
                                                                 </button>
