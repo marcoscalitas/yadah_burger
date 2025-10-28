@@ -53,20 +53,6 @@ class Category extends Model
     }
 
     /**
-     * Get a truncated description for display in lists.
-     */
-    public function getShortDescription(int $length = 50): string
-    {
-        if (! $this->description) {
-            return '';
-        }
-
-        return strlen($this->description) > $length
-            ? substr($this->description, 0, $length).'...'
-            : $this->description;
-    }
-
-    /**
      * Scope to get only active categories.
      */
     public function scopeActive($query)

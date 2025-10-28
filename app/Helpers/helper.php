@@ -581,3 +581,19 @@ if (! function_exists('getFormattedCurrency')) {
         );
     }
 }
+
+/**
+ * Get a truncated description for display in lists.
+ */
+if (! function_exists('getShortDescription')) {
+    function getShortDescription(string $text, int $length = 50): string
+    {
+        if (! $text || empty($text)) {
+            return '-';
+        }
+
+        return strlen($text) > $length
+            ? substr($text, 0, $length) . '...'
+            : $text;
+    }
+}
