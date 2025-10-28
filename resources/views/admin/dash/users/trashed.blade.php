@@ -21,6 +21,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="card-body pt-3">
                     <div class="table-responsive">
                         <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
@@ -28,28 +29,28 @@
                                 <table class="table table-hover datatable-table" id="pc-dt-simple">
                                     <thead>
                                         <tr>
-                                            <th data-sortable="true" style="width: 6%;">
+                                            <th data-sortable="true" style="width: 5%;">
                                                 <button class="datatable-sorter">#</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 22.605694564279553%;">
+                                            <th data-sortable="true" style="width: 22%;">
                                                 <button class="datatable-sorter">Utilizador</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 18.809318377911993%;">
+                                            <th data-sortable="true" style="width: 20%;">
                                                 <button class="datatable-sorter">E-mail</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 18.809318377911993%;">
+                                            <th data-sortable="true" style="width: 15%;">
                                                 <button class="datatable-sorter">Telefone</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 15.875754961173424%;">
+                                            <th data-sortable="true" style="width: 10%;">
                                                 <button class="datatable-sorter">Sexo</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 13.805004314063849%;">
+                                            <th data-sortable="true" style="width: 12%;">
                                                 <button class="datatable-sorter">Função</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 14.667817083692839%;">
+                                            <th data-sortable="true" style="width: 10%;">
                                                 <button class="datatable-sorter">Estado</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 14.236410698878343%;">
+                                            <th data-sortable="true" style="width: 6%;">
                                                 <button class="datatable-sorter">Ação</button>
                                             </th>
                                         </tr>

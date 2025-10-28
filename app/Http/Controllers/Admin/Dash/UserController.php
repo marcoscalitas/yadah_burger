@@ -195,7 +195,7 @@ class UserController extends Controller
     {
         checkIfIsAdmin('visualizar', self::ENTITY);
 
-        $users = User::where('user_status', 'd')->orderBy('id', 'desc')->get();
+        $users = User::onlyTrashed()->where('user_status', 'd')->orderBy('id', 'desc')->get();
 
         return view('admin.dash.users.trashed', compact('users'));
     }
