@@ -34,10 +34,10 @@
                                             <th data-sortable="true" style="width: 6%;">
                                                 <button class="datatable-sorter">#</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 20%;">
+                                            <th data-sortable="true" style="width: 26%;">
                                                 <button class="datatable-sorter">Produto</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 20%;">
+                                            <th data-sortable="true" style="width: 10%;">
                                                 <button class="datatable-sorter">Categoria</button>
                                             </th>
                                             <th data-sortable="true" style="width: 10%;">
@@ -46,13 +46,13 @@
                                             <th data-sortable="true" style="width: 15%;">
                                                 <button class="datatable-sorter">Preço</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 15%;">
+                                            <th data-sortable="true" style="width: 10%;">
                                                 <button class="datatable-sorter">Status</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 15%;">
+                                            <th data-sortable="true" style="width: 10%;">
                                                 <button class="datatable-sorter">Criada por</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 14%;">
+                                            <th data-sortable="true" style="width: 15%;">
                                                 <button class="datatable-sorter">Ações</button>
                                             </th>
                                         </tr>
@@ -70,7 +70,7 @@
                                                         </div>
 
                                                         <div class="grow ltr:ml-3 rtl:mr-3">
-                                                            <h6 class="mb-0">{{ $product->name }}</h6>
+                                                            <h6 class="mb-0">{{ getShortText($product->name, 20) }}</h6>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -82,14 +82,14 @@
                                                     <div class="max-w-xs overflow-hidden">
                                                         <span class="text-sm text-gray-600 block truncate"
                                                             title="{{ $product->description }}">
-                                                            {{ getShortDescription($product->description) }}
+                                                            {{ getShortText($product->description, 30) }}
                                                         </span>
                                                     </div>
                                                 </td>
-                                                <td>{{ number_format($product->price, 2, ',', '.') . ' Kz' }}</td>
+                                                <td>{!! getProductPrice($product) !!}</td>
                                                 <td>{!! getStatusBadge($product->product_status) !!}</td>
                                                 <td>
-                                                    {{ $product->createdBy ? $product->createdBy->getShortName() : 'Sistema' }}
+                                                    {{ $product->createdBy ? getShortText($product->createdBy->getShortName(), 15) : 'Sistema' }}
                                                 </td>
                                                 <td class="d-flex gap-2">
                                                     {{-- Editar --}}
@@ -143,9 +143,8 @@
                                                                     <div>
                                                                         <h6 class="font-semibold">{{ $product->name }}
                                                                         </h6>
-                                                                        <span
-                                                                            class="text-sm text-gray-500">
-                                                                            {{ getShortDescription($product->description) }}
+                                                                        <span class="text-sm text-gray-500">
+                                                                            {{ getShortText($product->description) }}
                                                                         </span>
                                                                     </div>
                                                                 </div>

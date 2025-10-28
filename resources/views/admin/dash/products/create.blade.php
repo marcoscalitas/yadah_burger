@@ -112,7 +112,7 @@
                             <!-- Price -->
                             <div class="col-span-12 sm:col-span-4">
                                 <div class="mb-1">
-                                    <label class="form-label">Preço promocional</label>
+                                    <label class="form-label">Preço promocional <span class="text-danger">*</span></label>
                                     <input type="text"
                                         class="form-control @error('promotion_price') is-invalid @enderror"
                                         name="promotion_price" id="promotion-price" value="{{ old('promotion_price') }}" />

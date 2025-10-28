@@ -75,7 +75,7 @@
                                                     <div class="max-w-xs overflow-hidden">
                                                         <span class="text-sm text-gray-600 block truncate"
                                                             title="{{ $category->description }}">
-                                                            {{ getShortDescription($category->description) }}
+                                                            {{ getShortText($category->description) }}
                                                         </span>
                                                     </div>
                                                 </td>
@@ -137,7 +137,7 @@
                                                                         <h6 class="font-semibold">{{ $category->name }}
                                                                         </h6>
                                                                         <span class="text-sm text-gray-500">
-                                                                            {{ getShortDescription($category->description) }}
+                                                                            {{ getShortText($category->description) }}
                                                                         </span>
                                                                     </div>
                                                                 </div>

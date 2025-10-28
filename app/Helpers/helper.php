@@ -585,8 +585,8 @@ if (! function_exists('getFormattedCurrency')) {
 /**
  * Get a truncated description for display in lists.
  */
-if (! function_exists('getShortDescription')) {
-    function getShortDescription(string $text, int $length = 50): string
+if (! function_exists('getShortText')) {
+    function getShortText(string $text, int $length = 50): string
     {
         if (! $text || empty($text)) {
             return '-';
@@ -595,5 +595,34 @@ if (! function_exists('getShortDescription')) {
         return strlen($text) > $length
             ? substr($text, 0, $length) . '...'
             : $text;
+    }
+}
+
+// getProductPrice
+if (! function_exists('getProductPrice')) {
+    /**
+     * @param  \App\Models\Product|object  $product  O produto ou objeto com price e promotion_price
+     * @param  bool  $formatted  Se true, retorna formatado com HTML, se false retorna apenas o valor numérico
+     * @return string O preço formatado a ser exibido
+     */
+    function getProductPrice($product, bool $formatted = true)
+    {
+        $hasPromotion = !empty($product->promotion_price) && $product->promotion_price > 0;
+
+        if (!$formatted) {
+            return $hasPromotion ? $product->promotion_price : $product->price;
+        }
+
+        $priceFormatted = number_format($product->price, 2, ',', '.') . ' Kz';
+        $promotionFormatted = number_format($product->promotion_price, 2, ',', '.') . ' Kz';
+
+        if ($hasPromotion) {
+            return '<div class="flex flex-col">
+                        <span class="font-semibold" style="color: #0f9e43ff;">' . $promotionFormatted . '</span>
+                        <span class="text-gray-400 text-xs line-through">' . $priceFormatted . '</span>
+                    </div>';
+        }
+
+        return '<span class="font-semibold" style="color: #0f9e43ff;">' . $priceFormatted . '</span>';
     }
 }
