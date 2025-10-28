@@ -586,7 +586,7 @@ if (! function_exists('getFormattedCurrency')) {
  * Get a truncated description for display in lists.
  */
 if (! function_exists('getShortText')) {
-    function getShortText(string $text, int $length = 50): string
+    function getShortText(?string $text, int $length = 50): string
     {
         if (! $text || empty($text)) {
             return '-';

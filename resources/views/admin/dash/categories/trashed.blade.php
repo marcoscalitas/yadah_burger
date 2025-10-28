@@ -78,9 +78,9 @@
                                                 </td>
                                                 <td>{!! getStatusBadge($category->category_status) !!}</td>
                                                 <td>
-                                                    {{ $category->createdBy ? $category->createdBy->getShortName() : 'Sistema' }}
+                                                    {{ $category->createdBy ? getShortText($category->createdBy->getShortName(), 15) : 'Sistema' }}
                                                 </td>
-                                                <td>{{ $category->created_at->format('d/m/Y H:i') }}</td>
+                                                <td>{!! getFormattedDateTime($category->created_at, 'datetime') !!}</td>
                                                 <td class="d-flex gap-2">
                                                     {{-- Restaurar --}}
                                                     <form method="POST"

@@ -55,10 +55,7 @@
                             <!-- User image -->
                             <div class="col-span-12 sm:col-span-12">
                                 <div class="mb-1">
-                                    <label class="form-label">
-                                        Escolher imagem
-                                        <span class="text-danger">*</span>
-                                    </label>
+                                    <label class="form-label">Escolher imagem</label>
                                     <input type="file" class="form-control @error('image') is-invalid @enderror"
                                         name="image" accept="image/*" />
                                     @error('image')
