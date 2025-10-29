@@ -178,9 +178,9 @@ class ProductController extends Controller
         $isPromotion = $request->boolean('is_featured');
 
         $request->merge([
-            'price' => $this->convertToDecimal($request->input('price') ?? 0),
+            'price' => convertToDecimal($request->input('price') ?? 0),
             'promotion_price' => $isPromotion
-                ? $this->convertToDecimal($request->input('promotion_price'))
+                ? convertToDecimal($request->input('promotion_price'))
                 : null,
         ]);
 
@@ -206,20 +206,5 @@ class ProductController extends Controller
         unset($validated['image']);
 
         return [$validated, $currentUser];
-    }
-
-    /**
-     * Converte uma string de preço formatada (ex: "50.000,00") para decimal (ex: "50000.00").
-     */
-    private function convertToDecimal($value)
-    {
-
-        // Remove pontos de milhar
-        $value = str_replace('.', '', $value);
-        // Troca vírgula decimal por ponto
-        $value = str_replace(',', '.', $value);
-
-        // Garante que é numérico
-        return is_numeric($value) ? (float) $value : 0;
     }
 }

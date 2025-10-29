@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
+
+    private const ENTITY = 'Pedidos';
+
     public function index()
     {
         $orders = Order::with(['orderItems.product', 'createdBy'])
@@ -25,11 +28,11 @@ class OrderController extends Controller
     public function create()
     {
         // Buscar todas as categorias com seus produtos ativos
-        $categories = Category::with(['products' => function($query) {
+        $categories = Category::with(['products' => function ($query) {
             $query->where('product_status', 'a')
-                  ->orderBy('name');
+                ->orderBy('name');
         }])
-            ->whereHas('products', function($query) {
+            ->whereHas('products', function ($query) {
                 $query->where('product_status', 'a');
             })
             ->orderBy('name')
@@ -40,9 +43,22 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
+        checkIfIsAdmin('criar', self::ENTITY);
+
+        $currentUser = getCurrentUser('admin');
+        $request->merge([
+            'customer_phone' => preg_replace('/\D/', '', $request->input('customer_phone')),
+        ]);
+
+        if ($request->has('discount_amount') && $request->discount_amount) {
+            $request->merge([
+                'discount_amount' => convertToDecimal($request->discount_amount)
+            ]);
+        }
+
         $validated = $request->validate([
             'customer_name' => 'required|string|max:255',
-            'customer_phone' => 'nullable|string|max:20',
+            'customer_phone' => 'required|string|max:20',
             'pickup_in_store' => 'required|boolean',
             'payment_method' => 'required|in:cash,transfer,tpa',
             'address_1' => 'required_if:pickup_in_store,0|nullable|string|max:255',
@@ -95,7 +111,7 @@ class OrderController extends Controller
 
             // Calcula desconto e total
             $discountAmount = isset($validated['discount_amount'])
-                ? (float) str_replace(['.', ','], ['', '.'], $validated['discount_amount'])
+                ? (float) $validated['discount_amount']
                 : 0;
 
             $totalAmount = max(0, $subtotal - $discountAmount);
@@ -117,7 +133,7 @@ class OrderController extends Controller
                 'total_amount' => $totalAmount,
                 'notes' => $validated['notes'],
                 'order_status' => Order::STATUS_PENDING,
-                'created_by' => Auth::id(),
+                'created_by' => $currentUser->id,
             ]);
 
             // Adicionar items do pedido
@@ -128,7 +144,7 @@ class OrderController extends Controller
                     'quantity' => $item['quantity'],
                     'unit_price' => $item['unit_price'],
                     'subtotal' => $item['subtotal'],
-                    'created_by' => Auth::id(),
+                    'created_by' => $currentUser->id,
                 ]);
             }
 
@@ -137,7 +153,6 @@ class OrderController extends Controller
             return redirect()
                 ->route('admin.orders.show', $order)
                 ->with('success', 'Pedido criado com sucesso!');
-
         } catch (\Exception $e) {
             DB::rollback();
 
@@ -155,6 +170,8 @@ class OrderController extends Controller
 
     public function edit(Order $order)
     {
+        checkIfIsAdmin('criar', self::ENTITY);
+
         // Não permite editar pedidos já concluídos ou entregues
         if (in_array($order->order_status, [Order::STATUS_COMPLETED, Order::STATUS_DELIVERED])) {
             return redirect()
@@ -162,20 +179,20 @@ class OrderController extends Controller
                 ->with('error', 'Não é possível editar pedidos concluídos ou entregues.');
         }
 
-        $categories = Category::with(['products' => function($query) {
+        $categories = Category::with(['products' => function ($query) {
             $query->where('product_status', 'a')
-                  ->orderBy('name');
+                ->orderBy('name');
         }])
-        ->whereHas('products', function($query) {
-            $query->where('product_status', 'a');
-        })
-        ->orderBy('name')
-        ->get();
+            ->whereHas('products', function ($query) {
+                $query->where('product_status', 'a');
+            })
+            ->orderBy('name')
+            ->get();
 
         $order->load(['orderItems.product.category']);
 
         // Prepara os produtos existentes para o JavaScript
-        $existingProducts = $order->orderItems->map(function($item) {
+        $existingProducts = $order->orderItems->map(function ($item) {
             return [
                 'id' => $item->product_id,
                 'name' => $item->product->name,
@@ -196,6 +213,13 @@ class OrderController extends Controller
             return redirect()
                 ->route('admin.orders.show', $order)
                 ->with('error', 'Não é possível editar pedidos concluídos ou entregues.');
+        }
+
+        // Normaliza o desconto usando o helper
+        if ($request->has('discount_amount') && $request->discount_amount) {
+            $request->merge([
+                'discount_amount' => convertToDecimal($request->discount_amount)
+            ]);
         }
 
         $validated = $request->validate([
@@ -250,7 +274,7 @@ class OrderController extends Controller
             }
 
             $discountAmount = isset($validated['discount_amount'])
-                ? (float) str_replace(['.', ','], ['', '.'], $validated['discount_amount'])
+                ? (float) $validated['discount_amount']
                 : 0;
 
             $totalAmount = max(0, $subtotal - $discountAmount);
@@ -290,7 +314,6 @@ class OrderController extends Controller
             return redirect()
                 ->route('admin.orders.show', $order)
                 ->with('success', 'Pedido atualizado com sucesso!');
-
         } catch (\Exception $e) {
             DB::rollback();
 
@@ -321,7 +344,6 @@ class OrderController extends Controller
             return redirect()
                 ->route('admin.orders.index')
                 ->with('success', 'Pedido excluído com sucesso!');
-
         } catch (\Exception $e) {
             DB::rollback();
             return back()->with('error', 'Erro ao excluir pedido: ' . $e->getMessage());
@@ -345,7 +367,6 @@ class OrderController extends Controller
             return redirect()
                 ->route('admin.orders.show', $order)
                 ->with('success', "Status do pedido atualizado para: {$statusName}");
-
         } catch (\Exception $e) {
             return back()->with('error', 'Erro ao atualizar status: ' . $e->getMessage());
         }
@@ -359,4 +380,3 @@ class OrderController extends Controller
         return 'PED-' . date('Ymd') . '-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
     }
 }
-

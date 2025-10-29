@@ -41,14 +41,20 @@
                                     </div>
                                 </div>
 
-                                <!-- Customer Phone -->
+                                <!-- Customer customer_phone -->
                                 <div class="col-span-12 sm:col-span-6">
                                     <div class="mb-1">
-                                        <label class="form-label">Telefone</label>
-                                        <input type="text"
-                                            class="form-control @error('customer_phone') is-invalid @enderror"
-                                            name="customer_phone" id="customer_phone" value="{{ old('customer_phone') }}"
-                                            placeholder="Ex: (11) 99999-9999" />
+                                        <label class="form-label">
+                                            Telefone
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">+244</span>
+                                            <input type="text"
+                                                class="form-control @error('customer_phone') is-invalid @enderror"
+                                                name="customer_phone" value="{{ old('customer_phone') }}" maxlength="11"
+                                                id="customer_phone" />
+                                        </div>
                                         @error('customer_phone')
                                             <div class="text-danger d-flex align-items-center mt-1">
                                                 <i class="fas fa-exclamation-triangle me-1"></i> {{ $message }}
@@ -197,8 +203,10 @@
 
                             <!-- Products Container -->
                             <div id="productsContainer" class="order-products-grid">
-                                <div id="emptyProductsMessage" style="grid-column: 1 / -1; text-align: center; padding: 2rem 0; color: #6b7280;">
-                                    <i class="ti ti-shopping-cart-off" style="font-size: 3rem; display: block; margin-bottom: 0.5rem;"></i>
+                                <div id="emptyProductsMessage"
+                                    style="grid-column: 1 / -1; text-align: center; padding: 2rem 0; color: #6b7280;">
+                                    <i class="ti ti-shopping-cart-off"
+                                        style="font-size: 3rem; display: block; margin-bottom: 0.5rem;"></i>
                                     <p style="margin-bottom: 0;">Nenhum produto adicionado ao pedido</p>
                                     <small>Clique em "Adicionar Produto" para começar</small>
                                 </div>
@@ -291,8 +299,6 @@
                             </div>
                         </div>
                     </div>
-
-
 
                     <!-- Products List -->
                     <div class="products-list">
@@ -389,51 +395,59 @@
 @section('custom-scripts')
     <script src="{{ asset('admin/assets/js/custom/product-modal.js') }}"></script>
 
-    @if(old('products'))
-    <script>
-        // Restaura produtos quando há erro de validação
-        document.addEventListener('DOMContentLoaded', function() {
-            const oldProducts = @json(old('products'));
+    @if (old('products'))
+        <script>
+            $(document).ready(function() {
 
-            if (oldProducts && Object.keys(oldProducts).length > 0) {
-                // IMPORTANTE: Limpa o localStorage para evitar duplicação
-                localStorage.removeItem('order_products_draft');
+                formatPhoneNumber('customer_phone');
+                // Restaura produtos quando há erro de validação
+                document.addEventListener('DOMContentLoaded', function() {
+                    const oldProducts = @json(old('products'));
 
-                // Limpa produtos que possam ter sido carregados
-                $('#productsContainer').find('[data-order-product-id]').remove();
-                $('#emptyProductsMessage').show();
-                selectedProducts.clear();
+                    if (oldProducts && Object.keys(oldProducts).length > 0) {
+                        // IMPORTANTE: Limpa o localStorage para evitar duplicação
+                        localStorage.removeItem('order_products_draft');
 
-                // Aguarda a inicialização do modal
-                setTimeout(function() {
-                    Object.keys(oldProducts).forEach(productId => {
-                        const productData = oldProducts[productId];
-                        const $productCard = $(`[data-product-id="${productId}"]`).first();
+                        // Limpa produtos que possam ter sido carregados
+                        $('#productsContainer').find('[data-order-product-id]').remove();
+                        $('#emptyProductsMessage').show();
+                        selectedProducts.clear();
 
-                        if ($productCard.length) {
-                            const product = {
-                                id: parseInt(productId),
-                                name: $productCard.data('product-name') || '',
-                                price: parseFloat(productData.price) || 0,
-                                quantity: parseInt(productData.quantity) || 0,
-                                category: $productCard.closest('[data-category-section]').find('h6').text().trim() || '',
-                                image: $productCard.find('img').attr('src') || ''
-                            };
+                        // Aguarda a inicialização do modal
+                        setTimeout(function() {
+                            Object.keys(oldProducts).forEach(productId => {
+                                const productData = oldProducts[productId];
+                                const $productCard = $(`[data-product-id="${productId}"]`)
+                                    .first();
 
-                            // Adiciona o produto ao pedido
-                            addProductToOrder(product);
+                                if ($productCard.length) {
+                                    const product = {
+                                        id: parseInt(productId),
+                                        name: $productCard.data('product-name') || '',
+                                        price: parseFloat(productData.price) || 0,
+                                        quantity: parseInt(productData.quantity) || 0,
+                                        category: $productCard.closest(
+                                            '[data-category-section]').find(
+                                            'h6').text().trim() || '',
+                                        image: $productCard.find('img').attr('src') || ''
+                                    };
 
-                            // Atualiza o input de quantidade no modal
-                            const $quantityInput = $(`.quantity-input[data-product-id="${productId}"]`);
-                            $quantityInput.val(product.quantity);
-                            $productCard.addClass('selected');
-                        }
-                    });
+                                    // Adiciona o produto ao pedido
+                                    addProductToOrder(product);
 
-                    updateOrderTotals();
-                }, 500);
-            }
-        });
-    </script>
+                                    // Atualiza o input de quantidade no modal
+                                    const $quantityInput = $(
+                                        `.quantity-input[data-product-id="${productId}"]`);
+                                    $quantityInput.val(product.quantity);
+                                    $productCard.addClass('selected');
+                                }
+                            });
+
+                            updateOrderTotals();
+                        }, 500);
+                    }
+                });
+            });
+        </script>
     @endif
 @endsection

@@ -626,3 +626,33 @@ if (! function_exists('getProductPrice')) {
         return '<span class="font-semibold" style="color: #0f9e43ff;">' . $priceFormatted . '</span>';
     }
 }
+
+// convertToDecimal
+if (! function_exists('convertToDecimal')) {
+    /**
+     * Converte uma string de preço formatada (ex: "50.000,00" ou "1,11") para decimal (ex: "50000.00" ou "1.11").
+     * Remove pontos de milhar e converte vírgula decimal para ponto.
+     *
+     * @param  string|float|null  $value  O valor a ser convertido
+     * @return float O valor convertido para float
+     */
+    function convertToDecimal($value): float
+    {
+        if (is_null($value) || $value === '') {
+            return 0.0;
+        }
+
+        // Se já for numérico, retorna como float
+        if (is_numeric($value)) {
+            return (float) $value;
+        }
+
+        // Remove pontos de milhar
+        $value = str_replace('.', '', $value);
+        // Troca vírgula decimal por ponto
+        $value = str_replace(',', '.', $value);
+
+        // Garante que é numérico
+        return is_numeric($value) ? (float) $value : 0.0;
+    }
+}

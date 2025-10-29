@@ -132,7 +132,7 @@
 
                                         @empty
                                             <tr>
-                                                <td colspan="6" class="text-center py-8">
+                                                <td colspan="9" class="text-center py-8">
                                                     <div class="flex flex-col items-center justify-center">
                                                         <i class="ti ti-tag text-6xl text-gray-300 mb-4"></i>
                                                         <h5 class="text-gray-500 mb-2">Nenhum pedido encontrado.</h5>
