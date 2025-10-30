@@ -97,14 +97,14 @@
                                                 <td>
                                                     <div class="d-flex gap-2 justify-content-center">
                                                         <a href="{{ route('admin.orders.show', $order) }}"
-                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
+                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-primary"
                                                             title="Ver detalhes">
                                                             <i class="ti ti-eye text-xl leading-none"></i>
                                                         </a>
 
                                                         @if ($order->canBeCancelled())
                                                             <a href="{{ route('admin.orders.edit', $order) }}"
-                                                                class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
+                                                                class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-warning"
                                                                 title="Editar">
                                                                 <i class="ti ti-edit text-xl leading-none"></i>
                                                             </a>
@@ -112,7 +112,7 @@
 
                                                         @if (in_array($order->order_status, ['p', 'x']))
                                                             <button type="button"
-                                                                class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
+                                                                class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-danger"
                                                                 data-pc-toggle="modal"
                                                                 data-pc-target="#deleteOrderModal{{ $order->id }}"
                                                                 data-pc-animate="sticky-up"

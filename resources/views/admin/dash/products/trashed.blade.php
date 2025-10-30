@@ -88,28 +88,67 @@
                                                 <td>
                                                     {{ $product->createdBy ? getShortText($product->createdBy->getShortName(), 15) : 'Sistema' }}
                                                 </td>
-                                                <td class="d-flex gap-2">
-                                                    {{-- Restaurar --}}
-                                                    <form method="POST"
-                                                        action="{{ route('admin.products.restore', $product->id) }}"
-                                                        style="display: inline;">
-                                                        @csrf
-                                                        @method('PATCH')
-                                                        <button type="submit"
-                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
+                                                <td>
+                                                    <div class="d-flex gap-2 justify-content-center">
+                                                        {{-- Restaurar --}}
+                                                        <button type="button"
+                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-success"
+                                                            data-pc-toggle="modal"
+                                                            data-pc-target="#restoreProductModal{{ $product->id }}"
                                                             title="Restaurar produto">
                                                             <i class="ti ti-refresh text-xl leading-none"></i>
                                                         </button>
-                                                    </form>
 
-                                                    {{-- Excluir --}}
-                                                    <button type="button"
-                                                        class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
-                                                        data-pc-toggle="modal"
-                                                        data-pc-target="#deleteProductModal{{ $product->id }}"
-                                                        data-pc-animate="sticky-up">
-                                                        <i class="ti ti-trash text-xl leading-none"></i>
-                                                    </button>
+                                                        {{-- Excluir Permanentemente --}}
+                                                        <button type="button"
+                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-danger"
+                                                            data-pc-toggle="modal"
+                                                            data-pc-target="#deleteProductModal{{ $product->id }}"
+                                                            data-pc-animate="sticky-up"
+                                                            title="Excluir permanentemente">
+                                                            <i class="ti ti-trash text-xl leading-none"></i>
+                                                        </button>
+                                                    </div>
+
+                                                    {{-- Modal de Confirmação de Restauração --}}
+                                                    <div class="modal fade modal-animate" id="restoreProductModal{{ $product->id }}"
+                                                        tabindex="-1" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Confirmar restauração</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="text-center">
+                                                                        <i class="ti ti-refresh text-success" style="font-size: 3rem;"></i>
+                                                                        <h4 class="mt-3">Restaurar Produto</h4>
+                                                                        <p class="text-muted">
+                                                                            Tem certeza que deseja restaurar o produto
+                                                                            <strong>{{ $product->name }}</strong>?
+                                                                        </p>
+                                                                        <p class="text-muted">
+                                                                            O produto voltará para a lista de produtos ativos.
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer d-flex gap-2 justify-content-end">
+                                                                    <button type="button" class="btn btn-outline-secondary"
+                                                                        data-pc-modal-dismiss="#restoreProductModal{{ $product->id }}">Cancelar</button>
+                                                                    <form method="POST"
+                                                                        action="{{ route('admin.products.restore', $product->id) }}"
+                                                                        style="display: inline;">
+                                                                        @csrf
+                                                                        @method('PATCH')
+                                                                        <button type="submit" class="btn btn-success">
+                                                                            <i class="ti ti-refresh me-2"></i>Sim, restaurar
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </td>
                                             </tr>
 

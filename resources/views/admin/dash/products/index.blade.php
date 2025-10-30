@@ -16,7 +16,7 @@
                         <h5 class="mb-3 sm:mb-0">Lista de produtos</h5>
                         <div>
                             <a href="{{ route('admin.products.trashed') }}" class="btn btn-outline-secondary mr-1">
-                                Ver produtos eliminados
+                                <i class="ti ti-trash me-2"></i>Ver produtos eliminados
                             </a>
                             <a href="{{ route('admin.products.create') }}" class="btn btn-primary">
                                 <i class="ti ti-plus me-2"></i>Adicionar Produto
@@ -91,21 +91,25 @@
                                                 <td>
                                                     {{ $product->createdBy ? getShortText($product->createdBy->getShortName(), 15) : 'Sistema' }}
                                                 </td>
-                                                <td class="d-flex gap-2">
-                                                    {{-- Editar --}}
-                                                    <a href="{{ route('admin.products.edit', $product->id) }}"
-                                                        class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                        <i class="ti ti-edit text-xl leading-none"></i>
-                                                    </a>
+                                                <td>
+                                                    <div class="d-flex gap-2 justify-content-center">
+                                                        {{-- Editar --}}
+                                                        <a href="{{ route('admin.products.edit', $product->id) }}"
+                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-warning"
+                                                            title="Editar">
+                                                            <i class="ti ti-edit text-xl leading-none"></i>
+                                                        </a>
 
-                                                    {{-- Excluir --}}
-                                                    <button type="button"
-                                                        class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
-                                                        data-pc-toggle="modal"
-                                                        data-pc-target="#deleteProductModal{{ $product->id }}"
-                                                        data-pc-animate="sticky-up">
-                                                        <i class="ti ti-trash text-xl leading-none"></i>
-                                                    </button>
+                                                        {{-- Excluir --}}
+                                                        <button type="button"
+                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-danger"
+                                                            data-pc-toggle="modal"
+                                                            data-pc-target="#deleteProductModal{{ $product->id }}"
+                                                            data-pc-animate="sticky-up"
+                                                            title="Excluir">
+                                                            <i class="ti ti-trash text-xl leading-none"></i>
+                                                        </button>
+                                                    </div>
                                                 </td>
                                             </tr>
 

@@ -16,7 +16,7 @@
                         <h5 class="mb-3 sm:mb-0">Lista de categorias</h5>
                         <div>
                             <a href="{{ route('admin.categories.trashed') }}" class="btn btn-outline-secondary mr-1">
-                                Ver categorias eliminadas
+                                <i class="ti ti-trash me-2"></i>Ver categorias eliminadas
                             </a>
                             <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">
                                 <i class="ti ti-plus me-2"></i>Adicionar Categoria
@@ -84,21 +84,25 @@
                                                     {{ $category->createdBy ? getShortText($category->createdBy->getShortName(), 15) : 'Sistema' }}
                                                 </td>
                                                 <td>{!! getFormattedDateTime($category->created_at, 'datetime') !!}</td>
-                                                <td class="d-flex gap-2">
-                                                    {{-- Editar --}}
-                                                    <a href="{{ route('admin.categories.edit', $category->id) }}"
-                                                        class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
-                                                        <i class="ti ti-edit text-xl leading-none"></i>
-                                                    </a>
+                                                <td>
+                                                    <div class="d-flex gap-2 justify-content-center">
+                                                        {{-- Editar --}}
+                                                        <a href="{{ route('admin.categories.edit', $category->id) }}"
+                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-warning"
+                                                            title="Editar">
+                                                            <i class="ti ti-edit text-xl leading-none"></i>
+                                                        </a>
 
-                                                    {{-- Excluir --}}
-                                                    <button type="button"
-                                                        class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
-                                                        data-pc-toggle="modal"
-                                                        data-pc-target="#deleteCategoryModal{{ $category->id }}"
-                                                        data-pc-animate="sticky-up">
-                                                        <i class="ti ti-trash text-xl leading-none"></i>
-                                                    </button>
+                                                        {{-- Excluir --}}
+                                                        <button type="button"
+                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-danger"
+                                                            data-pc-toggle="modal"
+                                                            data-pc-target="#deleteCategoryModal{{ $category->id }}"
+                                                            data-pc-animate="sticky-up"
+                                                            title="Excluir">
+                                                            <i class="ti ti-trash text-xl leading-none"></i>
+                                                        </button>
+                                                    </div>
                                                 </td>
                                             </tr>
 

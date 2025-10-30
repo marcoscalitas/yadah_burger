@@ -138,9 +138,9 @@
                                                                             </p>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary"
-                                                                            data-bs-dismiss="modal">Cancelar</button>
+                                                                    <div class="modal-footer d-flex gap-2 justify-content-end">
+                                                                        <button type="button" class="btn btn-outline-secondary"
+                                                                            data-pc-modal-dismiss="#restoreOrderModal{{ $order->id }}">Cancelar</button>
                                                                         <form method="POST"
                                                                             action="{{ route('admin.orders.restore', $order->id) }}"
                                                                             style="display: inline;">

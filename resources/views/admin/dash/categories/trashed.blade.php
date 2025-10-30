@@ -81,28 +81,67 @@
                                                     {{ $category->createdBy ? getShortText($category->createdBy->getShortName(), 15) : 'Sistema' }}
                                                 </td>
                                                 <td>{!! getFormattedDateTime($category->created_at, 'datetime') !!}</td>
-                                                <td class="d-flex gap-2">
-                                                    {{-- Restaurar --}}
-                                                    <form method="POST"
-                                                        action="{{ route('admin.categories.restore', $category->id) }}"
-                                                        style="display: inline;">
-                                                        @csrf
-                                                        @method('PATCH')
-                                                        <button type="submit"
-                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
+                                                <td>
+                                                    <div class="d-flex gap-2 justify-content-center">
+                                                        {{-- Restaurar --}}
+                                                        <button type="button"
+                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-success"
+                                                            data-pc-toggle="modal"
+                                                            data-pc-target="#restoreCategoryModal{{ $category->id }}"
                                                             title="Restaurar categoria">
                                                             <i class="ti ti-refresh text-xl leading-none"></i>
                                                         </button>
-                                                    </form>
 
-                                                    {{-- Excluir --}}
-                                                    <button type="button"
-                                                        class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
-                                                        data-pc-toggle="modal"
-                                                        data-pc-target="#deleteCategoryModal{{ $category->id }}"
-                                                        data-pc-animate="sticky-up">
-                                                        <i class="ti ti-trash text-xl leading-none"></i>
-                                                    </button>
+                                                        {{-- Excluir Permanentemente --}}
+                                                        <button type="button"
+                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-danger"
+                                                            data-pc-toggle="modal"
+                                                            data-pc-target="#deleteCategoryModal{{ $category->id }}"
+                                                            data-pc-animate="sticky-up"
+                                                            title="Excluir permanentemente">
+                                                            <i class="ti ti-trash text-xl leading-none"></i>
+                                                        </button>
+                                                    </div>
+
+                                                    {{-- Modal de Confirmação de Restauração --}}
+                                                    <div class="modal fade modal-animate" id="restoreCategoryModal{{ $category->id }}"
+                                                        tabindex="-1" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Confirmar restauração</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="text-center">
+                                                                        <i class="ti ti-refresh text-success" style="font-size: 3rem;"></i>
+                                                                        <h4 class="mt-3">Restaurar Categoria</h4>
+                                                                        <p class="text-muted">
+                                                                            Tem certeza que deseja restaurar a categoria
+                                                                            <strong>{{ $category->name }}</strong>?
+                                                                        </p>
+                                                                        <p class="text-muted">
+                                                                            A categoria voltará para a lista de categorias ativas.
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer d-flex gap-2 justify-content-end">
+                                                                    <button type="button" class="btn btn-outline-secondary"
+                                                                        data-pc-modal-dismiss="#restoreCategoryModal{{ $category->id }}">Cancelar</button>
+                                                                    <form method="POST"
+                                                                        action="{{ route('admin.categories.restore', $category->id) }}"
+                                                                        style="display: inline;">
+                                                                        @csrf
+                                                                        @method('PATCH')
+                                                                        <button type="submit" class="btn btn-success">
+                                                                            <i class="ti ti-refresh me-2"></i>Sim, restaurar
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </td>
                                             </tr>
 

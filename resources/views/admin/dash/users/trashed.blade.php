@@ -77,28 +77,67 @@
                                                 <td>{{ $user->getGender() }}</td>
                                                 <td>{{ $user->getRoleLabel() }}</td>
                                                 <td>{!! getStatusBadge($user->user_status) !!}</td>
-                                                <td class="d-flex gap-2">
-                                                    {{-- Restaurar --}}
-                                                    <form method="POST"
-                                                        action="{{ route('admin.users.restore', $user->id) }}"
-                                                        style="display: inline;">
-                                                        @csrf
-                                                        @method('PATCH')
-                                                        <button type="submit"
-                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
+                                                <td>
+                                                    <div class="d-flex gap-2 justify-content-center">
+                                                        {{-- Restaurar --}}
+                                                        <button type="button"
+                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-success"
+                                                            data-pc-toggle="modal"
+                                                            data-pc-target="#restoreUserModal{{ $user->id }}"
                                                             title="Restaurar usuário">
                                                             <i class="ti ti-refresh text-xl leading-none"></i>
                                                         </button>
-                                                    </form>
 
-                                                    {{-- Excluir --}}
-                                                    <button type="button"
-                                                        class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
-                                                        data-pc-toggle="modal"
-                                                        data-pc-target="#deleteUserModal{{ $user->id }}"
-                                                        data-pc-animate="sticky-up">
-                                                        <i class="ti ti-trash text-xl leading-none"></i>
-                                                    </button>
+                                                        {{-- Excluir Permanentemente --}}
+                                                        <button type="button"
+                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-danger"
+                                                            data-pc-toggle="modal"
+                                                            data-pc-target="#deleteUserModal{{ $user->id }}"
+                                                            data-pc-animate="sticky-up"
+                                                            title="Excluir permanentemente">
+                                                            <i class="ti ti-trash text-xl leading-none"></i>
+                                                        </button>
+                                                    </div>
+
+                                                    {{-- Modal de Confirmação de Restauração --}}
+                                                    <div class="modal fade modal-animate" id="restoreUserModal{{ $user->id }}"
+                                                        tabindex="-1" aria-hidden="true">
+                                                        <div class="modal-dialog modal-dialog-centered">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Confirmar restauração</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="text-center">
+                                                                        <i class="ti ti-refresh text-success" style="font-size: 3rem;"></i>
+                                                                        <h4 class="mt-3">Restaurar Utilizador</h4>
+                                                                        <p class="text-muted">
+                                                                            Tem certeza que deseja restaurar o utilizador
+                                                                            <strong>{{ $user->name }}</strong>?
+                                                                        </p>
+                                                                        <p class="text-muted">
+                                                                            O utilizador voltará para a lista de utilizadores ativos.
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer d-flex gap-2 justify-content-end">
+                                                                    <button type="button" class="btn btn-outline-secondary"
+                                                                        data-pc-modal-dismiss="#restoreUserModal{{ $user->id }}">Cancelar</button>
+                                                                    <form method="POST"
+                                                                        action="{{ route('admin.users.restore', $user->id) }}"
+                                                                        style="display: inline;">
+                                                                        @csrf
+                                                                        @method('PATCH')
+                                                                        <button type="submit" class="btn btn-success">
+                                                                            <i class="ti ti-refresh me-2"></i>Sim, restaurar
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </td>
                                             </tr>
 

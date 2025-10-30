@@ -16,7 +16,7 @@
                         <h5 class="mb-3 sm:mb-0">Lista de utilizadores</h5>
                         <div>
                             <a href="{{ route('admin.users.trashed') }}" class="btn btn-outline-secondary mr-1">
-                                Ver utilizadores eliminados
+                                <i class="ti ti-trash me-2"></i>Ver utilizadores eliminados
                             </a>
                             <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
                                 <i class="ti ti-plus me-2"></i>Adicionar Utilizador
@@ -83,16 +83,18 @@
                                                     <div class="d-flex gap-2 justify-content-center">
                                                         {{-- Editar --}}
                                                         <a href="{{ route('admin.users.edit', $user->id) }}"
-                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary">
+                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-warning"
+                                                            title="Editar">
                                                             <i class="ti ti-edit text-xl leading-none"></i>
                                                         </a>
 
                                                         {{-- Excluir --}}
                                                         <button type="button"
-                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
+                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-danger"
                                                             data-pc-toggle="modal"
                                                             data-pc-target="#deleteUserModal{{ $user->id }}"
-                                                            data-pc-animate="sticky-up">
+                                                            data-pc-animate="sticky-up"
+                                                            title="Excluir">
                                                             <i class="ti ti-trash text-xl leading-none"></i>
                                                         </button>
                                                 </td>
