@@ -110,11 +110,9 @@
                         <li class="pc-item {{ getActiveClass('admin.orders.create', 'active') }}">
                             <a class="pc-link" href="{{ route('admin.orders.create') }}" data-i18n="Criar">Criar</a>
                         </li>
-                        <li class="pc-item {{ getActiveClass('admin.orders.pending', 'active') }}">
-                            <a class="pc-link" href="javascript:void(0)" data-i18n="Pendentes">Pendentes</a>
-                        </li>
-                        <li class="pc-item {{ getActiveClass('admin.orders.completed', 'active') }}">
-                            <a class="pc-link" href="javascript:void(0)" data-i18n="Concluídos">Concluídos</a>
+                        <li class="pc-item {{ getActiveClass('admin.orders.trashed', 'active') }}">
+                            <a class="pc-link" href="{{ route('admin.orders.trashed') }}"
+                                data-i18n="Eliminados">Eliminados</a>
                         </li>
                     </ul>
                 </li>

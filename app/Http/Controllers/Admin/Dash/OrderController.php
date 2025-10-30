@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\OrderItem;
+use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -147,6 +148,13 @@ class OrderController extends Controller
                     'created_by' => $currentUser->id,
                 ]);
             }
+
+            // Gera e armazena a mensagem do WhatsApp
+            $whatsappService = new WhatsAppService();
+            $order->refresh(); // Recarrega o pedido com os items
+            $order->load(['orderItems.product']);
+            $whatsappMessage = $whatsappService->generateOrderMessage($order);
+            $order->update(['whatsapp_message' => $whatsappMessage]);
 
             DB::commit();
 
@@ -309,6 +317,13 @@ class OrderController extends Controller
                 ]);
             }
 
+            // Regenera a mensagem do WhatsApp com os dados atualizados
+            $whatsappService = new WhatsAppService();
+            $order->refresh(); // Recarrega o pedido com os novos items
+            $order->load(['orderItems.product']);
+            $whatsappMessage = $whatsappService->generateOrderMessage($order);
+            $order->update(['whatsapp_message' => $whatsappMessage]);
+
             DB::commit();
 
             return redirect()
@@ -362,6 +377,9 @@ class OrderController extends Controller
                 'updated_by' => Auth::id(),
             ]);
 
+            // Atualiza a mensagem do WhatsApp com o novo status
+            $order->updateWhatsAppMessage();
+
             $statusName = $order->getStatusName();
 
             return redirect()
@@ -369,6 +387,79 @@ class OrderController extends Controller
                 ->with('success', "Status do pedido atualizado para: {$statusName}");
         } catch (\Exception $e) {
             return back()->with('error', 'Erro ao atualizar status: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Display a listing of trashed orders.
+     */
+    public function trashed()
+    {
+        checkIfIsAdmin('visualizar', self::ENTITY);
+
+        $orders = Order::onlyTrashed()
+            ->with(['orderItems.product', 'createdBy'])
+            ->orderBy('deleted_at', 'desc')
+            ->paginate(10);
+
+        return view('admin.dash.orders.trashed', compact('orders'));
+    }
+
+    /**
+     * Restore the specified order from trash.
+     */
+    public function restore(string $id)
+    {
+        checkIfIsAdmin('restaurar', self::ENTITY);
+
+        try {
+            DB::beginTransaction();
+
+            $order = Order::onlyTrashed()->findOrFail($id);
+
+            // Restaura os items do pedido
+            $order->orderItems()->withTrashed()->restore();
+
+            // Restaura o pedido
+            $order->restore();
+
+            DB::commit();
+
+            return redirect()
+                ->route('admin.orders.trashed')
+                ->with('success', 'Pedido restaurado com sucesso!');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->with('error', 'Erro ao restaurar pedido: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Permanently delete the specified order.
+     */
+    public function forceDestroy(string $id)
+    {
+        checkIfIsAdmin('apagar_permanente', self::ENTITY);
+
+        try {
+            DB::beginTransaction();
+
+            $order = Order::onlyTrashed()->findOrFail($id);
+
+            // Remove permanentemente os items do pedido
+            $order->orderItems()->withTrashed()->forceDelete();
+
+            // Remove permanentemente o pedido
+            $order->forceDelete();
+
+            DB::commit();
+
+            return redirect()
+                ->route('admin.orders.trashed')
+                ->with('success', 'Pedido eliminado permanentemente!');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->with('error', 'Erro ao eliminar pedido: ' . $e->getMessage());
         }
     }
 

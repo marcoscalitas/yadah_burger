@@ -132,6 +132,22 @@ return [
         ],
     ],
 
+    'admin.orders.show' => [
+        'title' => 'Detalhes do Pedido',
+        'items' => [
+            ['label' => 'Pedidos', 'route' => 'admin.orders.index'],
+            // O número do pedido será adicionado dinamicamente na view
+        ],
+    ],
+
+    'admin.orders.edit' => [
+        'title' => 'Editar Pedido',
+        'items' => [
+            ['label' => 'Pedidos', 'route' => 'admin.orders.index'],
+            // O número do pedido será adicionado dinamicamente na view
+        ],
+    ],
+
     'admin.orders.trashed' => [
         'title' => 'Pedidos Eliminados',
         'items' => [

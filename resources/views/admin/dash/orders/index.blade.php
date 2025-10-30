@@ -14,10 +14,10 @@
                 <div class="card-header">
                     <div class="sm:flex items-center justify-between">
                         <h5 class="mb-3 sm:mb-0">Lista de pedidos</h5>
-                        <div>
-                            {{-- <a href="{{ route('admin.orders.trashed') }}" class="btn btn-outline-secondary mr-1">
-                                Ver pedidos eliminados
-                            </a> --}}
+                        <div class="d-flex gap-2">
+                            <a href="{{ route('admin.orders.trashed') }}" class="btn btn-outline-secondary">
+                                <i class="ti ti-trash me-2"></i>Ver pedidos eliminados
+                            </a>
                             <a href="{{ route('admin.orders.create') }}" class="btn btn-primary">
                                 <i class="ti ti-plus me-2"></i>Adicionar Pedido
                             </a>
@@ -112,23 +112,76 @@
 
                                                         @if (in_array($order->order_status, ['p', 'x']))
                                                             <button type="button"
-                                                                class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary text-danger"
+                                                                class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-secondary"
+                                                                data-pc-toggle="modal"
+                                                                data-pc-target="#deleteOrderModal{{ $order->id }}"
+                                                                data-pc-animate="sticky-up"
                                                                 title="Excluir">
                                                                 <i class="ti ti-trash text-xl leading-none"></i>
                                                             </button>
-
-                                                            <form id="delete-form-{{ $order->id }}"
-                                                                action="{{ route('admin.orders.destroy', $order) }}"
-                                                                method="POST" style="display: none;">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                            </form>
                                                         @endif
                                                     </div>
                                                 </td>
                                             </tr>
 
                                             <!-- Modal de Confirmação de Exclusão -->
+                                            @if (in_array($order->order_status, ['p', 'x']))
+                                                <div id="deleteOrderModal{{ $order->id }}" class="modal fade" tabindex="-1"
+                                                    role="dialog" aria-labelledby="deleteOrderModalLabel{{ $order->id }}"
+                                                    aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                                        <div class="modal-content">
+                                                            <form method="POST"
+                                                                action="{{ route('admin.orders.destroy', $order) }}">
+                                                                @csrf
+                                                                @method('DELETE')
+
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title font-semibold text-danger text-lg">
+                                                                        Eliminar Pedido
+                                                                    </h5>
+                                                                    <button type="button"
+                                                                        data-pc-modal-dismiss="#deleteOrderModal{{ $order->id }}"
+                                                                        class="text-lg flex items-center justify-center rounded w-7 h-7 text-secondary-500 hover:bg-danger-500/10 hover:text-danger-500">
+                                                                        <i class="ti ti-x"></i>
+                                                                    </button>
+                                                                </div>
+
+                                                                <div class="modal-body">
+                                                                    <div class="flex items-center gap-3 mb-4">
+                                                                        <div class="shrink-0">
+                                                                            <i class="ti ti-receipt text-5xl text-primary"></i>
+                                                                        </div>
+                                                                        <div>
+                                                                            <h6 class="font-semibold">
+                                                                                Pedido #{{ $order->order_number }}</h6>
+                                                                            <p class="text-sm text-muted">{{ $order->customer_name }}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <p class="text-muted">
+                                                                        Tem certeza de que deseja
+                                                                        <strong>
+                                                                            <span class="text-danger">eliminar</span>
+                                                                        </strong>
+                                                                        este pedido? Esta ação só pode ser desfeita por um
+                                                                        administrador.
+                                                                    </p>
+                                                                </div>
+
+                                                                <div class="modal-footer flex justify-end gap-3 border-t">
+                                                                    <button type="button" class="btn btn-outline-secondary"
+                                                                        data-pc-modal-dismiss="#deleteOrderModal{{ $order->id }}">
+                                                                        Cancelar
+                                                                    </button>
+                                                                    <button type="submit" class="btn btn-danger">
+                                                                        <i class="ti ti-trash me-2"></i> Eliminar
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
 
                                         @empty
                                             <tr>

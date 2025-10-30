@@ -123,4 +123,17 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | WhatsApp Business Number
+    |--------------------------------------------------------------------------
+    |
+    | Número do WhatsApp da empresa para receber notificações de pedidos.
+    | Formato: código do país + número (apenas números)
+    | Angola: 244 + número (exemplo: 244936173453)
+    |
+    */
+
+    'whatsapp_business_number' => env('WHATSAPP_BUSINESS_NUMBER', '244936173453'),
+
 ];

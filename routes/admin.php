@@ -78,29 +78,31 @@ Route::middleware(['auth.admin', 'verified'])->group(function () {
         Route::post('/change-email', 'updateEmail')->name('update.email');
         Route::delete('/delete-account', 'deleteAccount')->name('delete.account');
     });
-    // Tables CRUD
-    Route::resource('/users', UserController::class)->except(['show']);
-    Route::resource('/orders', OrderController::class);
-    Route::resource('/products', ProductController::class)->except(['show']);
-    Route::resource('/categories', CategoryController::class)->except(['show']);
-
-    // Additional order routes
-    Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.update.status');
-
-    // Utils
-    Route::post('/users/{id}/update-photo', [UserController::class, 'uploadPhoto'])->name('users.update.photo');
-    Route::patch('/users/{id}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset.password');
-    Route::post('/users/{id}/send-verification-email', [UserController::class, 'sendVerificationEmail'])->name('users.send.verification.email');
 
     // =======================================================================
-    // SOFT DELETE ROUTES - Trashed, Restore, Force Delete
+    // ADMIN - Private routes (login required + verified)
     // =======================================================================
 
-    // Users - Soft Delete Routes
+    // Users - Soft Delete & Utils Routes
     Route::prefix('users')->name('users.')->controller(UserController::class)->group(function () {
+        // Soft Delete
         Route::get('trashed', 'trashed')->name('trashed');
         Route::patch('{id}/restore', 'restore')->name('restore');
         Route::delete('{id}/force-destroy', 'forceDestroy')->name('force.destroy');
+        // Utils
+        Route::post('{id}/update-photo', 'uploadPhoto')->name('update.photo');
+        Route::patch('{id}/reset-password', 'resetPassword')->name('reset.password');
+        Route::post('{id}/send-verification-email', 'sendVerificationEmail')->name('send.verification.email');
+    });
+
+    // Orders - Soft Delete & Additional Routes
+    Route::prefix('orders')->name('orders.')->controller(OrderController::class)->group(function () {
+        // Soft Delete
+        Route::get('trashed', 'trashed')->name('trashed');
+        Route::patch('{id}/restore', 'restore')->name('restore');
+        Route::delete('{id}/force-destroy', 'forceDestroy')->name('force.destroy');
+        // Utils
+        Route::patch('{order}/status', 'updateStatus')->name('update.status');
     });
 
     // Categories - Soft Delete Routes
@@ -116,4 +118,10 @@ Route::middleware(['auth.admin', 'verified'])->group(function () {
         Route::patch('{id}/restore', 'restore')->name('restore');
         Route::delete('{id}/force-destroy', 'forceDestroy')->name('force.destroy');
     });
+
+    // Tables CRUD (Route::resource vem DEPOIS das rotas customizadas)
+    Route::resource('/users', UserController::class)->except(['show']);
+    Route::resource('/orders', OrderController::class);
+    Route::resource('/products', ProductController::class)->except(['show']);
+    Route::resource('/categories', CategoryController::class)->except(['show']);
 });

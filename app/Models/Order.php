@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Order extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'orders';
 
@@ -28,6 +29,7 @@ class Order extends Model
         'subtotal',
         'total_amount',
         'discount_amount',
+        'whatsapp_message',
         'order_status',
         'created_by',
         'updated_by',
@@ -199,5 +201,47 @@ class Order extends Model
     public function updatedBy()
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    /**
+     * Gera o link do WhatsApp para este pedido
+     * Usa a mensagem armazenada para evitar queries desnecessárias
+     */
+    public function getWhatsAppLink(): string
+    {
+        // Número da empresa Yadah Burguer
+        $businessPhone = config('app.whatsapp_business_number');
+        // Remove caracteres não numéricos
+        $businessPhone = preg_replace('/\D/', '', $businessPhone);
+
+        // Se não começar com código do país, adiciona 244 (Angola)
+        if (strlen($businessPhone) === 9 && !str_starts_with($businessPhone, '244')) {
+            $businessPhone = '244' . $businessPhone;
+        }
+
+        // Usa a mensagem armazenada ao invés de gerar novamente
+        $message = $this->whatsapp_message ?? $this->getWhatsAppMessage();
+
+        return "https://wa.me/{$businessPhone}?text=" . urlencode($message);
+    }
+
+    /**
+     * Gera a mensagem do WhatsApp para este pedido
+     * Este método só deve ser usado internamente quando a mensagem precisa ser regenerada
+     */
+    public function getWhatsAppMessage(): string
+    {
+        $whatsappService = new \App\Services\WhatsAppService();
+        return $whatsappService->generateOrderMessage($this);
+    }
+
+    /**
+     * Atualiza a mensagem do WhatsApp armazenada
+     * Deve ser chamado sempre que os dados do pedido mudarem
+     */
+    public function updateWhatsAppMessage(): void
+    {
+        $this->whatsapp_message = $this->getWhatsAppMessage();
+        $this->saveQuietly(); // Salva sem disparar eventos
     }
 }

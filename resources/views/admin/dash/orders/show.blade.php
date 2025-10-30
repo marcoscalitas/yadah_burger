@@ -24,14 +24,18 @@
                             </p>
                         </div>
                         <div class="flex gap-2">
-                            @if ($order->canBeCancelled())
-                                <a href="{{ route('admin.orders.edit', $order) }}" class="btn btn-warning">
-                                    <i class="ti ti-edit me-2"></i>Editar
-                                </a>
-                            @endif
                             <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary">
                                 <i class="ti ti-arrow-left me-2"></i>Voltar
                             </a>
+                            <!-- Botão WhatsApp -->
+                            <a href="{{ $order->getWhatsAppLink() }}" target="_blank" class="btn btn-success">
+                                <i class="ti ti-brand-whatsapp me-2"></i>Enviar WhatsApp
+                            </a>
+                            @if ($order->canBeCancelled())
+                                <a href="{{ route('admin.orders.edit', $order) }}" class="btn btn-primary">
+                                    <i class="ti ti-edit me-2"></i>Editar
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>
