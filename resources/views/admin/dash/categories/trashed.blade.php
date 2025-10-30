@@ -64,7 +64,7 @@
                                                         </div>
 
                                                         <div class="grow ltr:ml-3 rtl:mr-3">
-                                                            <h6 class="mb-0">{{ $category->name }}</h6>
+                                                            <h6 class="mb-0">{{ getShortText($category->name, 25) }}</h6>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -110,7 +110,8 @@
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
                                                                     <h5 class="modal-title">Confirmar restauração</h5>
-                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                    <button type="button" class="btn-close"
+                                                                        data-pc-modal-dismiss="#restoreCategoryModal{{ $category->id }}"
                                                                         aria-label="Close"></button>
                                                                 </div>
                                                                 <div class="modal-body">
@@ -196,7 +197,7 @@
                                                                     Esta ação não poderá ser desfeita.
                                                                 </p>
                                                             </div>
-                                                            <div class="modal-footer flex justify-end gap-3 border-t">
+                                                            <div class="modal-footer d-flex gap-2 justify-content-end">
                                                                 <button type="button" class="btn btn-outline-secondary"
                                                                     data-pc-modal-dismiss="#deleteCategoryModal{{ $category->id }}">
                                                                     Cancelar

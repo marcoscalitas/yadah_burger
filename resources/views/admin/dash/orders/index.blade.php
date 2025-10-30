@@ -37,10 +37,10 @@
                                             <th data-sortable="true" style="width: 10%;">
                                                 <button class="datatable-sorter">Nº Pedido</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 18%;">
+                                            <th data-sortable="true" style="width: 20%;">
                                                 <button class="datatable-sorter">Cliente</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 12%;">
+                                            <th data-sortable="true" style="width: 13%;">
                                                 <button class="datatable-sorter">Telefone</button>
                                             </th>
                                             <th data-sortable="true" style="width: 10%;">
@@ -52,10 +52,10 @@
                                             <th data-sortable="true" style="width: 10%;">
                                                 <button class="datatable-sorter">Estado</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 10%;">
+                                            <th data-sortable="true" style="width: 14%;">
                                                 <button class="datatable-sorter">Data</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 6%;">
+                                            <th data-sortable="true" style="width: 8%;">
                                                 <button class="datatable-sorter">Ação</button>
                                             </th>
                                         </tr>

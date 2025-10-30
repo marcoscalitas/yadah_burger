@@ -106,7 +106,8 @@
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
                                                                     <h5 class="modal-title">Confirmar restauração</h5>
-                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                    <button type="button" class="btn-close"
+                                                                        data-pc-modal-dismiss="#restoreUserModal{{ $user->id }}"
                                                                         aria-label="Close"></button>
                                                                 </div>
                                                                 <div class="modal-body">
@@ -188,7 +189,7 @@
                                                                 </p>
                                                             </div>
 
-                                                            <div class="modal-footer flex justify-end gap-3 border-t">
+                                                            <div class="modal-footer d-flex gap-2 justify-content-end">
                                                                 <button type="button" class="btn btn-outline-secondary"
                                                                     data-pc-modal-dismiss="#deleteUserModal{{ $user->id }}">
                                                                     Cancelar

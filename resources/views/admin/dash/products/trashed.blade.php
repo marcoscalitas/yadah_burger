@@ -28,19 +28,19 @@
                                 <table class="table table-hover datatable-table" id="pc-dt-simple">
                                     <thead>
                                         <tr>
-                                            <th data-sortable="true" style="width: 6%;">
+                                            <th data-sortable="true" style="width: 5%;">
                                                 <button class="datatable-sorter">#</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 26%;">
+                                            <th data-sortable="true" style="width: 25%;">
                                                 <button class="datatable-sorter">Produto</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 10%;">
+                                            <th data-sortable="true" style="width: 12%;">
                                                 <button class="datatable-sorter">Categoria</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 10%;">
+                                            <th data-sortable="true" style="width: 18%;">
                                                 <button class="datatable-sorter">Descrição</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 15%;">
+                                            <th data-sortable="true" style="width: 12%;">
                                                 <button class="datatable-sorter">Preço</button>
                                             </th>
                                             <th data-sortable="true" style="width: 10%;">
@@ -49,7 +49,7 @@
                                             <th data-sortable="true" style="width: 10%;">
                                                 <button class="datatable-sorter">Criada por</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 15%;">
+                                            <th data-sortable="true" style="width: 8%;">
                                                 <button class="datatable-sorter">Ações</button>
                                             </th>
                                         </tr>
@@ -117,7 +117,8 @@
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
                                                                     <h5 class="modal-title">Confirmar restauração</h5>
-                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                    <button type="button" class="btn-close"
+                                                                        data-pc-modal-dismiss="#restoreProductModal{{ $product->id }}"
                                                                         aria-label="Close"></button>
                                                                 </div>
                                                                 <div class="modal-body">
@@ -203,7 +204,7 @@
                                                                     Esta ação não poderá ser desfeita.
                                                                 </p>
                                                             </div>
-                                                            <div class="modal-footer flex justify-end gap-3 border-t">
+                                                            <div class="modal-footer d-flex gap-2 justify-content-end">
                                                                 <button type="button" class="btn btn-outline-secondary"
                                                                     data-pc-modal-dismiss="#deleteProductModal{{ $product->id }}">
                                                                     Cancelar

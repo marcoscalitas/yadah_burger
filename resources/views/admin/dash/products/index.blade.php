@@ -31,19 +31,19 @@
                                 <table class="table table-hover datatable-table" id="pc-dt-simple">
                                     <thead>
                                         <tr>
-                                            <th data-sortable="true" style="width: 6%;">
+                                            <th data-sortable="true" style="width: 5%;">
                                                 <button class="datatable-sorter">#</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 26%;">
+                                            <th data-sortable="true" style="width: 25%;">
                                                 <button class="datatable-sorter">Produto</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 10%;">
+                                            <th data-sortable="true" style="width: 12%;">
                                                 <button class="datatable-sorter">Categoria</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 10%;">
+                                            <th data-sortable="true" style="width: 18%;">
                                                 <button class="datatable-sorter">Descrição</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 15%;">
+                                            <th data-sortable="true" style="width: 12%;">
                                                 <button class="datatable-sorter">Preço</button>
                                             </th>
                                             <th data-sortable="true" style="width: 10%;">
@@ -52,7 +52,7 @@
                                             <th data-sortable="true" style="width: 10%;">
                                                 <button class="datatable-sorter">Criada por</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 15%;">
+                                            <th data-sortable="true" style="width: 8%;">
                                                 <button class="datatable-sorter">Ações</button>
                                             </th>
                                         </tr>

@@ -21,195 +21,222 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="card-body pt-3">
-                    @if ($orders->count() === 0)
-                        <div class="text-center py-5">
-                            <i class="ti ti-trash text-6xl text-muted mb-3"></i>
-                            <p class="text-muted">Nenhum pedido eliminado encontrado</p>
-                        </div>
-                    @else
-                        <div class="table-responsive">
-                            <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
-                                <div class="datatable-container">
-                                    <table class="table table-hover datatable-table" id="pc-dt-simple">
-                                        <thead>
-                                            <tr>
-                                                <th data-sortable="true" style="width: 5%;">
-                                                    <button class="datatable-sorter">#</button>
-                                                </th>
-                                                <th data-sortable="true" style="width: 10%;">
-                                                    <button class="datatable-sorter">Nº Pedido</button>
-                                                </th>
-                                                <th data-sortable="true" style="width: 18%;">
-                                                    <button class="datatable-sorter">Cliente</button>
-                                                </th>
-                                                <th data-sortable="true" style="width: 12%;">
-                                                    <button class="datatable-sorter">Telefone</button>
-                                                </th>
-                                                <th data-sortable="true" style="width: 10%;">
-                                                    <button class="datatable-sorter">Total</button>
-                                                </th>
-                                                <th data-sortable="true" style="width: 10%;">
-                                                    <button class="datatable-sorter">Estado</button>
-                                                </th>
-                                                <th data-sortable="true" style="width: 10%;">
-                                                    <button class="datatable-sorter">Eliminado em</button>
-                                                </th>
-                                                <th data-sortable="true" style="width: 6%;">
-                                                    <button class="datatable-sorter">Ação</button>
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($orders as $index => $order)
-                                                <tr data-index="{{ $index }}" data-id="{{ $order->id }}">
-                                                    <td>{{ $index + 1 }}</td>
+                    <div class="table-responsive">
+                        <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
+                            <div class="datatable-container">
+                                <table class="table table-hover datatable-table" id="pc-dt-simple">
+                                    <thead>
+                                        <tr>
+                                            <th data-sortable="true" style="width: 5%;">
+                                                <button class="datatable-sorter">#</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 10%;">
+                                                <button class="datatable-sorter">Nº Pedido</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 20%;">
+                                                <button class="datatable-sorter">Cliente</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 13%;">
+                                                <button class="datatable-sorter">Telefone</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 10%;">
+                                                <button class="datatable-sorter">Tipo</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 10%;">
+                                                <button class="datatable-sorter">Total</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 10%;">
+                                                <button class="datatable-sorter">Estado</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 14%;">
+                                                <button class="datatable-sorter">Data</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 8%;">
+                                                <button class="datatable-sorter">Ação</button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($orders as $index => $order)
+                                            <tr data-index="{{ $index }}" data-id="{{ $order->id }}">
+                                                <td>{{ $index + 1 }}</td>
 
-                                                    <td>
-                                                        <span class="text-muted fw-bold">
-                                                            #{{ $order->order_number }}
-                                                        </span>
-                                                    </td>
-
-                                                    <td>
-                                                        <div class="d-flex flex-column">
-                                                            <span class="fw-semibold">{{ $order->customer_name }}</span>
-                                                            <small class="text-muted">
-                                                                {{ $order->orderItems->count() }} itens
-                                                            </small>
-                                                        </div>
-                                                    </td>
-
-                                                    <td>{{ getFormattedPhone($order->customer_phone) }}</td>
-
-                                                    <td>{!! getFormattedCurrency($order->total_amount) !!}</td>
-
-                                                    <td>{!! getStatusBadge($order->order_status) !!}</td>
-
-                                                    <td>
+                                                <td>
+                                                    <a href="{{ route('admin.orders.show', $order) }}"
+                                                        class="text-primary fw-bold text-decoration-none">
+                                                        #{{ $order->order_number }}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex flex-column">
+                                                        <span class="fw-semibold">{{ $order->customer_name }}</span>
                                                         <small class="text-muted">
-                                                            {!! getFormattedDateTime($order->deleted_at) !!}
+                                                            {{ $order->orderItems->count() }} itens
                                                         </small>
-                                                    </td>
+                                                    </div>
+                                                </td>
+                                                <td>{{ getFormattedPhone($order->customer_phone) }}</td>
+                                                <td>
+                                                    @if ($order->pickup_in_store)
+                                                        <span class="badge bg-light-info">
+                                                            <i class="ti ti-shopping-bag me-1"></i>Retirada
+                                                        </span>
+                                                    @else
+                                                        <span class="badge bg-light-warning">
+                                                            <i class="ti ti-truck-delivery me-1"></i>Entrega
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                                <td>{!! getFormattedCurrency($order->total_amount) !!}</td>
+                                                <td>{!! getStatusBadge($order->order_status) !!}</td>
+                                                <td>{!! getFormattedDateTime($order->created_at) !!}</td>
+                                                <td>
+                                                    <div class="d-flex gap-2 justify-content-center">
+                                                        {{-- Restaurar --}}
+                                                        <button type="button"
+                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-success"
+                                                            data-pc-toggle="modal"
+                                                            data-pc-target="#restoreOrderModal{{ $order->id }}"
+                                                            title="Restaurar pedido">
+                                                            <i class="ti ti-refresh text-xl leading-none"></i>
+                                                        </button>
 
-                                                    <td>
-                                                        <div class="d-flex gap-2 justify-content-center">
-                                                            {{-- Restaurar --}}
-                                                            <button type="button"
-                                                                class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-success"
-                                                                data-pc-toggle="modal"
-                                                                data-pc-target="#restoreOrderModal{{ $order->id }}"
-                                                                title="Restaurar pedido">
-                                                                <i class="ti ti-refresh text-xl leading-none"></i>
-                                                            </button>
+                                                        {{-- Excluir Permanentemente --}}
+                                                        <button type="button"
+                                                            class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-danger"
+                                                            data-pc-toggle="modal"
+                                                            data-pc-target="#deleteOrderModal{{ $order->id }}"
+                                                            data-pc-animate="sticky-up" title="Excluir permanentemente">
+                                                            <i class="ti ti-trash text-xl leading-none"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
 
-                                                            {{-- Excluir Permanentemente --}}
-                                                            <button type="button"
-                                                                class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-danger"
-                                                                data-pc-toggle="modal"
-                                                                data-pc-target="#deleteOrderModal{{ $order->id }}"
-                                                                data-pc-animate="sticky-up"
-                                                                title="Excluir permanentemente">
-                                                                <i class="ti ti-trash text-xl leading-none"></i>
-                                                            </button>
+                                            {{-- Modal de Confirmação de Restauração --}}
+                                            <div class="modal fade modal-animate" id="restoreOrderModal{{ $order->id }}"
+                                                tabindex="-1" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Confirmar restauração</h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-pc-modal-dismiss="#restoreOrderModal{{ $order->id }}"
+                                                                aria-label="Close"></button>
                                                         </div>
-
-                                                        {{-- Modal de Confirmação de Restauração --}}
-                                                        <div class="modal fade modal-animate" id="restoreOrderModal{{ $order->id }}"
-                                                            tabindex="-1" aria-hidden="true">
-                                                            <div class="modal-dialog modal-dialog-centered">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h5 class="modal-title">Confirmar restauração</h5>
-                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                            aria-label="Close"></button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <div class="text-center">
-                                                                            <i class="ti ti-refresh text-success" style="font-size: 3rem;"></i>
-                                                                            <h4 class="mt-3">Restaurar Pedido</h4>
-                                                                            <p class="text-muted">
-                                                                                Tem certeza que deseja restaurar o pedido
-                                                                                <strong>#{{ $order->order_number }}</strong>?
-                                                                            </p>
-                                                                            <p class="text-muted">
-                                                                                O pedido voltará para a lista de pedidos ativos.
-                                                                            </p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer d-flex gap-2 justify-content-end">
-                                                                        <button type="button" class="btn btn-outline-secondary"
-                                                                            data-pc-modal-dismiss="#restoreOrderModal{{ $order->id }}">Cancelar</button>
-                                                                        <form method="POST"
-                                                                            action="{{ route('admin.orders.restore', $order->id) }}"
-                                                                            style="display: inline;">
-                                                                            @csrf
-                                                                            @method('PATCH')
-                                                                            <button type="submit" class="btn btn-success">
-                                                                                <i class="ti ti-refresh me-2"></i>Sim, restaurar
-                                                                            </button>
-                                                                        </form>
-                                                                    </div>
-                                                                </div>
+                                                        <div class="modal-body">
+                                                            <div class="text-center">
+                                                                <i class="ti ti-refresh text-success"
+                                                                    style="font-size: 3rem;"></i>
+                                                                <h4 class="mt-3">Restaurar Pedido</h4>
+                                                                <p class="text-muted">
+                                                                    Tem certeza que deseja restaurar o pedido
+                                                                    <strong>#{{ $order->order_number }}</strong>?
+                                                                </p>
+                                                                <p class="text-muted">
+                                                                    O pedido voltará para a lista de pedidos
+                                                                    ativos.
+                                                                </p>
                                                             </div>
                                                         </div>
+                                                        <div class="modal-footer d-flex gap-2 justify-content-end">
+                                                            <button type="button" class="btn btn-outline-secondary"
+                                                                data-pc-modal-dismiss="#restoreOrderModal{{ $order->id }}">Cancelar</button>
+                                                            <form method="POST"
+                                                                action="{{ route('admin.orders.restore', $order->id) }}"
+                                                                style="display: inline;">
+                                                                @csrf
+                                                                @method('PATCH')
+                                                                <button type="submit" class="btn btn-success">
+                                                                    <i class="ti ti-refresh me-2"></i>Sim,
+                                                                    restaurar
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                                                        {{-- Modal de Confirmação de Exclusão Permanente --}}
-                                                        <div class="modal fade modal-animate" id="deleteOrderModal{{ $order->id }}"
-                                                            tabindex="-1" aria-hidden="true">
-                                                            <div class="modal-dialog modal-dialog-centered">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h5 class="modal-title">Confirmar exclusão permanente</h5>
-                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                            aria-label="Close"></button>
+                                            <!-- Modal de Confirmação de Exclusão -->
+                                            <div id="deleteOrderModal{{ $order->id }}" class="modal fade" tabindex="-1"
+                                                role="dialog" aria-labelledby="deleteOrderModalLabel{{ $order->id }}"
+                                                aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                        <form method="POST"
+                                                            action="{{ route('admin.orders.destroy', $order) }}">
+                                                            @csrf
+                                                            @method('DELETE')
+
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title font-semibold text-danger text-lg">
+                                                                    Eliminar Pedido
+                                                                </h5>
+                                                                <button type="button"
+                                                                    data-pc-modal-dismiss="#deleteOrderModal{{ $order->id }}"
+                                                                    class="text-lg flex items-center justify-center rounded w-7 h-7 text-secondary-500 hover:bg-danger-500/10 hover:text-danger-500">
+                                                                    <i class="ti ti-x"></i>
+                                                                </button>
+                                                            </div>
+
+                                                            <div class="modal-body">
+                                                                <div class="flex items-center gap-3 mb-4">
+                                                                    <div class="shrink-0">
+                                                                        <i class="ti ti-receipt text-5xl text-primary"></i>
                                                                     </div>
-                                                                    <div class="modal-body">
-                                                                        <div class="text-center">
-                                                                            <i class="ti ti-alert-triangle text-warning" style="font-size: 3rem;"></i>
-                                                                            <h4 class="mt-3">Atenção!</h4>
-                                                                            <p class="text-muted">
-                                                                                Tem certeza que deseja excluir permanentemente o pedido
-                                                                                <strong>#{{ $order->order_number }}</strong>?
-                                                                            </p>
-                                                                            <p class="text-danger">
-                                                                                <strong>Esta ação não pode ser desfeita!</strong>
-                                                                            </p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary"
-                                                                            data-bs-dismiss="modal">Cancelar</button>
-                                                                        <form method="POST"
-                                                                            action="{{ route('admin.orders.force.destroy', $order->id) }}"
-                                                                            style="display: inline;">
-                                                                            @csrf
-                                                                            @method('DELETE')
-                                                                            <button type="submit" class="btn btn-danger">
-                                                                                Sim, excluir permanentemente
-                                                                            </button>
-                                                                        </form>
+                                                                    <div>
+                                                                        <h6 class="font-semibold">
+                                                                            Pedido #{{ $order->order_number }}</h6>
+                                                                        <p class="text-sm text-muted">
+                                                                            {{ $order->customer_name }}</p>
                                                                     </div>
                                                                 </div>
+                                                                <p class="text-muted">
+                                                                    Tem certeza de que deseja
+                                                                    <strong>
+                                                                        <span class="text-danger">eliminar</span>
+                                                                    </strong>
+                                                                    este pedido? Esta ação só pode ser desfeita por um
+                                                                    administrador.
+                                                                </p>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
+
+                                                            <div class="modal-footer flex justify-end gap-3 border-t">
+                                                                <button type="button" class="btn btn-outline-secondary"
+                                                                    data-pc-modal-dismiss="#deleteOrderModal{{ $order->id }}">
+                                                                    Cancelar
+                                                                </button>
+                                                                <button type="submit" class="btn btn-danger">
+                                                                    <i class="ti ti-trash me-2"></i> Eliminar
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @empty
+                                            <tr>
+                                                <td colspan="9" class="text-center py-8">
+                                                    <div class="flex flex-col items-center justify-center">
+                                                        <i class="ti ti-tag text-6xl text-gray-300 mb-4"></i>
+                                                        <h5 class="text-gray-500 mb-2">Nenhum pedido encontrado.</h5>
+                                                        <p class="text-gray-400 mb-4">Ainda não há pedidos cadastrados
+                                                            no
+                                                            sistema.</p>
+                                                        <a href="{{ route('admin.orders.create') }}"
+                                                            class="btn btn-primary">
+                                                            <i class="ti ti-plus me-2"></i>Adicionar primeiro pedido
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-
-                        {{-- Paginação --}}
-                        @if ($orders->hasPages())
-                            <div class="mt-4">
-                                {{ $orders->links() }}
-                            </div>
-                        @endif
-                    @endif
+                    </div>
                 </div>
             </div>
         </div>

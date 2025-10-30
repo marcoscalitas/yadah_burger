@@ -67,7 +67,7 @@
                                                         </div>
 
                                                         <div class="grow ltr:ml-3 rtl:mr-3">
-                                                            <h6 class="mb-0">{{ $category->name }}</h6>
+                                                            <h6 class="mb-0">{{ getShortText($category->name, 25) }}</h6>
                                                         </div>
                                                     </div>
                                                 </td>
