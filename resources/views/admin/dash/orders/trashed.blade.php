@@ -70,13 +70,13 @@
                                                 </td>
                                                 <td>
                                                     <div class="d-flex flex-column">
-                                                        <span class="fw-semibold">{{ $order->customer_name }}</span>
+                                                        <span class="fw-semibold">{{ getShortName($order->getDisplayCustomerName()) }}</span>
                                                         <small class="text-muted">
                                                             {{ $order->orderItems->count() }} itens
                                                         </small>
                                                     </div>
                                                 </td>
-                                                <td>{{ getFormattedPhone($order->customer_phone) }}</td>
+                                                <td>{{ getFormattedPhone($order->getDisplayCustomerPhone()) }}</td>
                                                 <td>
                                                     @if ($order->pickup_in_store)
                                                         <span class="badge bg-light-info">
@@ -191,7 +191,7 @@
                                                                         <h6 class="font-semibold">
                                                                             Pedido #{{ $order->order_number }}</h6>
                                                                         <p class="text-sm text-muted">
-                                                                            {{ $order->customer_name }}</p>
+                                                                            {{ $order->getDisplayCustomerName() }}</p>
                                                                     </div>
                                                                 </div>
                                                                 <p class="text-muted">

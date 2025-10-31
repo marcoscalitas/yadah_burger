@@ -20,8 +20,8 @@
                             src="{{ getCurrentUser('admin')->getImageUrl() }}" alt="user-image" />
                         <div class="ml-4 mr-2 grow">
                             <h6 class="mb-0 text-base font-semibold truncate max-w-[130px]"
-                                title="{{ getCurrentUser('admin')->getShortName() }}">
-                                {{ getCurrentUser('admin')->getShortName() }}</h6>
+                                title="{{ getShortName(getCurrentUser('admin')->fullname) }}">
+                                {{ getShortName(getCurrentUser('admin')->fullname) }}</h6>
                             <small class="text-xs opacity-75">{{ getCurrentUser('admin')->getRoleLabel() }}</small>
                         </div>
                         <a class="shrink-0 btn btn-icon inline-flex btn-link-secondary" data-pc-toggle="collapse"

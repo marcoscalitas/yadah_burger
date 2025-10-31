@@ -107,13 +107,13 @@
                         <div class="col-span-12 sm:col-span-6">
                             <div class="mb-1">
                                 <label class="form-label text-muted">Nome</label>
-                                <p class="fw-bold mb-0">{{ $order->customer_name }}</p>
+                                <p class="fw-bold mb-0">{{ $order->getDisplayCustomerName() }}</p>
                             </div>
                         </div>
                         <div class="col-span-12 sm:col-span-6">
                             <div class="mb-1">
                                 <label class="form-label text-muted">Telefone</label>
-                                <p class="fw-bold mb-0">{{ $order->customer_phone ?? 'Não informado' }}</p>
+                                <p class="fw-bold mb-0">{{ getFormattedPhone($order->getDisplayCustomerPhone()) ?: 'Não informado' }}</p>
                             </div>
                         </div>
                         <div class="col-span-12">
@@ -260,7 +260,7 @@
                         <div class="col-span-12 sm:col-span-6">
                             <div class="mb-1">
                                 <label class="form-label text-muted">Criado por</label>
-                                <p class="fw-bold mb-0">{{ $order->createdBy->name ?? 'Sistema' }}</p>
+                                <p class="fw-bold mb-0">{{ $order->createdBy ? getShortName($order->createdBy->name) : 'Sistema' }}</p>
                                 <p class="text-muted small mb-0">{{ $order->created_at->format('d/m/Y H:i:s') }}</p>
                             </div>
                         </div>
@@ -268,7 +268,7 @@
                             <div class="col-span-12 sm:col-span-6">
                                 <div class="mb-1">
                                     <label class="form-label text-muted">Última atualização</label>
-                                    <p class="fw-bold mb-0">{{ $order->updatedBy->name ?? 'Sistema' }}</p>
+                                    <p class="fw-bold mb-0">{{ $order->updatedBy ? getShortName($order->updatedBy->name) : 'Sistema' }}</p>
                                     <p class="text-muted small mb-0">{{ $order->updated_at->format('d/m/Y H:i:s') }}</p>
                                 </div>
                             </div>

@@ -86,7 +86,7 @@
                                                 <td>{!! getProductPrice($product) !!}</td>
                                                 <td>{!! getStatusBadge($product->product_status) !!}</td>
                                                 <td>
-                                                    {{ $product->createdBy ? getShortText($product->createdBy->getShortName(), 15) : 'Sistema' }}
+                                                    {{ $product->createdBy ? getShortText(getShortName($product->createdBy->name), 15) : 'Sistema' }}
                                                 </td>
                                                 <td>
                                                     <div class="flex gap-3 justify-content-center">

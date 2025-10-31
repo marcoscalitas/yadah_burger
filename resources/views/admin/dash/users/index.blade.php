@@ -70,7 +70,7 @@
                                                         </div>
 
                                                         <div class="grow ltr:ml-3 rtl:mr-3">
-                                                            <h6 class="mb-0">{{ $user->getShortName() }}</h6>
+                                                            <h6 class="mb-0">{{ getShortName($user->fullname) }}</h6>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -131,7 +131,7 @@
                                                                     </div>
                                                                     <div>
                                                                         <h6 class="font-semibold">
-                                                                            {{ $user->getShortName() }}</h6>
+                                                                            {{ getShortName($user->fullname) }}</h6>
                                                                     </div>
                                                                 </div>
                                                                 <p class="text-muted">

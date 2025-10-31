@@ -68,17 +68,6 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-    public function getShortName(): string
-    {
-        $names = explode(' ', trim($this->fullname));
-
-        if (count($names) === 0) {
-            return '';
-        }
-
-        return $names[0].' '.(count($names) > 1 ? end($names) : '');
-    }
-
     public function getRoleLabel(): string
     {
         return match ([$this->gender, $this->role]) {

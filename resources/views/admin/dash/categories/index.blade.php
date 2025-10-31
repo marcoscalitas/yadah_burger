@@ -81,7 +81,7 @@
                                                 </td>
                                                 <td>{!! getStatusBadge($category->category_status) !!}</td>
                                                 <td>
-                                                    {{ $category->createdBy ? getShortText($category->createdBy->getShortName(), 15) : 'Sistema' }}
+                                                    {{ $category->createdBy ? getShortText(getShortName($category->createdBy->name), 15) : 'Sistema' }}
                                                 </td>
                                                 <td>{!! getFormattedDateTime($category->created_at, 'datetime') !!}</td>
                                                 <td>

@@ -29,9 +29,9 @@
                                     </label>
                                     <input type="text" class="form-control @error('fullname') is-invalid @enderror"
                                         name="fullname" value="{{ old('fullname', $user->fullname) }}" />
-                                    <small class="form-text text-muted">
-                                        Utilizador: {{ $user->getShortName() }}
-                                    </small>
+                                                                        <div class="mb-4 text-center">
+                                        Utilizador: {{ getShortName($user->fullname) }}
+                                    </div>
                                     @error('fullname')
                                         <div class="text-danger d-flex align-items-center mt-1">
                                             <i class="fas fa-exclamation-triangle me-1"></i> {{ $message }}

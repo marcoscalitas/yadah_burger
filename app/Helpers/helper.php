@@ -525,7 +525,7 @@ if (! function_exists('validatePassword')) {
 }
 
 /**
- * Retorna HTML formatado com data e hora em formato brasileiro
+ * Formata uma data ou datetime para exibição
  *
  * @param  \Carbon\Carbon|string|null  $datetime
  * @param  string  $type  Tipo de formatação: 'text' (d/m/Y), 'input' (Y-m-d), 'datetime' (com hora)
@@ -554,6 +554,35 @@ if (! function_exists('getFormattedDateTime')) {
         ];
 
         return ($formats[$type] ?? $formats['text'])();
+    }
+}
+
+/**
+ * Retorna apenas o primeiro e último nome de um nome completo
+ *
+ * @param  string|null  $fullName
+ * @return string
+ */
+if (! function_exists('getShortName')) {
+    function getShortName(?string $fullName): string
+    {
+        if (empty($fullName)) {
+            return '';
+        }
+
+        // Remove espaços extras e separa o nome em partes
+        $nameParts = array_filter(explode(' ', trim($fullName)));
+
+        // Se tiver apenas um nome, retorna ele
+        if (count($nameParts) === 1) {
+            return $nameParts[0];
+        }
+
+        // Retorna primeiro e último nome
+        $firstName = reset($nameParts);
+        $lastName = end($nameParts);
+
+        return $firstName . ' ' . $lastName;
     }
 }
 

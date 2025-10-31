@@ -19,6 +19,7 @@ class Order extends Model
      */
     protected $fillable = [
         'order_number',
+        'user_id',
         'customer_name',
         'customer_phone',
         'pickup_in_store',
@@ -201,6 +202,44 @@ class Order extends Model
     public function updatedBy()
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    /**
+     * Relacionamento com o cliente (usuário) - se existir
+     */
+    public function customer()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Obtém o nome do cliente
+     * Prioriza o relacionamento com User, se não existir usa customer_name
+     */
+    public function getDisplayCustomerName(): string
+    {
+        // Se tem relacionamento com user, usa o nome do usuário
+        if ($this->user_id && $this->customer) {
+            return $this->customer->name;
+        }
+
+        // Caso contrário, usa o valor direto do campo
+        return $this->customer_name ?? 'Cliente não identificado';
+    }
+
+    /**
+     * Obtém o telefone do cliente
+     * Prioriza o relacionamento com User, se não existir usa customer_phone
+     */
+    public function getDisplayCustomerPhone(): string
+    {
+        // Se tem relacionamento com user, usa o telefone do usuário
+        if ($this->user_id && $this->customer) {
+            return $this->customer->phone ?? $this->customer_phone ?? '';
+        }
+
+        // Caso contrário, usa o valor direto do campo
+        return $this->customer_phone ?? '';
     }
 
     /**

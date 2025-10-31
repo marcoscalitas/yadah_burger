@@ -31,26 +31,29 @@
                                 <table class="table table-hover datatable-table" id="pc-dt-simple">
                                     <thead>
                                         <tr>
-                                            <th data-sortable="true" style="width: 5%;">
+                                            <th data-sortable="true" style="width: 4%;">
                                                 <button class="datatable-sorter">#</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 12%;">
+                                            <th data-sortable="true" style="width: 11%;">
                                                 <button class="datatable-sorter">Nº Pedido</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 25%;">
+                                            <th data-sortable="true" style="width: 20%;">
                                                 <button class="datatable-sorter">Cliente</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 15%;">
+                                            <th data-sortable="true" style="width: 13%;">
                                                 <button class="datatable-sorter">Telefone</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 12%;">
+                                            <th data-sortable="true" style="width: 10%;">
                                                 <button class="datatable-sorter">Tipo</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 12%;">
+                                            <th data-sortable="true" style="width: 11%;">
                                                 <button class="datatable-sorter">Total</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 12%;">
+                                            <th data-sortable="true" style="width: 10%;">
                                                 <button class="datatable-sorter">Estado</button>
+                                            </th>
+                                            <th data-sortable="true" style="width: 14%;">
+                                                <button class="datatable-sorter">Data</button>
                                             </th>
                                             <th data-sortable="false" style="width: 7%;">
                                                 <span>Ação</span>
@@ -70,13 +73,13 @@
                                                 </td>
                                                 <td>
                                                     <div class="d-flex flex-column">
-                                                        <span class="fw-semibold">{{ $order->customer_name }}</span>
+                                                        <span class="fw-semibold">{{ getShortName($order->getDisplayCustomerName()) }}</span>
                                                         <small class="text-muted">
                                                             {{ $order->orderItems->count() }} itens
                                                         </small>
                                                     </div>
                                                 </td>
-                                                <td>{{ getFormattedPhone($order->customer_phone) }}</td>
+                                                <td>{{ getFormattedPhone($order->getDisplayCustomerPhone()) }}</td>
                                                 <td>
                                                     @if ($order->pickup_in_store)
                                                         <span class="badge bg-light-info">
@@ -90,6 +93,7 @@
                                                 </td>
                                                 <td>{!! getProductPrice($order->total_amount) !!}</td>
                                                 <td>{!! getStatusBadge($order->order_status) !!}</td>
+                                                <td>{!! getFormattedDateTime($order->created_at) !!}</td>
                                                 <td>
                                                     <div class="flex gap-2">
                                                         <a href="{{ route('admin.orders.show', $order) }}"
@@ -151,7 +155,7 @@
                                                                         <div>
                                                                             <h6 class="font-semibold">
                                                                                 Pedido #{{ $order->order_number }}</h6>
-                                                                            <p class="text-sm text-muted">{{ $order->customer_name }}</p>
+                                                                            <p class="text-sm text-muted">{{ $order->getDisplayCustomerName() }}</p>
                                                                         </div>
                                                                     </div>
                                                                     <p class="text-muted">

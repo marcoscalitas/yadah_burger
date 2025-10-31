@@ -32,7 +32,7 @@
                                 class="absolute status-indicator block w-4 h-4 bg-green-500
                                                 border-2 border-white rounded-full"></span>
                         </div>
-                        <h5 class="mb-0">{{ $user->getShortName() }}</h5>
+                        <h5 class="mb-0">{{ getShortName($user->fullname) }}</h5>
                         <p class="text-muted text-sm">{{ $user->getRoleLabel() }}</p>
                         <hr class="my-4 border-secondary-500/10" />
                         <div

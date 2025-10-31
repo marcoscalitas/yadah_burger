@@ -239,7 +239,7 @@
                                             src="{{ getCurrentUser('admin')->getImageUrl() }}" alt="user-image" />
                                     </div>
                                     <div class="grow ms-3">
-                                        <h6 class="mb-1"> {{ getCurrentUser('admin')->getShortName() }} 🖖</h6>
+                                        <h6 class="mb-1"> {{ getShortName(getCurrentUser('admin')->fullname) }} 🖖</h6>
                                         <span> {{ getCurrentUser('admin')->email }}</span>
                                     </div>
                                 </div>

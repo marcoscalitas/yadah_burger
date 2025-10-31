@@ -32,7 +32,7 @@
                                 class="absolute status-indicator block w-4 h-4 bg-green-500
                                                 border-2 border-white rounded-full"></span>
                         </div>
-                        <h5 class="mb-0">{{ $user->getShortName() }}</h5>
+                        <h5 class="mb-0">{{ getShortName($user->fullname) }}</h5>
                         <p class="text-muted text-sm">{{ $user->getRoleLabel() }}</p>
                         <hr class="my-4 border-secondary-500/10" />
                         <div
@@ -232,7 +232,7 @@
                                     <input type="text" class="form-control @error('fullname') is-invalid @enderror"
                                         name="fullname" value="{{ old('fullname', $user->fullname) }}" />
                                     <small class="form-text text-muted">
-                                        Utilizador: {{ $user->getShortName() }}
+                                        Utilizador: {{ getShortName($user->fullname) }}
                                     </small>
                                     @error('fullname')
                                         <div class="text-danger d-flex align-items-center mt-1">
