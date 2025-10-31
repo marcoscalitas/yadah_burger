@@ -20,8 +20,9 @@ class OrderItem extends Model
     protected $fillable = [
         'order_id',
         'product_id',
+        'product_name', // Nome do produto no momento da venda (histórico)
         'quantity',
-        'unit_price',
+        'unit_price', // Preço no momento da venda (histórico)
         'subtotal',
         'created_by',
         'updated_by',

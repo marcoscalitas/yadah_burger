@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_id')->constrained('orders')->cascadeOnDelete();
             $table->foreignId('product_id')->constrained('products')->cascadeOnDelete();
+            $table->string('product_name'); // Nome do produto no momento da venda (histórico)
             $table->integer('quantity')->default(1);
-            $table->decimal('unit_price', 10, 2);
+            $table->decimal('unit_price', 10, 2); // Preço no momento da venda (histórico)
             $table->decimal('subtotal', 10, 2);
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();

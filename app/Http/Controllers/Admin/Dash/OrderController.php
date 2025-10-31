@@ -104,8 +104,9 @@ class OrderController extends Controller
 
                 $orderItems[] = [
                     'product_id' => $product->id,
+                    'product_name' => $product->name, // Salva o nome do produto para histórico
                     'quantity' => $quantity,
-                    'unit_price' => $priceFromDB,
+                    'unit_price' => $priceFromDB, // Salva o preço atual para histórico
                     'subtotal' => $itemSubtotal,
                 ];
             }
@@ -142,8 +143,9 @@ class OrderController extends Controller
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $item['product_id'],
+                    'product_name' => $item['product_name'], // Nome no momento da venda
                     'quantity' => $item['quantity'],
-                    'unit_price' => $item['unit_price'],
+                    'unit_price' => $item['unit_price'], // Preço no momento da venda
                     'subtotal' => $item['subtotal'],
                     'created_by' => $currentUser->id,
                 ]);
@@ -275,8 +277,9 @@ class OrderController extends Controller
 
                 $orderItems[] = [
                     'product_id' => $product->id,
+                    'product_name' => $product->name, // Salva o nome do produto para histórico
                     'quantity' => $quantity,
-                    'unit_price' => $priceFromDB,
+                    'unit_price' => $priceFromDB, // Salva o preço atual para histórico
                     'subtotal' => $itemSubtotal,
                 ];
             }
@@ -309,8 +312,9 @@ class OrderController extends Controller
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $item['product_id'],
+                    'product_name' => $item['product_name'], // Nome no momento da venda
                     'quantity' => $item['quantity'],
-                    'unit_price' => $item['unit_price'],
+                    'unit_price' => $item['unit_price'], // Preço no momento da venda
                     'subtotal' => $item['subtotal'],
                     'created_by' => $order->created_by,
                     'updated_by' => Auth::id(),
