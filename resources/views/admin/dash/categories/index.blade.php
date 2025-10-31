@@ -129,34 +129,27 @@
                                                                 </button>
                                                             </div>
 
-                                                            <div class="modal-body">
-                                                                <div class="flex items-center gap-3 mb-4">
-                                                                    <div class="shrink-0">
-                                                                        <img class="shrink-0 w-[100px] h-[100px] round-image"
-                                                                            src="{{ $category->getImageUrl() }}"
-                                                                            alt="categoria"
-                                                                            style="height: 50px; width: 50px;" />
-                                                                    </div>
-                                                                    <div>
-                                                                        <h6 class="font-semibold">{{ $category->name }}
-                                                                        </h6>
-                                                                        <span class="text-sm text-gray-500">
-                                                                            {{ getShortText($category->description) }}
-                                                                        </span>
-                                                                    </div>
+                                                            <div class="modal-body text-center">
+                                                                <div class="mb-4">
+                                                                    <img class="shrink-0 w-[100px] h-[100px] round-image mx-auto mb-3"
+                                                                        src="{{ $category->getImageUrl() }}"
+                                                                        alt="categoria"
+                                                                        style="height: 80px; width: 80px;" />
+                                                                    <h6 class="font-semibold mb-0">{{ $category->name }}</h6>
+                                                                    <span class="text-sm text-muted">
+                                                                        {{ getShortText($category->description) }}
+                                                                    </span>
                                                                 </div>
                                                                 <p class="text-muted">
-                                                                    Tem certeza de que deseja
-                                                                    <strong>
-                                                                        <span class="text-danger">eliminar</span>
-                                                                    </strong>
-                                                                    esta categoria? Esta ação só pode ser desfeita por um
-                                                                    administrador.
+                                                                    <strong>Deseja realmente <span class="text-danger">eliminar</span> esta categoria?</strong>
+                                                                </p>
+                                                                <p class="text-muted">
+                                                                    Esta ação só pode ser desfeita por um administrador.
                                                                 </p>
                                                             </div>
 
                                                             <div class="modal-footer flex justify-end gap-3 border-t">
-                                                                <button type="button" class="btn btn-outline-secondary"
+                                                                <button type="button" class="btn btn-secondary"
                                                                     data-pc-modal-dismiss="#deleteCategoryModal{{ $category->id }}">
                                                                     Cancelar
                                                                 </button>

@@ -87,10 +87,6 @@
                             <span class="text-muted">Status:</span>
                             <span>{!! getStatusBadge($order->order_status) !!}</span>
                         </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-muted">Pagamento:</span>
-                            <span class="fw-bold">{{ $order->getPaymentMethodName() }}</span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -116,7 +112,13 @@
                                 <p class="fw-bold mb-0">{{ getFormattedPhone($order->getDisplayCustomerPhone()) ?: 'Não informado' }}</p>
                             </div>
                         </div>
-                        <div class="col-span-12">
+                        <div class="col-span-12 sm:col-span-6">
+                            <div class="mb-1">
+                                <label class="form-label text-muted">Pagamento</label>
+                                <p class="fw-bold mb-0">{{ $order->getPaymentMethodName() }}</p>
+                            </div>
+                        </div>
+                        <div class="col-span-12 sm:col-span-6">
                             <div class="mb-1">
                                 <label class="form-label text-muted">Tipo de Entrega</label>
                                 <p class="fw-bold mb-0">
@@ -306,7 +308,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title text-danger">
+                        <h5 class="modal-title text-danger d-flex align-items-center">
                             <i class="ti ti-alert-triangle me-2"></i>Confirmar Exclusão
                         </h5>
                         <button type="button" data-pc-modal-dismiss="#deleteOrderModal"
@@ -314,14 +316,20 @@
                             <i class="ti ti-x"></i>
                         </button>
                     </div>
-                    <div class="modal-body text-center py-4">
-                        <i class="ti ti-trash text-danger mb-3" style="font-size: 3rem;"></i>
-                        <h6 class="mb-2">Deseja realmente excluir este pedido?</h6>
-                        <p class="text-muted mb-0">
-                            Pedido <strong>#{{ $order->order_number }}</strong> será excluído permanentemente.
+                    <div class="modal-body text-center">
+                        <div class="mb-4">
+                            <i class="ti ti-receipt text-5xl text-primary mb-3"></i>
+                            <h6 class="font-semibold mb-0">Pedido #{{ $order->order_number }}</h6>
+                            <p class="text-sm text-muted">{{ $order->getDisplayCustomerName() }}</p>
+                        </div>
+                        <p class="text-muted">
+                            <strong>Deseja realmente <span class="text-danger">eliminar</span> este pedido?</strong>
+                        </p>
+                        <p class="text-muted">
+                            Esta ação só pode ser desfeita por um administrador.
                         </p>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer flex justify-end gap-3 border-t">
                         <button type="button" class="btn btn-secondary" data-pc-modal-dismiss="#deleteOrderModal">
                             Cancelar
                         </button>

@@ -137,7 +137,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer flex justify-end gap-3 border-t">
-                                                                    <button type="button" class="btn btn-outline-secondary"
+                                                                    <button type="button" class="btn btn-secondary"
                                                                         data-pc-modal-dismiss="#restoreProductModal{{ $product->id }}">Cancelar</button>
                                                                     <form method="POST"
                                                                         action="{{ route('admin.products.restore', $product->id) }}"
@@ -178,36 +178,26 @@
                                                                 </button>
                                                             </div>
 
-                                                            <div class="modal-body">
-                                                                <div class="flex items-center gap-3 mb-4">
-                                                                    <div class="shrink-0">
-                                                                        <img class="shrink-0 w-[100px] h-[100px] round-image"
-                                                                            src="{{ $product->getImageUrl() }}"
-                                                                            alt="produto"
-                                                                            style="height: 50px; width: 50px;" />
-                                                                    </div>
-                                                                    <div>
-                                                                        <h6 class="font-semibold">{{ $product->name }}
-                                                                        </h6>
-                                                                        <span class="text-sm text-gray-500">
-                                                                            {{ getShortText($product->description) }}
-                                                                        </span>
-                                                                    </div>
+                                                            <div class="modal-body text-center">
+                                                                <div class="mb-4">
+                                                                    <img class="shrink-0 w-[100px] h-[100px] round-image mx-auto mb-3"
+                                                                        src="{{ $product->getImageUrl() }}"
+                                                                        alt="produto"
+                                                                        style="height: 80px; width: 80px;" />
+                                                                    <h6 class="font-semibold mb-0">{{ $product->name }}</h6>
+                                                                    <span class="text-sm text-muted">
+                                                                        {{ getShortText($product->description) }}
+                                                                    </span>
                                                                 </div>
                                                                 <p class="text-muted">
-                                                                    Tem certeza de que deseja
-                                                                    <span class="text-danger">
-                                                                        <strong>eliminar</strong>
-                                                                    </span>
-                                                                    este produto de forma
-                                                                    <span class="text-danger">
-                                                                        <strong> permanente?</strong>
-                                                                    </span>
+                                                                    <strong>Deseja realmente <span class="text-danger">eliminar</span> este produto?</strong>
+                                                                </p>
+                                                                <p class="text-muted">
                                                                     Esta ação não poderá ser desfeita.
                                                                 </p>
                                                             </div>
                                                             <div class="modal-footer flex justify-end gap-3 border-t">
-                                                                <button type="button" class="btn btn-outline-secondary"
+                                                                <button type="button" class="btn btn-secondary"
                                                                     data-pc-modal-dismiss="#deleteProductModal{{ $product->id }}">
                                                                     Cancelar
                                                                 </button>

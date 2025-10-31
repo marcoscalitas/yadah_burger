@@ -380,7 +380,7 @@
                     </div>
                 </div>
                 <div class="modal-footer flex justify-end gap-3 border-t">
-                    <button type="button" class="btn btn-outline-secondary" data-pc-modal-dismiss="#productModal">
+                    <button type="button" class="btn btn-secondary" data-pc-modal-dismiss="#productModal">
                         Cancelar
                     </button>
                     <button type="button" class="btn btn-primary" id="addSelectedProducts" disabled>

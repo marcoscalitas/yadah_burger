@@ -143,7 +143,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer flex justify-end gap-3 border-t">
-                                                            <button type="button" class="btn btn-outline-secondary"
+                                                            <button type="button" class="btn btn-secondary"
                                                                 data-pc-modal-dismiss="#restoreOrderModal{{ $order->id }}">Cancelar</button>
                                                             <form method="POST"
                                                                 action="{{ route('admin.orders.restore', $order->id) }}"
@@ -182,30 +182,24 @@
                                                                 </button>
                                                             </div>
 
-                                                            <div class="modal-body">
-                                                                <div class="flex items-center gap-3 mb-4">
-                                                                    <div class="shrink-0">
-                                                                        <i class="ti ti-receipt text-5xl text-primary"></i>
-                                                                    </div>
-                                                                    <div>
-                                                                        <h6 class="font-semibold">
-                                                                            Pedido #{{ $order->order_number }}</h6>
-                                                                        <p class="text-sm text-muted">
-                                                                            {{ $order->getDisplayCustomerName() }}</p>
-                                                                    </div>
+                                                            <div class="modal-body text-center">
+                                                                <div class="mb-4">
+                                                                    <i class="ti ti-receipt text-5xl text-primary mb-3"></i>
+                                                                    <h6 class="font-semibold mb-0">
+                                                                        Pedido #{{ $order->order_number }}</h6>
+                                                                    <p class="text-sm text-muted">
+                                                                        {{ $order->getDisplayCustomerName() }}</p>
                                                                 </div>
                                                                 <p class="text-muted">
-                                                                    Tem certeza de que deseja
-                                                                    <strong>
-                                                                        <span class="text-danger">eliminar</span>
-                                                                    </strong>
-                                                                    este pedido? Esta ação só pode ser desfeita por um
-                                                                    administrador.
+                                                                    <strong>Deseja realmente <span class="text-danger">eliminar</span> este pedido?</strong>
+                                                                </p>
+                                                                <p class="text-muted">
+                                                                    Esta ação não poderá ser desfeita.
                                                                 </p>
                                                             </div>
 
                                                             <div class="modal-footer flex justify-end gap-3 border-t">
-                                                                <button type="button" class="btn btn-outline-secondary"
+                                                                <button type="button" class="btn btn-secondary"
                                                                     data-pc-modal-dismiss="#deleteOrderModal{{ $order->id }}">
                                                                     Cancelar
                                                                 </button>

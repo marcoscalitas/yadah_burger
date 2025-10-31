@@ -133,7 +133,7 @@
 
                                     <div class="modal-footer flex justify-end gap-3 border-t">
                                         <button type="button" data-pc-modal-dismiss="#deleteAccountModal"
-                                            class="btn btn-outline-secondary px-4">
+                                            class="btn btn-secondary px-4">
                                             Cancelar
                                         </button>
                                         <button type="submit" class="btn btn-danger px-5">

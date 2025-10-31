@@ -126,7 +126,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer flex justify-end gap-3 border-t">
-                                                                    <button type="button" class="btn btn-outline-secondary"
+                                                                    <button type="button" class="btn btn-secondary"
                                                                         data-pc-modal-dismiss="#restoreUserModal{{ $user->id }}">Cancelar</button>
                                                                     <form method="POST"
                                                                         action="{{ route('admin.users.restore', $user->id) }}"
@@ -166,33 +166,25 @@
                                                                 </button>
                                                             </div>
 
-                                                            <div class="modal-body">
-                                                                <div class="flex items-center gap-3 mb-4">
-                                                                    <div class="shrink-0">
-                                                                        <img class="shrink-0 w-[100px] h-[100px] round-image"
-                                                                            src="{{ $user->getImageUrl() }}" alt="produto"
-                                                                            style="height: 50px; width: 50px;" />
-                                                                    </div>
-                                                                    <div>
-                                                                        <h6 class="font-semibold">
-                                                                            {{ getShortName($user->fullname) }}</h6>
-                                                                    </div>
+                                                            <div class="modal-body text-center">
+                                                                <div class="mb-4">
+                                                                    <img class="shrink-0 w-[100px] h-[100px] round-image mx-auto mb-3"
+                                                                        src="{{ $user->getImageUrl() }}" alt="utilizador"
+                                                                        style="height: 80px; width: 80px;" />
+                                                                    <h6 class="font-semibold mb-0">
+                                                                        {{ getShortName($user->fullname) }}</h6>
+                                                                    <span class="text-muted text-sm">{{ $user->getRoleLabel() }}</span>
                                                                 </div>
                                                                 <p class="text-muted">
-                                                                    Tem certeza de que deseja
-                                                                    <span class="text-danger">
-                                                                        <strong>eliminar</strong>
-                                                                    </span>
-                                                                    este utilizador de forma
-                                                                    <span class="text-danger">
-                                                                        <strong> permanente?</strong>
-                                                                    </span>
+                                                                    <strong>Deseja realmente <span class="text-danger">eliminar</span> este utilizador?</strong>
+                                                                </p>
+                                                                <p class="text-muted">
                                                                     Esta ação não poderá ser desfeita.
                                                                 </p>
                                                             </div>
 
                                                             <div class="modal-footer flex justify-end gap-3 border-t">
-                                                                <button type="button" class="btn btn-outline-secondary"
+                                                                <button type="button" class="btn btn-secondary"
                                                                     data-pc-modal-dismiss="#deleteUserModal{{ $user->id }}">
                                                                     Cancelar
                                                                 </button>

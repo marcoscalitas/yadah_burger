@@ -130,7 +130,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="modal-footer flex justify-end gap-3 border-t">
-                                                                    <button type="button" class="btn btn-outline-secondary"
+                                                                    <button type="button" class="btn btn-secondary"
                                                                         data-pc-modal-dismiss="#restoreCategoryModal{{ $category->id }}">Cancelar</button>
                                                                     <form method="POST"
                                                                         action="{{ route('admin.categories.restore', $category->id) }}"
@@ -171,36 +171,26 @@
                                                                 </button>
                                                             </div>
 
-                                                            <div class="modal-body">
-                                                                <div class="flex items-center gap-3 mb-4">
-                                                                    <div class="shrink-0">
-                                                                        <img class="shrink-0 w-[100px] h-[100px] round-image"
-                                                                            src="{{ $category->getImageUrl() }}"
-                                                                            alt="categoria"
-                                                                            style="height: 50px; width: 50px;" />
-                                                                    </div>
-                                                                    <div>
-                                                                        <h6 class="font-semibold">{{ $category->name }}
-                                                                        </h6>
-                                                                        <span class="text-sm text-gray-500">
-                                                                            {{ getShortText($category->description, 50) }}
-                                                                        </span>
-                                                                    </div>
+                                                            <div class="modal-body text-center">
+                                                                <div class="mb-4">
+                                                                    <img class="shrink-0 w-[100px] h-[100px] round-image mx-auto mb-3"
+                                                                        src="{{ $category->getImageUrl() }}"
+                                                                        alt="categoria"
+                                                                        style="height: 80px; width: 80px;" />
+                                                                    <h6 class="font-semibold mb-0">{{ $category->name }}</h6>
+                                                                    <span class="text-sm text-muted">
+                                                                        {{ getShortText($category->description, 50) }}
+                                                                    </span>
                                                                 </div>
                                                                 <p class="text-muted">
-                                                                    Tem certeza de que deseja
-                                                                    <span class="text-danger">
-                                                                        <strong>eliminar</strong>
-                                                                    </span>
-                                                                    esta categoria de forma
-                                                                    <span class="text-danger">
-                                                                        <strong> permanente?</strong>
-                                                                    </span>
+                                                                    <strong>Deseja realmente <span class="text-danger">eliminar</span> esta categoria?</strong>
+                                                                </p>
+                                                                <p class="text-muted">
                                                                     Esta ação não poderá ser desfeita.
                                                                 </p>
                                                             </div>
                                                             <div class="modal-footer flex justify-end gap-3 border-t">
-                                                                <button type="button" class="btn btn-outline-secondary"
+                                                                <button type="button" class="btn btn-secondary"
                                                                     data-pc-modal-dismiss="#deleteCategoryModal{{ $category->id }}">
                                                                     Cancelar
                                                                 </button>
