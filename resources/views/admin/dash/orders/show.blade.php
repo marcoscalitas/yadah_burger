@@ -10,12 +10,12 @@
 
 @section('content')
     <!-- [ Main Content ] start -->
-    <div class="grid grid-cols-12 gap-6">
+    <div class="grid grid-cols-12 gap-x-6">
         <!-- Order Header -->
         <div class="col-span-12">
             <div class="card">
                 <div class="card-header">
-                    <div class="flex justify-between items-center">
+                    <div class="sm:flex items-center justify-between">
                         <div>
                             <h4 class="mb-1">Pedido #{{ $order->order_number }}</h4>
                             <p class="text-muted mb-0">
@@ -23,7 +23,7 @@
                                 {{ $order->created_at->format('d/m/Y H:i') }}
                             </p>
                         </div>
-                        <div class="flex gap-2">
+                        <div class="d-flex gap-2">
                             <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary">
                                 <i class="ti ti-arrow-left me-2"></i>Voltar
                             </a>
@@ -82,12 +82,12 @@
                         @endif
                     </form>
 
-                    <div class="mt-4 pt-3 border-top">
-                        <div class="d-flex justify-content-between mb-2">
+                    <div class="mt-4 pt-3 border-t border-theme-border">
+                        <div class="flex justify-between items-center mb-2">
                             <span class="text-muted">Status:</span>
                             <span>{!! getStatusBadge($order->order_status) !!}</span>
                         </div>
-                        <div class="d-flex justify-content-between">
+                        <div class="flex justify-between items-center">
                             <span class="text-muted">Pagamento:</span>
                             <span class="fw-bold">{{ $order->getPaymentMethodName() }}</span>
                         </div>
@@ -103,38 +103,48 @@
                     <h5><i class="ti ti-user me-2"></i>Informações do Cliente</h5>
                 </div>
                 <div class="card-body">
-                    <div class="grid grid-cols-12 gap-4">
+                    <div class="grid grid-cols-12 gap-6">
                         <div class="col-span-12 sm:col-span-6">
-                            <p class="mb-2 text-muted">Nome:</p>
-                            <p class="fw-bold">{{ $order->customer_name }}</p>
+                            <div class="mb-1">
+                                <label class="form-label text-muted">Nome</label>
+                                <p class="fw-bold mb-0">{{ $order->customer_name }}</p>
+                            </div>
                         </div>
                         <div class="col-span-12 sm:col-span-6">
-                            <p class="mb-2 text-muted">Telefone:</p>
-                            <p class="fw-bold">{{ $order->customer_phone ?? 'Não informado' }}</p>
+                            <div class="mb-1">
+                                <label class="form-label text-muted">Telefone</label>
+                                <p class="fw-bold mb-0">{{ $order->customer_phone ?? 'Não informado' }}</p>
+                            </div>
                         </div>
                         <div class="col-span-12">
-                            <p class="mb-2 text-muted">Tipo de Entrega:</p>
-                            <p class="fw-bold">
-                                @if ($order->pickup_in_store)
-                                    <i class="ti ti-shopping-bag me-1"></i>Retirada na Loja
-                                @else
-                                    <i class="ti ti-truck-delivery me-1"></i>Entrega
-                                @endif
-                            </p>
+                            <div class="mb-1">
+                                <label class="form-label text-muted">Tipo de Entrega</label>
+                                <p class="fw-bold mb-0">
+                                    @if ($order->pickup_in_store)
+                                        <i class="ti ti-shopping-bag me-1"></i>Retirada na Loja
+                                    @else
+                                        <i class="ti ti-truck-delivery me-1"></i>Entrega
+                                    @endif
+                                </p>
+                            </div>
                         </div>
                         @if (!$order->pickup_in_store)
                             <div class="col-span-12">
-                                <p class="mb-2 text-muted">Endereço:</p>
-                                <p class="fw-bold">{{ $order->address_1 }}</p>
-                                @if ($order->address_2)
-                                    <p class="text-muted">{{ $order->address_2 }}</p>
-                                @endif
+                                <div class="mb-1">
+                                    <label class="form-label text-muted">Endereço</label>
+                                    <p class="fw-bold mb-0">{{ $order->address_1 }}</p>
+                                    @if ($order->address_2)
+                                        <p class="text-muted mb-0">{{ $order->address_2 }}</p>
+                                    @endif
+                                </div>
                             </div>
                         @endif
                         @if ($order->notes)
                             <div class="col-span-12">
-                                <p class="mb-2 text-muted">Observações:</p>
-                                <p>{{ $order->notes }}</p>
+                                <div class="mb-1">
+                                    <label class="form-label text-muted">Observações</label>
+                                    <p class="mb-0">{{ $order->notes }}</p>
+                                </div>
                             </div>
                         @endif
                     </div>
@@ -163,13 +173,13 @@
                                 @foreach ($order->orderItems as $item)
                                     <tr>
                                         <td>
-                                            <div class="d-flex align-items-center">
+                                            <div class="flex items-center gap-3">
                                                 @if ($item->product && $item->product->image_url)
                                                     <img src="{{ $item->product->getImageUrl() }}"
-                                                        alt="{{ $item->product->name }}" class="rounded me-3"
+                                                        alt="{{ $item->product->name }}" class="rounded"
                                                         style="width: 50px; height: 50px; object-fit: cover;">
                                                 @else
-                                                    <div class="rounded me-3 bg-light d-flex align-items-center justify-content-center"
+                                                    <div class="rounded bg-light flex items-center justify-center"
                                                         style="width: 50px; height: 50px;">
                                                         <i class="ti ti-photo text-muted"></i>
                                                     </div>
@@ -198,24 +208,24 @@
                     </div>
 
                     <!-- Order Totals -->
-                    <div class="row justify-content-end mt-4">
-                        <div class="col-12 col-md-6 col-lg-4">
+                    <div class="grid grid-cols-12 gap-6 mt-4">
+                        <div class="col-span-12 md:col-span-6 lg:col-span-4 ml-auto">
                             <div class="card bg-light-secondary">
                                 <div class="card-body">
-                                    <div class="d-flex justify-content-between mb-2">
+                                    <div class="flex justify-between items-center mb-2">
                                         <span>Subtotal:</span>
                                         <span class="fw-bold">{{ number_format($order->subtotal, 2, ',', '.') }} Kz</span>
                                     </div>
                                     @if ($order->discount_amount > 0)
-                                        <div class="d-flex justify-content-between mb-2 text-danger">
+                                        <div class="flex justify-between items-center mb-2 text-danger">
                                             <span>Desconto:</span>
                                             <span
                                                 class="fw-bold">-{{ number_format($order->discount_amount, 2, ',', '.') }}
                                                 Kz</span>
                                         </div>
                                     @endif
-                                    <hr>
-                                    <div class="d-flex justify-content-between">
+                                    <hr class="my-2">
+                                    <div class="flex justify-between items-center">
                                         <span class="fw-bold">Total:</span>
                                         <span class="fw-bold text-success h5 mb-0">
                                             {{ number_format($order->total_amount, 2, ',', '.') }} Kz
@@ -236,17 +246,21 @@
                     <h5><i class="ti ti-info-circle me-2"></i>Informações Adicionais</h5>
                 </div>
                 <div class="card-body">
-                    <div class="grid grid-cols-12 gap-4">
+                    <div class="grid grid-cols-12 gap-6">
                         <div class="col-span-12 sm:col-span-6">
-                            <p class="mb-1 text-muted">Criado por:</p>
-                            <p class="fw-bold">{{ $order->createdBy->name ?? 'Sistema' }}</p>
-                            <p class="text-muted small">{{ $order->created_at->format('d/m/Y H:i:s') }}</p>
+                            <div class="mb-1">
+                                <label class="form-label text-muted">Criado por</label>
+                                <p class="fw-bold mb-0">{{ $order->createdBy->name ?? 'Sistema' }}</p>
+                                <p class="text-muted small mb-0">{{ $order->created_at->format('d/m/Y H:i:s') }}</p>
+                            </div>
                         </div>
                         @if ($order->updated_at != $order->created_at)
                             <div class="col-span-12 sm:col-span-6">
-                                <p class="mb-1 text-muted">Última atualização:</p>
-                                <p class="fw-bold">{{ $order->updatedBy->name ?? 'Sistema' }}</p>
-                                <p class="text-muted small">{{ $order->updated_at->format('d/m/Y H:i:s') }}</p>
+                                <div class="mb-1">
+                                    <label class="form-label text-muted">Última atualização</label>
+                                    <p class="fw-bold mb-0">{{ $order->updatedBy->name ?? 'Sistema' }}</p>
+                                    <p class="text-muted small mb-0">{{ $order->updated_at->format('d/m/Y H:i:s') }}</p>
+                                </div>
                             </div>
                         @endif
                     </div>
@@ -259,7 +273,7 @@
             <div class="col-span-12">
                 <div class="card border-danger">
                     <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
+                        <div class="sm:flex items-center justify-between">
                             <div>
                                 <h6 class="text-danger mb-1">Excluir Pedido</h6>
                                 <p class="text-muted mb-0">Esta ação não pode ser desfeita.</p>
