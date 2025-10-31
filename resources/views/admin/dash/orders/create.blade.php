@@ -214,27 +214,28 @@
 
                             <!-- Total Display -->
                             <div class="col-span-12 mt-4">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="grid grid-cols-12 gap-3">
-                                            <div class="col-span-6 sm:col-span-4">
-                                                <div class="d-flex justify-content-between">
-                                                    <span class="text-muted fw-bold">Subtotal:</span>
-                                                    <span id="subtotalDisplay" class="fw-bold text-success">0,00 Kz</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-span-6 sm:col-span-4">
-                                                <div class="d-flex justify-content-between">
-                                                    <span class="text-muted fw-bold">Desconto:</span>
-                                                    <span id="discountDisplay" class="fw-bold text-danger">0,00 Kz</span>
-                                                </div>
-                                            </div>
-                                            <div class="col-span-12 sm:col-span-4">
-                                                <div class="d-flex justify-content-between">
-                                                    <span class="text-muted fw-bold">Total Final:</span>
-                                                    <span id="totalDisplay" class="fw-bold text-success">0,00 Kz</span>
-                                                </div>
-                                            </div>
+                                <div class="card border-2 border-primary">
+                                    <div class="card-body py-3 px-4">
+                                        <!-- Subtotal -->
+                                        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-1 sm:gap-0">
+                                            <span class="text-muted">Subtotal: </span>
+                                            <span id="subtotalDisplay" class="fw-bold text-dark">0,00 Kz</span>
+                                        </div>
+
+                                        <hr class="border-secondary-500/10 my-3">
+
+                                        <!-- Desconto -->
+                                        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-1 sm:gap-0">
+                                            <span class="text-muted">Desconto: </span>
+                                            <span id="discountDisplay" class="fw-bold text-danger">0,00 Kz</span>
+                                        </div>
+
+                                        <hr class="border-secondary-500/10 my-3">
+
+                                        <!-- Total -->
+                                        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-1 sm:gap-0">
+                                            <span class="text-success fw-bold">Total: </span>
+                                            <span id="totalDisplay" class="h5 mb-0 fw-bold text-success">0,00 Kz</span>
                                         </div>
                                     </div>
                                 </div>
@@ -307,16 +308,17 @@
                                 <div class="category-section" data-category-section
                                     data-category-id="{{ $category->id }}">
                                     <!-- Category Header -->
-                                    <div class="d-flex align-items-center gap-3 p-3 bg-light rounded mb-3"
+                                    <div class="flex items-center gap-3 p-3 bg-light rounded mb-3"
                                         style="border-left: 4px solid var(--bs-primary);">
-                                        <div class="category-image">
+                                        <div class="shrink-0">
                                             <img src="{{ $category->getImageUrl() }}" alt="{{ $category->name }}"
-                                                class="rounded-circle"
-                                                style="width: 40px; height: 40px; object-fit: cover;">
+                                                class="shrink-0 w-[60px] h-[60px] round-image"
+                                                style="width: 60px; height: 60px;">
                                         </div>
-                                        <h5 class="mb-0 fw-bold">{{ $category->name }}</h5>
-                                        <small class="text-muted ms-auto">{{ $category->products->count() }} produtos
-                                            disponíveis</small>
+                                        <div class="grow">
+                                            <h5 class="mb-0 fw-bold">{{ $category->name }}</h5>
+                                            <small class="text-muted">{{ $category->products->count() }} produtos disponíveis</small>
+                                        </div>
                                     </div>
 
                                     <!-- Products Grid -->
@@ -340,12 +342,9 @@
                                                     </div>
                                                 @endif
 
-                                                <!-- Product Info -->
-                                                <h6 class="product-name">{{ $product->name }}</h6>
-                                                <p class="product-price">{{ number_format($product->price, 2, ',', '.') }}
-                                                    Kz</p>
-
-                                                <!-- Quantity Controls -->
+                                            <!-- Product Info -->
+                                            <h6 class="product-name">{{ $product->name }}</h6>
+                                            <p class="product-price">{!! getProductPrice($product) !!}</p>                                                <!-- Quantity Controls -->
                                                 <div class="quantity-controls">
                                                     <button type="button" class="btn btn-icon btn-light-secondary"
                                                         onclick="changeQuantity({{ $product->id }}, -1, event)">
@@ -379,7 +378,7 @@
                         @endforelse
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer flex justify-end gap-3 border-t">
                     <button type="button" class="btn btn-outline-secondary" data-pc-modal-dismiss="#productModal">
                         Cancelar
                     </button>

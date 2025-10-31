@@ -14,8 +14,8 @@
                 <div class="card-header">
                     <div class="sm:flex items-center justify-between">
                         <h5 class="mb-3 sm:mb-0">Lista de produtos</h5>
-                        <div>
-                            <a href="{{ route('admin.products.trashed') }}" class="btn btn-outline-secondary mr-1">
+                        <div class="flex gap-3">
+                            <a href="{{ route('admin.products.trashed') }}" class="btn btn-outline-secondary">
                                 <i class="ti ti-trash me-2"></i>Ver produtos eliminados
                             </a>
                             <a href="{{ route('admin.products.create') }}" class="btn btn-primary">
@@ -92,7 +92,7 @@
                                                     {{ $product->createdBy ? getShortText($product->createdBy->getShortName(), 15) : 'Sistema' }}
                                                 </td>
                                                 <td>
-                                                    <div class="d-flex gap-2 justify-content-center">
+                                                    <div class="flex gap-3 justify-content-center">
                                                         {{-- Editar --}}
                                                         <a href="{{ route('admin.products.edit', $product->id) }}"
                                                             class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-warning"

@@ -601,29 +601,80 @@ if (! function_exists('getShortText')) {
 // getProductPrice
 if (! function_exists('getProductPrice')) {
     /**
-     * @param  \App\Models\Product|object  $product  O produto ou objeto com price e promotion_price
+     * Formata preços de produtos ou valores numéricos com cores inteligentes.
+     *
+     * Aceita:
+     * - Objetos Product com price e promotion_price
+     * - Valores numéricos (int, float, string numérica)
+     * - Strings formatadas (ex: "50.000,00" ou "1.500,50")
+     *
+     * Cores automáticas:
+     * - Valores negativos: texto vermelho (text-danger)
+     * - Valores positivos/zero: texto verde (text-success)
+     *
+     * @param  \App\Models\Product|object|numeric|string  $input  O produto ou valor a ser formatado
      * @param  bool  $formatted  Se true, retorna formatado com HTML, se false retorna apenas o valor numérico
-     * @return string O preço formatado a ser exibido
+     * @param  bool  $withCurrency  Se true, adiciona "Kz" ao final (apenas quando $formatted = false)
+     * @param  string|null  $customClass  Classes CSS personalizadas (sobrescreve cores automáticas)
+     * @return string|float O preço formatado
      */
-    function getProductPrice($product, bool $formatted = true)
+    function getProductPrice($input, bool $formatted = true, bool $withCurrency = false, ?string $customClass = null)
     {
-        $hasPromotion = !empty($product->promotion_price) && $product->promotion_price > 0;
+        // Se for null ou vazio, retorna 0
+        if (is_null($input) || $input === '') {
+            return $formatted ? '<span class="text-success">0,00 Kz</span>' : 0.0;
+        }
 
+        // Caso 1: É um objeto (Product) com propriedades price/promotion_price
+        if (is_object($input)) {
+            $hasPromotion = !empty($input->promotion_price) && $input->promotion_price > 0;
+            $price = $input->price ?? 0;
+            $promotionPrice = $input->promotion_price ?? 0;
+
+            // Converte strings formatadas para decimal se necessário
+            $price = convertToDecimal($price);
+            $promotionPrice = convertToDecimal($promotionPrice);
+
+            if (!$formatted) {
+                return $hasPromotion ? $promotionPrice : $price;
+            }
+
+            $priceFormatted = number_format($price, 2, ',', '.') . ' Kz';
+            $promotionFormatted = number_format($promotionPrice, 2, ',', '.') . ' Kz';
+
+            // Determina a cor baseada no valor
+            $colorClass = $customClass ?? ($promotionPrice > 0 ? 'text-success' : ($promotionPrice < 0 ? 'text-danger' : 'text-success'));
+
+            if ($hasPromotion) {
+                return '<div class="flex flex-col">
+                            <span class="fw-bold ' . $colorClass . '">' . $promotionFormatted . '</span>
+                            <span class="text-gray-400 text-xs line-through">' . $priceFormatted . '</span>
+                        </div>';
+            }
+
+            $colorClass = $customClass ?? ($price > 0 ? 'text-success' : ($price < 0 ? 'text-danger' : 'text-success'));
+            return '<span class="fw-bold ' . $colorClass . '">' . $priceFormatted . '</span>';
+        }
+
+        // Caso 2: É um valor numérico ou string (preço simples)
+        // Converte para decimal se for string formatada
+        $value = is_numeric($input) ? (float) $input : convertToDecimal($input);
+
+        // Retorna valor numérico sem formatação
         if (!$formatted) {
-            return $hasPromotion ? $product->promotion_price : $product->price;
+            return $withCurrency ? number_format(abs($value), 2, ',', '.') . ' Kz' : $value;
         }
 
-        $priceFormatted = number_format($product->price, 2, ',', '.') . ' Kz';
-        $promotionFormatted = number_format($product->promotion_price, 2, ',', '.') . ' Kz';
+        // Determina a cor baseada no valor (negativo = vermelho, positivo = verde)
+        $colorClass = $customClass ?? ($value < 0 ? 'text-danger' : 'text-success');
 
-        if ($hasPromotion) {
-            return '<div class="flex flex-col">
-                        <span class="font-semibold" style="color: #0f9e43ff;">' . $promotionFormatted . '</span>
-                        <span class="text-gray-400 text-xs line-through">' . $priceFormatted . '</span>
-                    </div>';
-        }
+        // Formata o valor
+        $valueFormatted = number_format(abs($value), 2, ',', '.') . ' Kz';
 
-        return '<span class="font-semibold" style="color: #0f9e43ff;">' . $priceFormatted . '</span>';
+        // Adiciona sinal de menos para valores negativos
+        $prefix = $value < 0 ? '-' : '';
+
+        return '<span class="fw-bold ' . $colorClass . '">' . $prefix . $valueFormatted . '</span>';
     }
 }
 

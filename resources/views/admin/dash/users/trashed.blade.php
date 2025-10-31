@@ -78,7 +78,7 @@
                                                 <td>{{ $user->getRoleLabel() }}</td>
                                                 <td>{!! getStatusBadge($user->user_status) !!}</td>
                                                 <td>
-                                                    <div class="d-flex gap-2 justify-content-center">
+                                                    <div class="flex gap-3 justify-content-center">
                                                         {{-- Restaurar --}}
                                                         <button type="button"
                                                             class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-success"
@@ -105,10 +105,12 @@
                                                         <div class="modal-dialog modal-dialog-centered">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <h5 class="modal-title">Confirmar restauração</h5>
-                                                                    <button type="button" class="btn-close"
+                                                                    <h5 class="modal-title font-semibold">Confirmar restauração</h5>
+                                                                    <button type="button"
                                                                         data-pc-modal-dismiss="#restoreUserModal{{ $user->id }}"
-                                                                        aria-label="Close"></button>
+                                                                        class="text-lg flex items-center justify-center rounded w-7 h-7 text-secondary-500 hover:bg-danger-500/10 hover:text-danger-500">
+                                                                        <i class="ti ti-x"></i>
+                                                                    </button>
                                                                 </div>
                                                                 <div class="modal-body">
                                                                     <div class="text-center">
@@ -123,7 +125,7 @@
                                                                         </p>
                                                                     </div>
                                                                 </div>
-                                                                <div class="modal-footer d-flex gap-2 justify-content-end">
+                                                                <div class="modal-footer flex justify-end gap-3 border-t">
                                                                     <button type="button" class="btn btn-outline-secondary"
                                                                         data-pc-modal-dismiss="#restoreUserModal{{ $user->id }}">Cancelar</button>
                                                                     <form method="POST"
@@ -189,7 +191,7 @@
                                                                 </p>
                                                             </div>
 
-                                                            <div class="modal-footer d-flex gap-2 justify-content-end">
+                                                            <div class="modal-footer flex justify-end gap-3 border-t">
                                                                 <button type="button" class="btn btn-outline-secondary"
                                                                     data-pc-modal-dismiss="#deleteUserModal{{ $user->id }}">
                                                                     Cancelar

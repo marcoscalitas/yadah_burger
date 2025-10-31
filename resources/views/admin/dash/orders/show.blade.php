@@ -23,7 +23,7 @@
                                 {{ $order->created_at->format('d/m/Y H:i') }}
                             </p>
                         </div>
-                        <div class="d-flex gap-2">
+                        <div class="flex gap-3">
                             <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary">
                                 <i class="ti ti-arrow-left me-2"></i>Voltar
                             </a>
@@ -159,78 +159,88 @@
                     <h5><i class="ti ti-shopping-cart me-2"></i>Produtos do Pedido</h5>
                 </div>
                 <div class="card-body">
+
                     <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Produto</th>
-                                    <th class="text-center">Quantidade</th>
-                                    <th class="text-end">Preço Unit.</th>
-                                    <th class="text-end">Subtotal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($order->orderItems as $item)
-                                    <tr>
-                                        <td>
-                                            <div class="flex items-center gap-3">
-                                                @if ($item->product && $item->product->image_url)
-                                                    <img src="{{ $item->product->getImageUrl() }}"
-                                                        alt="{{ $item->product->name }}" class="rounded"
-                                                        style="width: 50px; height: 50px; object-fit: cover;">
-                                                @else
-                                                    <div class="rounded bg-light flex items-center justify-center"
-                                                        style="width: 50px; height: 50px;">
-                                                        <i class="ti ti-photo text-muted"></i>
+                        <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
+                            <div class="datatable-container">
+                                <table class="table table-hover datatable-table" id="pc-dt-simple">
+                                    <thead>
+                                        <tr>
+                                            <th>Produto</th>
+                                            <th class="text-center">Quantidade</th>
+                                            <th class="text-end">Preço Unit.</th>
+                                            <th class="text-end">Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($order->orderItems as $item)
+                                            <tr>
+                                                <td>
+                                                    <div class="flex items-center gap-3">
+                                                        @if ($item->product && $item->product->image_url)
+                                                            <div class="shrink-0">
+                                                                <img src="{{ $item->product->getImageUrl() }}"
+                                                                    alt="{{ $item->product->name }}"
+                                                                    class="shrink-0 w-[100px] h-[100px] round-image"
+                                                                    style="width: 50px; height: 50px;">
+                                                            </div>
+                                                        @else
+                                                            <div class="rounded bg-light flex items-center justify-center"
+                                                                style="width: 50px; height: 50px;">
+                                                                <i class="ti ti-photo text-muted"></i>
+                                                            </div>
+                                                        @endif
+                                                        <div>
+                                                            <h6 class="mb-0">
+                                                                {{ $item->product->name ?? 'Produto não disponível' }}</h6>
+                                                            @if ($item->product && $item->product->category)
+                                                                <small
+                                                                    class="text-muted">{{ $item->product->category->name }}</small>
+                                                            @endif
+                                                        </div>
                                                     </div>
-                                                @endif
-                                                <div>
-                                                    <h6 class="mb-0">
-                                                        {{ $item->product->name ?? 'Produto não disponível' }}</h6>
-                                                    @if ($item->product && $item->product->category)
-                                                        <small
-                                                            class="text-muted">{{ $item->product->category->name }}</small>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="text-center">
-                                            <span class="badge bg-light-secondary">{{ $item->quantity }}x</span>
-                                        </td>
-                                        <td class="text-end">{{ number_format($item->unit_price, 2, ',', '.') }} Kz</td>
-                                        <td class="text-end fw-bold text-success">
-                                            {{ number_format($item->subtotal, 2, ',', '.') }} Kz
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                                </td>
+                                                <td class="text-center">
+                                                    <span class="badge bg-light-secondary">{{ $item->quantity }}x</span>
+                                                </td>
+                                                <td class="text-end">{!! getProductPrice($item->unit_price) !!}
+                                                </td>
+                                                <td class="text-end">
+                                                    {!! getProductPrice($item->subtotal) !!}
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Order Totals -->
-                    <div class="grid grid-cols-12 gap-6 mt-4">
-                        <div class="col-span-12 md:col-span-6 lg:col-span-4 ml-auto">
-                            <div class="card bg-light-secondary">
-                                <div class="card-body">
-                                    <div class="flex justify-between items-center mb-2">
-                                        <span>Subtotal:</span>
-                                        <span class="fw-bold">{{ number_format($order->subtotal, 2, ',', '.') }} Kz</span>
+                    <div class="mt-4">
+                        <div class="card border-2 border-primary">
+                            <div class="card-body py-3 px-4">
+                                <!-- Subtotal -->
+                                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-1 sm:gap-0">
+                                    <span class="text-muted">Subtotal: </span>
+                                    <span class="fw-bold text-dark">{!! getProductPrice($order->subtotal) !!}</span>
+                                </div>
+
+                                @if ($order->discount_amount > 0)
+                                    <hr class="border-secondary-500/10 my-3">
+                                    <!-- Desconto -->
+                                    <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-1 sm:gap-0">
+                                        <span class="text-muted">Desconto: </span>
+                                        <span class="fw-bold text-danger">{!! getProductPrice(-$order->discount_amount) !!}</span>
                                     </div>
-                                    @if ($order->discount_amount > 0)
-                                        <div class="flex justify-between items-center mb-2 text-danger">
-                                            <span>Desconto:</span>
-                                            <span
-                                                class="fw-bold">-{{ number_format($order->discount_amount, 2, ',', '.') }}
-                                                Kz</span>
-                                        </div>
-                                    @endif
-                                    <hr class="my-2">
-                                    <div class="flex justify-between items-center">
-                                        <span class="fw-bold">Total:</span>
-                                        <span class="fw-bold text-success h5 mb-0">
-                                            {{ number_format($order->total_amount, 2, ',', '.') }} Kz
-                                        </span>
-                                    </div>
+                                @endif
+
+                                <hr class="border-secondary-500/10 my-3">
+
+                                <!-- Total -->
+                                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-1 sm:gap-0">
+                                    <span class="text-success fw-bold">Total: </span>
+                                    <span class="h5 mb-0 fw-bold text-success">{!! getProductPrice($order->total_amount) !!}</span>
                                 </div>
                             </div>
                         </div>

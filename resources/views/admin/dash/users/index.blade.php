@@ -14,8 +14,8 @@
                 <div class="card-header">
                     <div class="sm:flex items-center justify-between">
                         <h5 class="mb-3 sm:mb-0">Lista de utilizadores</h5>
-                        <div>
-                            <a href="{{ route('admin.users.trashed') }}" class="btn btn-outline-secondary mr-1">
+                        <div class="flex gap-3">
+                            <a href="{{ route('admin.users.trashed') }}" class="btn btn-outline-secondary">
                                 <i class="ti ti-trash me-2"></i>Ver utilizadores eliminados
                             </a>
                             <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
@@ -80,7 +80,7 @@
                                                 <td>{{ $user->getRoleLabel() }}</td>
                                                 <td>{!! getStatusBadge($user->user_status) !!}</td>
                                                 <td>
-                                                    <div class="d-flex gap-2 justify-content-center">
+                                                    <div class="flex gap-3 justify-content-center">
                                                         {{-- Editar --}}
                                                         <a href="{{ route('admin.users.edit', $user->id) }}"
                                                             class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-warning"

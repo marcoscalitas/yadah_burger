@@ -769,17 +769,29 @@ function saveOrderToStorage() {
 }
 
 /**
- * Carrega produtos do pedido do localStorage
+ * Carrega produtos do pedido do localStorage (APENAS se for rascunho)
  */
 function loadOrderFromStorage() {
     try {
+        // Apenas carrega se estiver na página de create ou edit
+        const isCreateOrEditPage = window.location.pathname.includes('/create') ||
+                                   window.location.pathname.includes('/edit');
+
+        if (!isCreateOrEditPage) {
+            return;
+        }
+
         const storedData = localStorage.getItem(STORAGE_KEY);
 
-        if (!storedData) return;
+        if (!storedData) {
+            return;
+        }
 
         const orderData = JSON.parse(storedData);
 
-        if (!Array.isArray(orderData) || orderData.length === 0) return;
+        if (!Array.isArray(orderData) || orderData.length === 0) {
+            return;
+        }
 
         // Adiciona cada produto ao pedido
         orderData.forEach(product => {
@@ -789,12 +801,10 @@ function loadOrderFromStorage() {
         updateOrderTotals();
 
     } catch (e) {
-        console.error('Erro ao carregar produtos do localStorage:', e);
+        console.error('❌ Erro ao carregar produtos:', e);
         localStorage.removeItem(STORAGE_KEY);
     }
-}
-
-/**
+}/**
  * Limpa produtos do localStorage
  */
 function clearOrderFromStorage() {
@@ -822,21 +832,21 @@ function initFormSubmitHandler() {
 }
 
 /**
- * Limpa storage se estiver em página de sucesso
+ * Limpa storage quando pedido é criado com sucesso
  */
 function clearStorageOnSuccess() {
-    // Se estiver na página de listagem ou detalhes (não na de criação/edição)
-    // E houver mensagem de sucesso, limpa o storage
-    const isSuccessPage = !window.location.pathname.includes('/create') &&
-                          !window.location.pathname.includes('/edit');
+    const urlParams = new URLSearchParams(window.location.search);
+    const wasCreated = urlParams.get('created') === '1';
 
-    if (isSuccessPage) {
-        clearOrderFromStorage();
+    if (wasCreated) {
+        // APAGA TUDO DO localStorage
+        localStorage.clear();
+        console.log('🔥 PEDIDO CRIADO COM SUCESSO - TUDO APAGADO!');
     }
 }
 
 // Inicializa quando o DOM estiver pronto
 $(document).ready(function() {
-    initProductModal();
-    clearStorageOnSuccess(); // Limpa storage se for página de sucesso
+    clearStorageOnSuccess(); // Limpa TUDO se pedido foi criado
+    initProductModal(); // Inicia com localStorage limpo
 });

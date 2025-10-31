@@ -14,7 +14,7 @@
                 <div class="card-header">
                     <div class="sm:flex items-center justify-between">
                         <h5 class="mb-3 sm:mb-0">Lista de pedidos</h5>
-                        <div class="d-flex gap-2">
+                        <div class="flex gap-3">
                             <a href="{{ route('admin.orders.trashed') }}" class="btn btn-outline-secondary">
                                 <i class="ti ti-trash me-2"></i>Ver pedidos eliminados
                             </a>
@@ -34,29 +34,26 @@
                                             <th data-sortable="true" style="width: 5%;">
                                                 <button class="datatable-sorter">#</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 10%;">
+                                            <th data-sortable="true" style="width: 12%;">
                                                 <button class="datatable-sorter">Nº Pedido</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 20%;">
+                                            <th data-sortable="true" style="width: 25%;">
                                                 <button class="datatable-sorter">Cliente</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 13%;">
+                                            <th data-sortable="true" style="width: 15%;">
                                                 <button class="datatable-sorter">Telefone</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 10%;">
+                                            <th data-sortable="true" style="width: 12%;">
                                                 <button class="datatable-sorter">Tipo</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 10%;">
+                                            <th data-sortable="true" style="width: 12%;">
                                                 <button class="datatable-sorter">Total</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 10%;">
+                                            <th data-sortable="true" style="width: 12%;">
                                                 <button class="datatable-sorter">Estado</button>
                                             </th>
-                                            <th data-sortable="true" style="width: 14%;">
-                                                <button class="datatable-sorter">Data</button>
-                                            </th>
-                                            <th data-sortable="true" style="width: 8%;">
-                                                <button class="datatable-sorter">Ação</button>
+                                            <th data-sortable="false" style="width: 7%;">
+                                                <span>Ação</span>
                                             </th>
                                         </tr>
                                     </thead>
@@ -91,11 +88,10 @@
                                                         </span>
                                                     @endif
                                                 </td>
-                                                <td>{!! getFormattedCurrency($order->total_amount) !!}</td>
+                                                <td>{!! getProductPrice($order->total_amount) !!}</td>
                                                 <td>{!! getStatusBadge($order->order_status) !!}</td>
-                                                <td>{!! getFormattedDateTime($order->created_at) !!}</td>
                                                 <td>
-                                                    <div class="d-flex gap-2 justify-content-center">
+                                                    <div class="flex gap-2">
                                                         <a href="{{ route('admin.orders.show', $order) }}"
                                                             class="w-8 h-8 rounded-xl inline-flex items-center justify-center btn-link-primary"
                                                             title="Ver detalhes">
